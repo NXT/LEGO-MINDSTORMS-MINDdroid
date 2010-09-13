@@ -26,8 +26,7 @@ public class UIView extends View {
 	private Canvas mCanvas;
 	private Paint mPaint;
 
-	// if 0, even very slight tilt will result in movement
-	private float mSensorBuffer = 7;
+	
 
 	private SensorManager mSensorManager;
 
@@ -112,15 +111,10 @@ public class UIView extends View {
 	}
 
 	private void updateMoveIndicator() {
+		mMoveIndicator.updateX(mAccelX);
+		mMoveIndicator.updateY(mAccelY);
+		
 
-		if (mAccelX > mSensorBuffer || mAccelX < -mSensorBuffer) {
-			mMoveIndicator.updateX(mAccelX);
-
-		}
-		if (mAccelY > mSensorBuffer || mAccelY < -mSensorBuffer) {
-			mMoveIndicator.updateY(mAccelY);
-
-		}
 	}
 
 	private final SensorEventListener mSensorAccelerometer = new SensorEventListener() {
@@ -135,7 +129,7 @@ public class UIView extends View {
 		public void onSensorChanged(SensorEvent event) {
 
 			mAccelX = 0 - event.values[2];
-			mAccelY = event.values[1];
+			mAccelY = 0 - event.values[1];
 			mAccelZ = event.values[0];
 
 		}

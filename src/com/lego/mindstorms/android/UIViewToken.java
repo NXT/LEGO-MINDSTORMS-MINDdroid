@@ -19,8 +19,8 @@ public class UIViewToken {
 	private int mY = 0;
 	private int mIconWidth;
 	private int mIconHeight;
-  
-	 
+	// if 0, even very slight tilt will result in movement
+	private float mSensorBuffer = 3;
 
 	/**
 	 * MovementIndicator constructor.
@@ -32,10 +32,11 @@ public class UIViewToken {
 	public UIViewToken(UIView view, Context context) {
 		this.mView = view;
 		mIcon = BitmapFactory.decodeResource(context.getApplicationContext().getResources(), R.drawable.alpha_rex);
-	 
+
 		mIconWidth = mIcon.getWidth();
 		mIconHeight = mIcon.getHeight();
- 
+
+		Log.d(TAG, "iw : ih" + mIconHeight + " : " + mIconHeight);
 	}
 
 	/**
@@ -58,14 +59,21 @@ public class UIViewToken {
 	 *            Incremental value to add onto current x co-ordinate.
 	 */
 	public void updateX(float newX) {
- 
-		mX += newX;
+		if (newX > mSensorBuffer || newX < -mSensorBuffer) {//if slight tilt, do nothing
+			Log.d(TAG, "mAccelX " + newX);
 
-		// boundary checking, don't want the move_icon going off-screen.
-		if (mX + mIconWidth / 2 >= mView.getWidth())
-			mX = mView.getWidth() - (mIconWidth / 2);
-		else if (mX - (mIconWidth / 2) < 0)
-			mX = mIconWidth / 2;
+			mX = ((mView.getWidth() / 2)- (mIconWidth / 2)) + (int) ((newX / 10) * (mView.getWidth() / 10));
+			// Log.i(TAG,"newX : mX --"+newX+" : "+mX);
+			
+			// boundary checking, don't want the move_icon going off-screen.
+			if (mX + mIconWidth / 2 >= mView.getWidth()) {//set at outer edge
+				mX = mView.getWidth() - (mIconWidth / 2);
+			} else if (mX - (mIconWidth / 2) < 0) {
+				mX = mIconWidth / 2;
+			}
+
+		} 
+
 	}
 
 	/**
@@ -76,13 +84,21 @@ public class UIViewToken {
 	 *            Incremental value to add onto current y co-ordinate.
 	 */
 	public void updateY(float newY) {
-		mY -= newY;
 
-		// boundary checking, don't want the move_icon rolling off-screen.
-		if (mY +mView.mActionButtonHeight + mIconHeight / 2 >= mView.getHeight())
-			mY = mView.getHeight()-mView.mActionButtonHeight - mIconHeight / 2;
-		else if (mY - mIconHeight / 2 < 0)
-			mY = mIconHeight / 2;
+		if (newY > mSensorBuffer || newY < -mSensorBuffer) {// if slight tilt do nothing
+			Log.d(TAG, "mAccelY " + newY);
+
+			mY = ((mView.getHeight() / 2)-mIconHeight / 2) + (int) ((newY / 10) * (mView.getHeight() / 10));
+			// Log.i(TAG,"newY : mY --"+newY+" : "+mY);
+			
+			// boundary checking, don't want the move_icon rolling off-screen.
+			if (mY + mView.mActionButtonHeight + mIconHeight / 2 >= mView.getHeight()) {//set at outer edge
+				mY = mView.getHeight() - mView.mActionButtonHeight - mIconHeight / 2;
+			} else if (mY - mIconHeight / 2 < 0) {
+				mY = mIconHeight / 2;
+			}
+		}  
+
 	}
 
 	/**
@@ -100,10 +116,13 @@ public class UIViewToken {
 	}
 
 	public void centerIcon() {
- 
+
 		mX = (mView.getWidth() / 2) - (mIconWidth / 2);// center - half of icon
-		mY = ((mView.getHeight() - mView.mActionButtonHeight) / 2) - (mIconHeight / 2);// center - half of icon
- 
+		mY = ((mView.getHeight() - mView.mActionButtonHeight) / 2) - (mIconHeight / 2);// center
+																						// -
+																						// half
+																						// of
+																						// icon
 
 	}
 }
