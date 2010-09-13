@@ -7,9 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
 
-public class UIViewToken {
+public class UIMovementToken {
 
-	private static final String TAG = "MoveIndicator";
+	private static final String TAG = UIMovementToken.class.getName();
 	private Bitmap mIcon;
 
 	// View controlling movement
@@ -29,7 +29,7 @@ public class UIViewToken {
 	 *            View controlling the move_icon
 	 * @param context
 	 */
-	public UIViewToken(UIView view, Context context) {
+	public UIMovementToken(UIView view, Context context) {
 		this.mView = view;
 		mIcon = BitmapFactory.decodeResource(context.getApplicationContext().getResources(), R.drawable.alpha_rex);
 

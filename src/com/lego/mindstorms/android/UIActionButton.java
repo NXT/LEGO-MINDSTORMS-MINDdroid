@@ -6,16 +6,15 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.Log;
 
 /**
  * Background drawn on screen, each new level is loaded once the previous level
  * has been completed.
  */
-public class UIViewButton {
+public class UIActionButton {
 
-	private static final String TAG = "UIViewBackground";
+	private static final String TAG = UIActionButton.class.getName();
 	// current tile attributes
 	private int left = 0;
 	private int viewHeight;
@@ -31,7 +30,7 @@ public class UIViewButton {
 	 * @param context
 	 *            Application context used to load images.
 	 */
-	UIViewButton(Activity activity) {
+	UIActionButton(Activity activity) {
 
 		mActionButton = BitmapFactory.decodeResource(activity.getApplicationContext().getResources(), R.drawable.push);
 
