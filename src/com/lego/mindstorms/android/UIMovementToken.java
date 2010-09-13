@@ -20,7 +20,7 @@ public class UIMovementToken {
 	private int mIconWidth;
 	private int mIconHeight;
 	// if 0, even very slight tilt will result in movement
-	private float mSensorBuffer = 3;
+	private float mSensorBuffer = 0;
 
 	/**
 	 * MovementIndicator constructor.

@@ -28,6 +28,11 @@ public class UIActivity extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		mView.unregisterListener();
+	};
+	
+	@Override
 	public void onSaveInstanceState(Bundle icicle) {
 		super.onSaveInstanceState(icicle);
 		mView.unregisterListener();
