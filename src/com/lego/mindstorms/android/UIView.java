@@ -39,6 +39,25 @@ public class UIView extends View {
 	// int mCanvasHeight = 0;
 	int mActionButtonHeight = 0;
 
+	private final SensorEventListener mSensorAccelerometer = new SensorEventListener() {
+
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+
+			mAccelX = 0 - event.values[2];
+			mAccelY = 0 - event.values[1];
+			mAccelZ = event.values[0];
+
+		}
+
+	};
+
 	public UIView(Context context, UIActivity uiActivity) {
 		super(context);
 
@@ -58,21 +77,6 @@ public class UIView extends View {
 		mActionButtonHeight = mBackground.getActionButtonHeight();
 		mMoveIndicator = new UIMovementToken(this, context.getApplicationContext());
 
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		// we only want to handle down events .
-		Log.d(TAG, "onTouchEvent");
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-			Log.d(TAG, "onTouchEvent down");
-			if (event.getY() > this.getHeight() - mActionButtonHeight) {
-				Log.d(TAG, "onTouchEvent in button area");
-				mBackground.drawAction(mCanvas, mPaint);
-
-			}
-		}
-		return true;
 	}
 
 	@Override
@@ -101,30 +105,20 @@ public class UIView extends View {
 		invalidate();
 	}
 
-	private void updateMoveIndicator() {
-		mMoveIndicator.updateX(mAccelX);
-		mMoveIndicator.updateY(mAccelY);
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		// we only want to handle down events .
+		Log.d(TAG, "onTouchEvent");
+		if (event.getAction() == MotionEvent.ACTION_DOWN) {
+			Log.d(TAG, "onTouchEvent down");
+			if (event.getY() > this.getHeight() - mActionButtonHeight) {
+				Log.d(TAG, "onTouchEvent in button area");
+				mBackground.drawAction(mCanvas, mPaint);
 
+			}
+		}
+		return true;
 	}
-
-	private final SensorEventListener mSensorAccelerometer = new SensorEventListener() {
-
-		@Override
-		public void onAccuracyChanged(Sensor sensor, int accuracy) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void onSensorChanged(SensorEvent event) {
-
-			mAccelX = 0 - event.values[2];
-			mAccelY = 0 - event.values[1];
-			mAccelZ = event.values[0];
-
-		}
-
-	};
 
 	public void registerListener() {
 		List<Sensor> sensorList;
@@ -136,6 +130,12 @@ public class UIView extends View {
 
 	public void unregisterListener() {
 		mSensorManager.unregisterListener(mSensorAccelerometer);
+
+	}
+
+	private void updateMoveIndicator() {
+		mMoveIndicator.updateX(mAccelX);
+		mMoveIndicator.updateY(mAccelY);
 
 	}
 

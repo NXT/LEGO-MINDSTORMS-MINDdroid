@@ -24,7 +24,7 @@ public class UIActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 		mView.registerListener();
-		mView.init=true;
+		mView.init = true;
 	}
 
 	@Override

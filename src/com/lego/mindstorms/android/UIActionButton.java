@@ -46,22 +46,21 @@ public class UIActionButton {
 	 * @param viewHeight
 	 * @param viewWidth
 	 */
-	public void draw(Canvas canvas, Paint paint ) {
-		 
+	public void draw(Canvas canvas, Paint paint) {
+
 		buttonTop = getViewHeight() - getActionButtonHeight();
- 
+
 		buttonWidth = mActionButton.getWidth();
- 
 
 		paint.setColor(Color.WHITE);
 		canvas.drawRect(left, buttonTop, getViewWidth(), getViewHeight(), paint);
 		canvas.drawBitmap(mActionButton, left, buttonTop, paint);
-		
-		if (!erase){
+
+		if (!erase) {
 			paint.setColor(Color.BLACK);
-				canvas.drawText("Action!", buttonWidth + 5, buttonTop+ (getActionButtonHeight()*1/3) , paint); 
-				paint.setColor(Color.WHITE);
-			
+			canvas.drawText("Action!", buttonWidth + 5, buttonTop + (getActionButtonHeight() * 1 / 3), paint);
+			paint.setColor(Color.WHITE);
+
 		}
 
 	}
@@ -69,36 +68,37 @@ public class UIActionButton {
 	public void drawAction(Canvas canvas, Paint paint) {
 		Log.d(TAG, "drawAction erase: " + erase);
 		if (erase) {
-			 
+
 			erase = false;
 		} else {
-		 
+
 			erase = true;
 		}
 
 	}
 
 	public int getActionButtonHeight() {
-		//Log.d(TAG, "mActionButton.getHeight(): " + mActionButton.getHeight());
+		// Log.d(TAG, "mActionButton.getHeight(): " +
+		// mActionButton.getHeight());
 		return mActionButton.getHeight();
+	}
+
+	public int getViewHeight() {
+		// Log.d(TAG,"getViewHeight: "+viewHeight);
+		return viewHeight;
+	}
+
+	public int getViewWidth() {
+		// Log.d(TAG,"getViewWidth: "+viewWidth);
+		return viewWidth;
 	}
 
 	public void setViewHeight(int viewHeight) {
 		this.viewHeight = viewHeight;
 	}
 
-	public int getViewHeight() {
-		//Log.d(TAG,"getViewHeight: "+viewHeight);
-		return viewHeight;
-	}
-
 	public void setViewWidth(int viewWidth) {
 		this.viewWidth = viewWidth;
-	}
-
-	public int getViewWidth() {
-		//Log.d(TAG,"getViewWidth: "+viewWidth);
-		return viewWidth;
 	}
 
 }

@@ -39,6 +39,17 @@ public class UIMovementToken {
 		Log.d(TAG, "iw : ih" + mIconHeight + " : " + mIconHeight);
 	}
 
+	public void centerIcon() {
+
+		mX = (mView.getWidth() / 2) - (mIconWidth / 2);// center - half of icon
+		mY = ((mView.getHeight() - mView.mActionButtonHeight) / 2) - (mIconHeight / 2);// center
+																						// -
+																						// half
+																						// of
+																						// icon
+
+	}
+
 	/**
 	 * Draw the move_icon.
 	 * 
@@ -49,6 +60,20 @@ public class UIMovementToken {
 	 */
 	public void draw(Canvas canvas, Paint paint) {
 		canvas.drawBitmap(mIcon, mX - (mIconWidth / 2), mY - (mIconHeight / 2), paint);
+	}
+
+	/**
+	 * @return Current x co-ordinate.
+	 */
+	public int getX() {
+		return mX;
+	}
+
+	/**
+	 * @return Current y co-ordinate.
+	 */
+	public int getY() {
+		return mY;
 	}
 
 	/**
@@ -98,31 +123,6 @@ public class UIMovementToken {
 				mY = mIconHeight / 2;
 			}
 		}  
-
-	}
-
-	/**
-	 * @return Current x co-ordinate.
-	 */
-	public int getX() {
-		return mX;
-	}
-
-	/**
-	 * @return Current y co-ordinate.
-	 */
-	public int getY() {
-		return mY;
-	}
-
-	public void centerIcon() {
-
-		mX = (mView.getWidth() / 2) - (mIconWidth / 2);// center - half of icon
-		mY = ((mView.getHeight() - mView.mActionButtonHeight) / 2) - (mIconHeight / 2);// center
-																						// -
-																						// half
-																						// of
-																						// icon
 
 	}
 }
