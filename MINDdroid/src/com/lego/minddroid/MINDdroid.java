@@ -66,7 +66,7 @@ public class MINDdroid extends Activity
     private Handler btcHandler;
     private Menu myMenu;
 
-	private UIView mView;
+	private GameView mView;
 
     /** 
       * Called when the activity is first created. Inititializes all the graphical views.
@@ -75,9 +75,9 @@ public class MINDdroid extends Activity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
 		// setup our view, give it focus and display.
-		mView = new UIView(getApplicationContext(), this);
+		mView = new GameView(getApplicationContext(), this);
 		mView.setFocusable(true);
 		setContentView(mView);
         reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
@@ -176,7 +176,7 @@ public class MINDdroid extends Activity
     public void onResume() {
 		super.onResume();
 		mView.registerListener();
-		mView.init = true;
+	
     }
 
 
