@@ -45,9 +45,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		private Drawable mIconOrange;
 
-		private Bitmap mIconBlue;
+		private Drawable mIconBlue;
 
-		private Bitmap mIconWhite;
+		private Drawable mIconWhite;
 
 		private Bitmap mTarget;
 
@@ -110,8 +110,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			mIconOrange = context.getResources().getDrawable(R.drawable.orange);
 			// load background image as a Bitmap instead of a Drawable b/c
 			// we don't need to transform it and it's faster to draw this way
-			mIconBlue = BitmapFactory.decodeResource(res, R.drawable.blue);
-			mIconWhite = BitmapFactory.decodeResource(res, R.drawable.white);
+			mIconBlue = context.getResources().getDrawable(R.drawable.blue);
+			mIconWhite =context.getResources().getDrawable(R.drawable.white);
 			mTarget = BitmapFactory.decodeResource(res, R.drawable.target_no_orange_dot);
 			mActionButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_up);
 			mBackgroundImage = BitmapFactory.decodeResource(res, R.drawable.background_1);
@@ -156,18 +156,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
+		boolean pulse=false;
+		
 		@Override
 		public void run() {
 			Log.d(TAG, "--run--");
 			while (mRun) {
+				
+				updateTime();
+				
+				updateMoveIndicator(mAccelX, mAccelY);
+				
+				if(previous_draw>90){
 				Canvas c = null;
 				try {
 					c = mSurfaceHolder.lockCanvas(null);
 					synchronized (mSurfaceHolder) {
-						updateTime();
-						updateMoveIndicator(mAccelX, mAccelY);
+					
 						
+						if (previous_pulse>800){
+							pulseInGoal= pulseInGoal==mIconBlue? mIconWhite:mIconBlue;
+							//pulse=true;
+							previous_pulse=0;//mLastTime set to current moment in updateTime
+						}
 						doDraw(c);
+						 
 					}
 				} finally {
 					// do this in a finally so that if an exception is thrown
@@ -175,8 +188,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					// inconsistent state
 					if (c != null) {
 						mSurfaceHolder.unlockCanvasAndPost(c);
+						previous_draw=mLastTime;//mLastTime set to current moment in updateTime
 					}
 				}
+			}
 			}
 		}
 
@@ -271,6 +286,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 
 		}
+		
+		Drawable pulseInGoal;
 
 		/**
 		 * Draws move indicator, button and background to the provided Canvas.
@@ -283,7 +300,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 			// draw the background
 			mCanvas.drawBitmap(mBackgroundImage, 0, 0, null);
-
+		
 			// draw the goal
 			mCanvas.drawBitmap(mTarget, (mCanvasWidth - mTarget.getWidth()) / 2,
 					((mCanvasHeight - mActionButton.getHeight()) / 2) - (mTarget.getHeight() / 2), null);
@@ -292,9 +309,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 			if (inGoal) {
 	 
-				mIconOrange.setBounds((int) mX - (growAdjust / 2), (int) mY - ((growAdjust / 2)), ((int) mX + (growAdjust / 2)),
+				pulseInGoal.setBounds((int) mX - (growAdjust / 2), (int) mY - ((growAdjust / 2)), ((int) mX + (growAdjust / 2)),
 						(int) mY + (growAdjust / 2));
-				mIconOrange.draw(mCanvas);
+				pulseInGoal.draw(mCanvas);
 				
 //				Log.d(TAG,"in goal: left, top , right , bottom :"+ ":"+((int) mX - (mIconWidth / 2) )+ ":"+(( (int) mY - (mIconHeight / 2)))+ ":"+( (int) mX + (mIconWidth / 2))+ ":"+((int) mY
 //						- (mIconHeight / 2)));
@@ -337,6 +354,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		long test=0;
+		long previous_pulse=0;
+		long previous_draw=0;
 		
 		private void updateTime() {// use for blinking
 			long now = System.currentTimeMillis();
@@ -353,9 +372,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			if (mLastTime > now)
 				return;
 
-			double elapsed = (now - mLastTime) / 1000.0;
-
-			mLastTime = now;
+			//double elapsed = (now - mLastTime) / 1000.0;
+             long elapsed = now - mLastTime;
+             previous_pulse+=elapsed;
+             previous_draw+=elapsed;
+             
+			 mLastTime = now;
 
 		}
 
