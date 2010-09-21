@@ -75,6 +75,7 @@ public class BTCommunicator extends Thread
         return (btAdapter == null) ? false : btAdapter.isEnabled();
     }
 
+
     @Override
     public void run() {
         createNXTConnection();

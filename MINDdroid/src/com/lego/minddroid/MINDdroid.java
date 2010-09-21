@@ -17,6 +17,7 @@ package com.lego.minddroid;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -111,7 +112,8 @@ public class MINDdroid extends Activity
         }
         else {
             myBTCommunicator = null;
-            showToast("Please enable bluetooth first!");
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivity(enableIntent);
         }
     }
 

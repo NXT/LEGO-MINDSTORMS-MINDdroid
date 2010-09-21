@@ -19,11 +19,11 @@ public final class R {
         public static final int connect_up=0x7f020005;
         public static final int connected_down=0x7f020006;
         public static final int connected_up=0x7f020007;
-        public static final int example_1=0x7f020008;
-        public static final int icon=0x7f020009;
-        public static final int info_down=0x7f02000a;
-        public static final int info_up=0x7f02000b;
-        public static final int logo_black=0x7f02000c;
+        public static final int icon=0x7f020008;
+        public static final int info_down=0x7f020009;
+        public static final int info_up=0x7f02000a;
+        public static final int logo_black=0x7f02000b;
+        public static final int logo_new=0x7f02000c;
         public static final int menu_connect_icon=0x7f02000d;
         public static final int menu_disconnect_icon=0x7f02000e;
         public static final int menu_info_icon=0x7f02000f;

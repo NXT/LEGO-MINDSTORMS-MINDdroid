@@ -431,7 +431,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private static final String TAG = GameView.class.getName();;
 
-	private Activity mActivity;
+	private MINDdroid mActivity;
 	/** The thread that actually draws the animation */
 	private GameThread thread;
 	private Paint mPaint;
@@ -470,6 +470,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			mAccelY = 0 - event.values[1];
 			mAccelZ = event.values[0];
 
+            // !!! should be called somewhere above after the digital filtering !!!
+			mActivity.updateOrientation(event.values[0], event.values[1], event.values[2], true);
+
 		}
 
 	};
@@ -506,6 +509,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				Log.d(TAG, "onTouchEvent in button area TouchEvent");
 
 				// implement action here
+				mActivity.actionButtonPressed();
 			}
 		}
 		return true;
