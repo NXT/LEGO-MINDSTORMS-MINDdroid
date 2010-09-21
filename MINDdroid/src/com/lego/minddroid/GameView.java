@@ -176,15 +176,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 						c = mSurfaceHolder.lockCanvas(null);
 						synchronized (mSurfaceHolder) {
 
-							thread.mX = mNumX / mNum;
-							thread.mY = mNumY / mNum;
+							thread.mX = ((mNumX / mNum) + (previousNumX/previousNum))/2;
+							thread.mY = ((mNumY / mNum) + (previousNumY/previousNum))/2;
 							Log.d(TAG, "mNum in averaging " + mNum);
 							
-                            if (aveCount*3< mNum){
-							mNumY = mNumY/3;
-							mNumX = mNumX/3;
-							mNum = mNum/3;
-                            }
+							previousNumY=mNumY;
+							previousNumX=mNumX;
+							previousNum=mNum;
+                           // if (aveCount*3< mNum){
+							mNumY = 0;//mNumY/3;
+							mNumX = 0;//mNumX/3;
+							mNum = 0;//mNum/3;
+							
+					
+                           // }
                             aveCount=0;
 
 							if (elapsedSincePulse > 800) {
@@ -444,6 +449,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private float mNumX;
 	private float mNumY;
 	private int mNum = 0;
+	
+	private float previousNumX;
+	private float previousNumY;
+	private int previousNum = 0;
 	/** Message handler used by thread to interact with TextView */
 
 	private final SensorEventListener mSensorAccelerometer = new SensorEventListener() {
