@@ -4,7 +4,7 @@
       android:versionCode="1"
       android:versionName="1.0">
     <uses-sdk android:minSdkVersion="7"/> 
-    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+    <application android:icon="@drawable/logo_black" android:label="@string/app_name" android:debuggable="true">
         <activity android:name=".MINDdroid"
                   android:label="@string/app_name"
                   android:screenOrientation="portrait">

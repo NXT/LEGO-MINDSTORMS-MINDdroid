@@ -23,19 +23,20 @@ public final class R {
         public static final int icon=0x7f020009;
         public static final int info_down=0x7f02000a;
         public static final int info_up=0x7f02000b;
-        public static final int menu_connect_icon=0x7f02000c;
-        public static final int menu_disconnect_icon=0x7f02000d;
-        public static final int menu_info_icon=0x7f02000e;
-        public static final int menu_quit_icon=0x7f02000f;
-        public static final int minddroid_logo=0x7f020010;
-        public static final int orange=0x7f020011;
-        public static final int orange_dot=0x7f020012;
-        public static final int quit_down=0x7f020013;
-        public static final int quit_up=0x7f020014;
-        public static final int target=0x7f020015;
-        public static final int target_no_orange_dot=0x7f020016;
-        public static final int white=0x7f020017;
-        public static final int white_total=0x7f020018;
+        public static final int logo_black=0x7f02000c;
+        public static final int menu_connect_icon=0x7f02000d;
+        public static final int menu_disconnect_icon=0x7f02000e;
+        public static final int menu_info_icon=0x7f02000f;
+        public static final int menu_quit_icon=0x7f020010;
+        public static final int minddroid_logo=0x7f020011;
+        public static final int orange=0x7f020012;
+        public static final int orange_dot=0x7f020013;
+        public static final int quit_down=0x7f020014;
+        public static final int quit_up=0x7f020015;
+        public static final int target=0x7f020016;
+        public static final int target_no_orange_dot=0x7f020017;
+        public static final int white=0x7f020018;
+        public static final int white_total=0x7f020019;
     }
     public static final class id {
         public static final int action_button=0x7f060009;
