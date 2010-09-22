@@ -97,7 +97,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		private long mFeedbackEnd = 0;
 		long test = 0;
-		long elapsedSincePulse = 0;
+		//long elapsedSincePulse = 0;
 		long elapsedSinceDraw = 0;
 
 		public GameThread(SurfaceHolder surfaceHolder, Context context, Vibrator vibrator, Handler handler) {
@@ -157,8 +157,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 			}
 		}
-    
-		 int aveCount=0;
+
+		int aveCount = 0;
 
 		@Override
 		public void run() {
@@ -176,35 +176,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 						c = mSurfaceHolder.lockCanvas(null);
 						synchronized (mSurfaceHolder) {
 
-							thread.mX = ((mNumX / mNum) + (previousNumX/previousNum))/2;
-							thread.mY = ((mNumY / mNum) + (previousNumY/previousNum))/2;
+							thread.mX = ((mNumX / mNum) + (previousNumX / previousNum)) / 2;
+							thread.mY = ((mNumY / mNum) + (previousNumY / previousNum)) / 2;
 							Log.d(TAG, "mNum in averaging " + mNum);
-							
-							previousNumY=mNumY;
-							previousNumX=mNumX;
-							previousNum=mNum;
-                           // if (aveCount*3< mNum){
-							mNumY = 0;//mNumY/3;
-							mNumX = 0;//mNumX/3;
-							mNum = 0;//mNum/3;
-							
-					
-                           // }
-                            aveCount=0;
 
-							if (elapsedSincePulse > 800) {
-								elapsedSincePulse = pulseInGoal == mIconBlue ? 600 : 0;// mLastTime
-																						// set
-																						// show
-																						// white
-																						// icon
-																						// for
-																						// only
-																						// 200
-																						// ms
-								pulseInGoal = pulseInGoal == mIconBlue ? mIconWhite : mIconBlue;
+							previousNumY = mNumY;
+							previousNumX = mNumX;
+							previousNum = mNum;
 
-							}
+							mNumY = 0;
+							mNumX = 0;
+							mNum = 0;
+
+							aveCount = 0;
+
+							//							if (elapsedSincePulse > 800) {
+							//								elapsedSincePulse = pulseInGoal == mIconBlue ? 600 : 0;// mLastTime - set to show white icon only 200 ms																					 
+							//							}
 
 							pulseNotInGoal = pulseNotInGoal == mIconOrange ? mIconWhite : mIconOrange;
 							doDraw(c);
@@ -308,21 +296,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				// don't forget to resize the background image
 				mBackgroundImage = Bitmap.createScaledBitmap(mBackgroundImage, width, height, true);
 
-				// mIconOrangeFull = Bitmap.createScaledBitmap(mIconOrangeFull,
-				// ICON_MAX_SIZE, ICON_MAX_SIZE, true);
-
 				int temp_ratio = mCanvasWidth / 64;
 				GOAL_WIDTH = mCanvasWidth / temp_ratio;
 
-				ICON_MAX_SIZE = (GOAL_WIDTH / 8) * 6;// mIconOrange.getWidth();
-				ICON_MIN_SIZE = (GOAL_WIDTH / 8);
+				ICON_MAX_SIZE = (GOAL_WIDTH / 8) * 6;
+				ICON_MIN_SIZE = (GOAL_WIDTH / 6);
 
 				temp_ratio = mCanvasHeight / 64;
 				GOAL_HEIGHT = mCanvasHeight / temp_ratio;
-				// GOAL_HEIGHT= (GOAL_WIDTH/8)*6;
+
 				mTarget = Bitmap.createScaledBitmap(mTarget, GOAL_WIDTH, GOAL_HEIGHT, true);
-				// mIconHeight = mCanvasWidth/temp_ratio;//
-				// mIconOrange.getHeight();
 
 			}
 		}
@@ -338,7 +321,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		}
 
-		Drawable pulseInGoal;
 		Drawable pulseNotInGoal;
 
 		/**
@@ -346,7 +328,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 */
 		private void doDraw(Canvas mCanvas) {
 			// Draw the background image. Operations on the Canvas accumulate
-
+			thread.growAdjust = thread.calcGrowAdjust(mX, mY);
 			// draw the background
 			mCanvas.drawBitmap(mBackgroundImage, 0, 0, null);
 
@@ -361,9 +343,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 			if (inGoal) {
 
-				pulseInGoal.setBounds((int) mX - (growAdjust / 2), (int) mY - ((growAdjust / 2)), ((int) mX + (growAdjust / 2)), (int) mY
+				mIconOrange.setBounds((int) mX - (growAdjust / 2), (int) mY - ((growAdjust / 2)), ((int) mX + (growAdjust / 2)), (int) mY
 						+ (growAdjust / 2));
-				pulseInGoal.draw(mCanvas);
+				mIconOrange.draw(mCanvas);
 
 			} else {
 
@@ -375,14 +357,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		}
 
-		private int calcGrowAdjust(float mAcX, float mAcY) {
+		private int calcGrowAdjust(float mX2, float mY2) {
 
-			int mX2 = ((thread.mCanvasWidth / 2)) + (int) ((mAcX / 10) * (thread.mCanvasWidth / 10));
-			int mY2 = (((thread.mCanvasHeight - thread.mActionButton.getHeight()) / 2))
-					+ (int) ((mAcY / 10) * ((thread.mCanvasHeight - thread.mActionButton.getHeight()) / 10));
-
-			int xDistanceFromCenter = Math.abs((mCanvasWidth / 2) - mX2);
-			int yDistanceFromCenter = Math.abs(((mCanvasHeight - mActionButton.getHeight()) / 2) - mY2);
+			int xDistanceFromCenter = (int) Math.abs((mCanvasWidth / 2) - mX2);
+			int yDistanceFromCenter = (int) Math.abs(((mCanvasHeight - mActionButton.getHeight()) / 2) - mY2);
 
 			if (xDistanceFromCenter > ICON_MAX_SIZE || yDistanceFromCenter > ICON_MAX_SIZE) {
 				return ICON_MAX_SIZE;
@@ -401,8 +379,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		}
 
-	
-
 		private void updateTime() {// use for blinking
 			long now = System.currentTimeMillis();
 			if (test == 0) {
@@ -420,7 +396,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 			// double elapsed = (now - mLastTime) / 1000.0;
 			long elapsed = now - mLastTime;
-			elapsedSincePulse += elapsed;
+			//	elapsedSincePulse += elapsed;
 			elapsedSinceDraw += elapsed;
 
 			mLastTime = now;
@@ -445,11 +421,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private float mAccelX = 0;
 	private float mAccelY = 0;
 	private float mAccelZ = 0; // heading
-	
+
 	private float mNumX;
 	private float mNumY;
 	private int mNum = 0;
-	
+
 	private float previousNumX;
 	private float previousNumY;
 	private int previousNum = 0;
@@ -528,23 +504,16 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	}
 
-	
-
 	private void updateMoveIndicator(float mAcX, float mAcY) {
-		// if (thread.mLastTime > thread.mFeedbackEnd) {
-
-		thread.growAdjust = thread.calcGrowAdjust(mAcX, mAcY);
 
 		thread.mX = ((thread.mCanvasWidth / 2)) + (int) ((mAcX / 10) * (thread.mCanvasWidth / 10));
 
 		// boundary checking, don't want the move_icon going off-screen.
-		if (thread.mX + thread.growAdjust / 2 >= thread.mCanvasWidth) {// set
-																		// at
-																		// outer
-																		// edge
-			thread.mX = thread.mCanvasWidth - (thread.growAdjust / 2);
-		} else if (thread.mX - (thread.growAdjust / 2) < 0) {
-			thread.mX = thread.growAdjust / 2;
+		if (thread.mX + thread.ICON_MAX_SIZE / 2 >= thread.mCanvasWidth) {// set at outer edge
+
+			thread.mX = thread.mCanvasWidth - (thread.ICON_MAX_SIZE / 2);
+		} else if (thread.mX - (thread.ICON_MAX_SIZE / 2) < 0) {
+			thread.mX = thread.ICON_MAX_SIZE / 2;
 		}
 		mNumX += thread.mX;
 
@@ -553,17 +522,15 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		// boundary checking, don't want the move_icon rolling
 		// off-screen.
-		if (thread.mY + thread.growAdjust / 2 >= (thread.mCanvasHeight - thread.mActionButton.getHeight())) {// set
-																												// at
-																												// outer
-																												// edge
-			thread.mY = thread.mCanvasHeight - thread.mActionButton.getHeight() - thread.growAdjust / 2;
-		} else if (thread.mY - thread.growAdjust / 2 < 0) {
-			thread.mY = thread.growAdjust / 2;
+		if (thread.mY + thread.ICON_MAX_SIZE / 2 >= (thread.mCanvasHeight - thread.mActionButton.getHeight())) {// set at outer edge
+
+			thread.mY = thread.mCanvasHeight - thread.mActionButton.getHeight() - thread.ICON_MAX_SIZE / 2;
+		} else if (thread.mY - thread.ICON_MAX_SIZE / 2 < 0) {
+			thread.mY = thread.ICON_MAX_SIZE / 2;
 		}
 
 		mNumY += thread.mY;
-        
+
 		thread.aveCount++;
 		mNum++;
 
@@ -571,11 +538,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public boolean isInGoal() {
 
-		if ((thread.mCanvasWidth - thread.mTarget.getWidth()) / 2 > thread.mX || (thread.mCanvasWidth + thread.mTarget.getWidth()) / 2 < thread.mX) {// x
-																																						// is
-																																						// not
-																																						// within
-																																						// goal
+		if ((thread.mCanvasWidth - thread.mTarget.getWidth()) / 2 > thread.mX || (thread.mCanvasWidth + thread.mTarget.getWidth()) / 2 < thread.mX) {// x is not within goal
+
 			return false;
 		}
 
