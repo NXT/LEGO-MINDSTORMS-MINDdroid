@@ -93,10 +93,10 @@ public class MINDdroid extends Activity
         myMenu.removeItem(MENU_CONNECT);
 
         if (connected) {
-            myMenu.add(0, MENU_CONNECT, 2, "Disconnect").setIcon(R.drawable.menu_disconnect_icon);
+            myMenu.add(0, MENU_CONNECT, 2, "Disconnect").setIcon(R.drawable.ic_menu_connected);
         }
         else {
-            myMenu.add(0, MENU_CONNECT, 2, "Connect").setIcon(R.drawable.menu_connect_icon);
+            myMenu.add(0, MENU_CONNECT, 2, "Connect").setIcon(R.drawable.ic_menu_connect);
         }
     }            
 
@@ -203,9 +203,9 @@ public class MINDdroid extends Activity
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         myMenu = menu;
-        myMenu.add(0, MENU_INFO, 1, "Info").setIcon(R.drawable.menu_info_icon);
-        myMenu.add(0, MENU_CONNECT, 2, "Connect").setIcon(R.drawable.menu_connect_icon);
-        myMenu.add(0, MENU_QUIT, 3, "Quit").setIcon(R.drawable.menu_quit_icon);
+        myMenu.add(0, MENU_INFO, 1, "Info").setIcon(R.drawable.ic_menu_about);
+        myMenu.add(0, MENU_CONNECT, 2, "Connect").setIcon(R.drawable.ic_menu_connect);
+        myMenu.add(0, MENU_QUIT, 3, "Quit").setIcon(R.drawable.ic_menu_exit);
         return true;
     }
 
