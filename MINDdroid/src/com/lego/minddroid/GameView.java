@@ -199,17 +199,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 						// during the above, we don't leave the Surface in an
 						// inconsistent state
 						if (c != null) {
-							if (isInGoal()) { // icon is in goal
-								thread.inGoal = true;
-							} else {
-
-								if (thread.inGoal) {// was in goal before
-									thread.inGoal = false;
-									thread.vibrate();
-
-								}
-
-							}
+						
 							mSurfaceHolder.unlockCanvasAndPost(c);
 
 							elapsedSinceDraw = 0;// mLastTime set to current
@@ -358,7 +348,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 */
 		private void doDraw(Canvas mCanvas) {
 			// Draw the background image. Operations on the Canvas accumulate
-			thread.growAdjust = thread.calcGrowAdjust(mX, mY);
+			if (isInGoal()) { // icon is in goal
+				thread.inGoal = true;
+				thread.growAdjust = thread.calcGrowAdjust(mX, mY);
+			} else {
+				thread.growAdjust=ICON_MAX_SIZE;
+				if (thread.inGoal) {// was in goal before
+					thread.inGoal = false;
+					thread.vibrate();
+
+				}
+
+			}
+			
 			// draw the background
 			mCanvas.drawBitmap(mBackgroundImage, 0, 0, null);
 
