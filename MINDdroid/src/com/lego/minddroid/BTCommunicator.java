@@ -158,7 +158,10 @@ public class BTCommunicator extends Thread
 
 
     private void rotateTo(int motor, int end) {
-        byte[] message = LCPMessage.getMotorMessage(motor, -80, end);
+        // byte[] message = LCPMessage.getMotorMessage(motor, -80, end);
+        byte[] message = new byte[] {   12, 0, // message length
+                                        (byte) 0x80, (byte) 0x04, (byte) 0x01, (byte) 0x64, (byte) 0x03, (byte) 0x00, 
+                                        (byte) 0x00, (byte) 0x20, (byte) 0xB4, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
         sendMessage(message);
     }
 

@@ -124,18 +124,18 @@ public class MINDdroid extends Activity
             myBTCommunicator = null;
         }
         connected = false;
-       // updateButtonsAndMenu();
+        updateButtonsAndMenu();
     }
 
 
     public void actionButtonPressed() {
         if (myBTCommunicator != null)            
-            sendBTCmessage(BTCommunicator.ACTION, 440);
+            // sendBTCmessage(BTCommunicator.ACTION, 440);
             mView.getThread().mActionPressed=true;
             // will have to implement a seperate thread for waiting a special time
             // the below implemented commands don't work correctly
             // sendBTCmessage(BTCommunicator.MOTOR_RESET, BTCommunicator.MOTOR_B);
-            // sendBTCmessage(BTCommunicator.MOTOR_B_ACTION, 200);
+            sendBTCmessage(BTCommunicator.MOTOR_B_ACTION, 200);
     }
 
 
