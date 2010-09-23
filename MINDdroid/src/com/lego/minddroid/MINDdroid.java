@@ -124,7 +124,7 @@ public class MINDdroid extends Activity
             myBTCommunicator = null;
         }
         connected = false;
-        updateButtonsAndMenu();
+       // updateButtonsAndMenu();
     }
 
 
