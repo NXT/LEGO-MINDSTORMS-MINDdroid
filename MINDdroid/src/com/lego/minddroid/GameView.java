@@ -318,8 +318,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				
 				if (mElapsedSinceDraw > REDRAW_SCHED) {
 				    
-				    if (mElapsedSinceNXTCommand > MINDdroid.UPDATE_TIME) {
-					    commandNXT(mNumAcX/mNumAc,mNumAcY/mNumAc);
+				    if ((mElapsedSinceNXTCommand > MINDdroid.UPDATE_TIME) && (mNumAc > 0)) {
+					    mActivity.updateMotorControl(-mNumAcY/mNumAc, -mNumAcX/mNumAc);
 					    mNumAcX=0;
 					    mNumAcY=0;
 					    mElapsedSinceNXTCommand = 0;
@@ -379,25 +379,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			return map;
 		}
 		
-		
-		
-		    public void commandNXT( float pitch, float roll) {
-		        int left = 0;
-		        int right = 0;
-		        if (mActivity.myBTCommunicator != null) {
-
-		                if (Math.abs(pitch) >= 10) {
-		                    left = (int) Math.round(3.3*pitch * (1.0 + roll / 90.0));
-		                    right = (int) Math.round(3.3*pitch * (1.0 - roll / 90.0));                
-		                }              
-
-		                // send messages via the handler
-		                mActivity.sendBTCmessage(BTCommunicator.MOTOR_A, left);
-		                mActivity.sendBTCmessage(BTCommunicator.MOTOR_C, right);
-		          
-		        }
-		    }
-
+			
 		/**
 		 * Used to signal the thread whether it should be running or not.
 		 * Passing true allows the thread to run; passing false will shut it
@@ -685,6 +667,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		getThread().mAvCount++;
 		mNum++;
+		mNumAc++;
 
 	}
 

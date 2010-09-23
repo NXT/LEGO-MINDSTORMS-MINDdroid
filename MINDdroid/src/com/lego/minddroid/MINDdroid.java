@@ -60,7 +60,7 @@ public class MINDdroid extends Activity
     private Button actionButton;
     private TextView myNXT;
     private long timeDataSent = 0;
-    BTCommunicator myBTCommunicator = null;
+    private BTCommunicator myBTCommunicator = null;
     private Toast reusableToast;
     private boolean connected = false;
     private ProgressDialog connectingProgressDialog;
@@ -136,6 +136,23 @@ public class MINDdroid extends Activity
             // the below implemented commands don't work correctly
             // sendBTCmessage(BTCommunicator.MOTOR_RESET, BTCommunicator.MOTOR_B);
             // sendBTCmessage(BTCommunicator.MOTOR_B_ACTION, 200);
+    }
+
+
+    public void updateMotorControl(float pitch, float roll) {
+        int left = 0;
+        int right = 0;
+        if (myBTCommunicator != null) {
+
+            if (Math.abs(pitch) >= 10) {
+                left = (int) Math.round(3.3*pitch * (1.0 + roll / 90.0));
+                right = (int) Math.round(3.3*pitch * (1.0 - roll / 90.0));                
+            }              
+
+            // send messages via the handler
+            sendBTCmessage(BTCommunicator.MOTOR_A, left);
+            sendBTCmessage(BTCommunicator.MOTOR_C, right);
+        }
     }
 
 
