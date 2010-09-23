@@ -93,10 +93,10 @@ public class MINDdroid extends Activity
         myMenu.removeItem(MENU_CONNECT);
 
         if (connected) {
-            myMenu.add(0, MENU_CONNECT, 2, "Disconnect").setIcon(R.drawable.ic_menu_connected);
+            myMenu.add(0, MENU_CONNECT, 2, getResources().getString(R.string.disconnect)).setIcon(R.drawable.ic_menu_connected);
         }
         else {
-            myMenu.add(0, MENU_CONNECT, 2, "Connect").setIcon(R.drawable.ic_menu_connect);
+            myMenu.add(0, MENU_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
         }
     }            
 
@@ -108,7 +108,7 @@ public class MINDdroid extends Activity
             myBTCommunicator.start();
             updateButtonsAndMenu();
             connectingProgressDialog = ProgressDialog.show(this, "", 
-                "Connecting to your robot.\nPlease wait...", true);
+                getResources().getString(R.string.connecting_please_wait), true);
         }
         else {
             myBTCommunicator = null;
@@ -195,9 +195,9 @@ public class MINDdroid extends Activity
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         myMenu = menu;
-        myMenu.add(0, MENU_INFO, 1, "Info").setIcon(R.drawable.ic_menu_about);
-        myMenu.add(0, MENU_CONNECT, 2, "Connect").setIcon(R.drawable.ic_menu_connect);
-        myMenu.add(0, MENU_QUIT, 3, "Quit").setIcon(R.drawable.ic_menu_exit);
+        myMenu.add(0, MENU_INFO, 1, getResources().getString(R.string.info)).setIcon(R.drawable.ic_menu_about);
+        myMenu.add(0, MENU_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
+        myMenu.add(0, MENU_QUIT, 3, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
         return true;
     }
 

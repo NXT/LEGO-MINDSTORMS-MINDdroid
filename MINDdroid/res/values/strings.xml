@@ -2,8 +2,15 @@
 <resources>
     <string name="nxt_default_name">NXT</string>
     <string name="app_name">MINDdroid</string>
-    <string name="about_comments">by\nGünther Hölzl (Austria)\nand\nShawn Brown (Japan)</string>
+    <string name="about_comments">This application is under GPLv3\nand was written by\nGünther Hölzl (Austria)\nand\nShawn Brown (Japan)</string>
+    <string name="info">Info</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
-    <string name="action">Action!</string>
+    <string name="quit">Quit</string>    
+    <string name="action">Action!</string>    
+    <string name="connecting_please_wait">Connecting to your robot.\nPlease wait...</string>
+    <string name="no_paired_nxt">No paired NXT robot found!</string>
+    <string name="problem_at_connecting">Problem at creating a connection!</string>
+    <string name="problem_at_closing">Problem at closing the connection!</string>
+    <string name="problem_at_sending">Problem at sending the message!</string>
 </resources>

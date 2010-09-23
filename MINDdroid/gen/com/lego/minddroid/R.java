@@ -51,10 +51,17 @@ public final class R {
     }
     public static final class string {
         public static final int about_comments=0x7f050002;
-        public static final int action=0x7f050005;
+        public static final int action=0x7f050007;
         public static final int app_name=0x7f050001;
-        public static final int connect=0x7f050003;
-        public static final int disconnect=0x7f050004;
+        public static final int connect=0x7f050004;
+        public static final int connecting_please_wait=0x7f050008;
+        public static final int disconnect=0x7f050005;
+        public static final int info=0x7f050003;
+        public static final int no_paired_nxt=0x7f050009;
         public static final int nxt_default_name=0x7f050000;
+        public static final int problem_at_closing=0x7f05000b;
+        public static final int problem_at_connecting=0x7f05000a;
+        public static final int problem_at_sending=0x7f05000c;
+        public static final int quit=0x7f050006;
     }
 }

@@ -102,7 +102,7 @@ public class BTCommunicator extends Thread
 
             if (nxtDevice == null)
             {
-                sendToast("No paired NXT device found");
+                sendToast(myMINDdroid.getResources().getString(R.string.no_paired_nxt));
                 sendState(STATE_CONNECTERROR);
                 return;
             }             
@@ -112,7 +112,7 @@ public class BTCommunicator extends Thread
             nxtDin = new DataInputStream(nxtBTsocket.getInputStream());
             nxtDos = new DataOutputStream(nxtBTsocket.getOutputStream());          
         } catch (IOException e) {
-            sendToast("Problem at creating a connection");
+            sendToast(myMINDdroid.getResources().getString(R.string.problem_at_connecting));
             sendState(STATE_CONNECTERROR);
             return;
         }
@@ -133,7 +133,7 @@ public class BTCommunicator extends Thread
             nxtDin = null;
             nxtDos = null;            
         } catch (IOException e) {
-            sendToast("Problem at closing the connection");
+            sendToast(myMINDdroid.getResources().getString(R.string.problem_at_closing));
         }
     }
 
@@ -181,7 +181,7 @@ public class BTCommunicator extends Thread
             nxtDos.write(message, 0, message.length);
             nxtDos.flush();        
         } catch (IOException ioe) { 
-            sendToast("Problem at sending message!");
+            sendToast(myMINDdroid.getResources().getString(R.string.problem_at_sending));
         }
     }        
         
