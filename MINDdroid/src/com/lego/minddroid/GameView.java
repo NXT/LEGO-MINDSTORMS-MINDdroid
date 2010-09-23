@@ -320,7 +320,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				GOAL_WIDTH = mCanvasWidth / temp_ratio;
 
 				ICON_MAX_SIZE = (GOAL_WIDTH / 8) * 6;
-				ICON_MIN_SIZE = (GOAL_WIDTH / 6);
+				ICON_MIN_SIZE = (GOAL_WIDTH / 4);
 
 				temp_ratio = mCanvasHeight / 64;
 				GOAL_HEIGHT = mCanvasHeight / temp_ratio;
