@@ -149,22 +149,6 @@ public class MINDdroid extends Activity
         }
     }
 
-    public void updateMotorControl(float pitch, float roll) {
-        int left = 0;
-        int right = 0;
-        if (myBTCommunicator != null) {
-
-            if (Math.abs(pitch) >= 10) {
-                left = (int) Math.round(3.3*pitch * (1.0 + roll / 90.0));
-                right = (int) Math.round(3.3*pitch * (1.0 - roll / 90.0));                
-            }              
-
-            // send messages via the handler
-            sendBTCmessage(BTCommunicator.MOTOR_A, left);
-            sendBTCmessage(BTCommunicator.MOTOR_C, right);
-        }
-    }
-
 
     void sendBTCmessage(int message, int value) {
         Bundle myBundle = new Bundle();
