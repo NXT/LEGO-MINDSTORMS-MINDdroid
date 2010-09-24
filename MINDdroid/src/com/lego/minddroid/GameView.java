@@ -51,6 +51,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		private Drawable mIconWhite;
 
 		private Bitmap mTarget;
+		
+		private Bitmap mTargetInactive;
 
 		private Bitmap mActionButton;
 
@@ -144,6 +146,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			// we don't need to transform it and it's faster to draw this way
 			mIconWhite = context.getResources().getDrawable(R.drawable.white);
 			mTarget = BitmapFactory.decodeResource(res, R.drawable.target_no_orange_dot);
+			mTargetInactive = BitmapFactory.decodeResource(res, R.drawable.target);
 			mActionButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_up);
 			mActionDownButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_down);
 			mBackgroundImage = BitmapFactory.decodeResource(res, R.drawable.background_1);
@@ -205,6 +208,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 * Draws move indicator, button and background to the provided Canvas.
 		 */
 		private void doDraw(Canvas mCanvas) {
+			 
+			if (!mActivity.connected){
+				
+				// draw the background
+				mCanvas.drawBitmap(mBackgroundImage, 0, 0, null);
+				//draw pressed action button
+				mCanvas.drawBitmap(mActionDownButton, 0, mCanvasHeight - mActionButton.getHeight(), null);
+				//draw icon in goal
+				// draw the goal
+				mCanvas.drawBitmap(mTargetInactive, (mCanvasWidth - mTarget.getWidth()) / 2,
+						((mCanvasHeight - mActionButton.getHeight()) / 2) - (mTarget.getHeight() / 2), null);
+			}else{
+			
+			
 			// Draw the background image. Operations on the Canvas accumulate
 			if (isInGoal()) { // icon is in goal
 				mInGoal = true;
@@ -267,6 +284,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 						((int) mY + mGrowAdjust / 2));
 				mPulsingTiltIcon.draw(mCanvas);
 
+			}
 			}
 
 		}
@@ -446,7 +464,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				GOAL_HEIGHT = mCanvasHeight / temp_ratio;
 
 				mTarget = Bitmap.createScaledBitmap(mTarget, GOAL_WIDTH, GOAL_HEIGHT, true);
-
+				mTargetInactive = Bitmap.createScaledBitmap(mTargetInactive, GOAL_WIDTH, GOAL_HEIGHT, true);
 			}
 		}
 

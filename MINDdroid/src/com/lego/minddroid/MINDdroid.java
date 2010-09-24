@@ -62,7 +62,7 @@ public class MINDdroid extends Activity
     private long timeDataSent = 0;
     private BTCommunicator myBTCommunicator = null;
     private Toast reusableToast;
-    private boolean connected = false;
+    boolean connected = false;
     private ProgressDialog connectingProgressDialog;
     private Handler btcHandler;
     private Menu myMenu;
