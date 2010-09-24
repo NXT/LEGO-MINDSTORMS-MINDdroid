@@ -51,8 +51,9 @@ public class MINDdroid extends Activity
     public static final int MENU_INFO = Menu.FIRST;
     public static final int MENU_CONNECT = Menu.FIRST + 1;
     public static final int MENU_QUIT = Menu.FIRST + 2;
-
-    private SensorManager sensorManager;
+    //buffer to avoid interference with the accelerometer
+	public static final long DELAY_FOR_SOUND = 1000;
+	private SensorManager sensorManager;
     private boolean runWithEmulator = false;
     private SeekBar pitchSeekBar;
     private SeekBar rollSeekBar;
@@ -62,7 +63,7 @@ public class MINDdroid extends Activity
     private long timeDataSent = 0;
     private BTCommunicator myBTCommunicator = null;
     private Toast reusableToast;
-    boolean connected = false;
+     boolean connected = false;
     private ProgressDialog connectingProgressDialog;
     private Handler btcHandler;
     private Menu myMenu;
@@ -77,15 +78,16 @@ public class MINDdroid extends Activity
     {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        StartSound mySound = new StartSound(this);
+        mySound.start();
 		// setup our view, give it focus and display.
 		mView = new GameView(getApplicationContext(), this);
 		mView.setFocusable(true);
 		setContentView(mView);
         reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
-        // at the moment disabled because of interference with the accelerometer
-        // StartSound mySound = new StartSound(this);
-        // mySound.start();
+        
+        
     }
 
 
@@ -128,14 +130,13 @@ public class MINDdroid extends Activity
 
 
     public void actionButtonPressed() {
-        if (myBTCommunicator != null) {           
+        if (myBTCommunicator != null)            
             // sendBTCmessage(BTCommunicator.ACTION, 440);
             mView.getThread().mActionPressed=true;
             // will have to implement a seperate thread for waiting a special time
             // the below implemented commands don't work correctly
             // sendBTCmessage(BTCommunicator.MOTOR_RESET, BTCommunicator.MOTOR_B);
             sendBTCmessage(BTCommunicator.MOTOR_B_ACTION, 200);
-        }
     }
 
 
