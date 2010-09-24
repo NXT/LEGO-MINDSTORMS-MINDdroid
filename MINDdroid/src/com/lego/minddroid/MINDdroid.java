@@ -138,6 +138,16 @@ public class MINDdroid extends Activity
         }
     }
 
+    
+    public void updateMotorControl(int left, int right) {
+   
+        if (myBTCommunicator != null) {
+          
+            // send messages via the handler
+            sendBTCmessage(BTCommunicator.MOTOR_A, left);
+            sendBTCmessage(BTCommunicator.MOTOR_C, right);
+        }
+    }
 
     public void updateMotorControl(float pitch, float roll) {
         int left = 0;

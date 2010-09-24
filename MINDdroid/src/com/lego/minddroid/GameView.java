@@ -38,6 +38,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 */
 		boolean mInGoal = true;
 
+		/** stop pulsing in areas that won't command the motors to move*/
+		boolean mNoMotion=false;
 		/**
 		 * to notify users when leaving goal
 		 */
@@ -276,6 +278,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				if (mLastTime > mNextPulse) {
 
 					mPulsingTiltIcon = mPulsingTiltIcon == mIconOrange ? mIconWhite : mIconOrange;
+					if (mNoMotion){
+						mPulsingTiltIcon=mIconOrange;
+					}
 					mNextPulse = mPulsingTiltIcon == mIconOrange ? mLastTime + calcNextPulse() : mLastTime + 90;
 					//Log.i(TAG, "next pulse " + (nextPulse - mLastTime));
 				}
@@ -325,6 +330,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
+		
 		@Override
 		public void run() {
 			Log.d(TAG, "--run--");
@@ -337,7 +343,21 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				if (mElapsedSinceDraw > REDRAW_SCHED) {
 				    
 				    if ((mElapsedSinceNXTCommand > MINDdroid.UPDATE_TIME) && (mNumAc > 0)) {
-					    mActivity.updateMotorControl(-mNumAcY/mNumAc, -mNumAcX/mNumAc);
+					    
+				        int left = 0;
+				        int right = 0;
+				        
+
+				        if (Math.abs(-mNumAcY/mNumAc) >= 10) {
+				            left = (int) Math.round(3.3*-mNumAcY/mNumAc * (1.0 + (-mNumAcX/mNumAc) / 90.0));
+				            right = (int) Math.round(3.3*-mNumAcY/mNumAc * (1.0 - (-mNumAcX/mNumAc) / 90.0));                
+				        }   
+				        mActivity.updateMotorControl(left, right);
+				        mNoMotion= (left==0 && right ==0)?true:false;
+				    	 
+					    
+					    
+					    
 					    mNumAcX=0;
 					    mNumAcY=0;
 					    mElapsedSinceNXTCommand = 0;
