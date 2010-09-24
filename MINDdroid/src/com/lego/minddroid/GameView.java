@@ -577,7 +577,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		Log.d(TAG, " ~~~~~~~ UIView ~~~~~~~~");
 		mActivity = uiActivity;
 		mSensorManager = (SensorManager) mActivity.getSystemService(Context.SENSOR_SERVICE);
-
+		thread.mLastTime=MINDdroid.DELAY_FOR_SOUND;
 		// register our interest in hearing about changes to our surface
 		SurfaceHolder holder = getHolder();
 		holder.setKeepScreenOn(true);
