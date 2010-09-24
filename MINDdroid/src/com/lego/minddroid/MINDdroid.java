@@ -124,7 +124,6 @@ public class MINDdroid extends Activity
             myBTCommunicator = null;
         }
         connected = false;
-        updateButtonsAndMenu();
     }
 
 
@@ -217,6 +216,7 @@ public class MINDdroid extends Activity
                 }
                 else {
                     destroyBTCommunicator();
+                    updateButtonsAndMenu();
                 }
                 return true;  
             case MENU_QUIT:
