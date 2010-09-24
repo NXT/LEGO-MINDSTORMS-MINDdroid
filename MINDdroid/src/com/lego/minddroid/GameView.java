@@ -580,6 +580,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		// register our interest in hearing about changes to our surface
 		SurfaceHolder holder = getHolder();
+		holder.setKeepScreenOn(true);
 		holder.addCallback(this);
 
 		// create thread only; it's started in surfaceCreated()
