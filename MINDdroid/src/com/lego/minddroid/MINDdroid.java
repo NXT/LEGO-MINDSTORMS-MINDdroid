@@ -51,8 +51,6 @@ public class MINDdroid extends Activity
     public static final int MENU_INFO = Menu.FIRST;
     public static final int MENU_CONNECT = Menu.FIRST + 1;
     public static final int MENU_QUIT = Menu.FIRST + 2;
-    //buffer to avoid interference with the accelerometer
-	public static final long DELAY_FOR_SOUND = 1000;
 	private SensorManager sensorManager;
     private boolean runWithEmulator = false;
     private SeekBar pitchSeekBar;
