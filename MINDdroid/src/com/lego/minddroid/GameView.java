@@ -211,7 +211,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 */
 		private void doDraw(Canvas mCanvas) {
 			 
-			if (!mActivity.connected){
+			if (!mActivity.isConnected()){
 				
 				// draw the background
 				mCanvas.drawBitmap(mBackgroundImage, 0, 0, null);
@@ -344,19 +344,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 				    
 				    if ((mElapsedSinceNXTCommand > MINDdroid.UPDATE_TIME) && (mNumAc > 0)) {
 					    
-				        int left = 0;
-				        int right = 0;
-				        
 
-				        if (Math.abs(-mNumAcY/mNumAc) >= 10) {
-				            left = (int) Math.round(3.3*-mNumAcY/mNumAc * (1.0 + (-mNumAcX/mNumAc) / 90.0));
-				            right = (int) Math.round(3.3*-mNumAcY/mNumAc * (1.0 - (-mNumAcX/mNumAc) / 90.0));                
-				        }   
-				        mActivity.updateMotorControl(left, right);
-				        mNoMotion= (left==0 && right ==0)?true:false;
+//                      Please don't do motor calculations here, that's definitely not the task of the UI
+//				        int left = 0;
+//				        int right = 0;
+//				        
+
+//				        if (Math.abs(-mNumAcY/mNumAc) >= 10) {
+//				            left = (int) Math.round(3.3*-mNumAcY/mNumAc * (1.0 + (-mNumAcX/mNumAc) / 90.0));
+//				            right = (int) Math.round(3.3*-mNumAcY/mNumAc * (1.0 - (-mNumAcX/mNumAc) / 90.0));                
+//				        }   
+//				        mActivity.updateMotorControl(left, right);
+//				        mNoMotion= (left==0 && right ==0)?true:false;
 				    	 
-					    
-					    
+					    mActivity.updateMotorControl(-mNumAcY/mNumAc, -mNumAcX/mNumAc);					    
 					    
 					    mNumAcX=0;
 					    mNumAcY=0;
