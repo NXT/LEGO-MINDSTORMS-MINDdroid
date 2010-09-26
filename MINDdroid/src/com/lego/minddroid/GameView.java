@@ -25,7 +25,7 @@ import android.view.SurfaceView;
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	class GameThread extends Thread {
-	    /** time between each redraw */
+		/** time between each redraw */
 		private static final int REDRAW_SCHED = 100;
 		private int ICON_MAX_SIZE;
 		private int ICON_MIN_SIZE;
@@ -38,8 +38,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 */
 		boolean mInGoal = true;
 
-		/** stop pulsing in areas that won't command the motors to move*/
-		boolean mNoMotion=false;
+		/** stop pulsing in areas that won't command the motors to move */
+		boolean mNoMotion = false;
 		/**
 		 * to notify users when leaving goal
 		 */
@@ -53,7 +53,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		private Drawable mIconWhite;
 
 		private Bitmap mTarget;
-		
+
 		private Bitmap mTargetInactive;
 
 		private Bitmap mActionButton;
@@ -110,7 +110,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 * track how long since we redrew screen
 		 */
 		long mElapsedSinceDraw = 0;
-		
+
 		/**
 		 * track how long since we redrew screen
 		 */
@@ -131,11 +131,33 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		/** was action button just pressed */
 		boolean mActionPressed = false;
-		
+
 		/** */
-		boolean mToNXT=false;
-		
-		
+		boolean mToNXT = false;
+
+		/** buffers for averaging to hold calculated screen position */
+		private float mNumX;
+		private float mNumY;
+
+		/** buffers to hold tilt readings for averaging */
+		float mNumAcX;
+		float mNumAcY;
+
+		/** number of tilt readings since last draw */
+		private int mNum = 0;
+
+		/** number of tilt readings since last draw */
+		private int mNumAc = 0;
+
+		/** mX value buffer for time between two draws ago and last draw */
+		private float mPreviousNumX;
+
+		/** mY value buffer for time between two draws ago and last draw **/
+		private float mPreviousNumY;
+
+		/** number of tilt readings for time between two draws ago and last draw **/
+		private int mPreviousNum = 0;
+
 		public GameThread(SurfaceHolder surfaceHolder, Context context, Vibrator vibrator, Handler handler) {
 			// get handles to some important objects
 			mHapticFeedback = vibrator;
@@ -210,86 +232,85 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 * Draws move indicator, button and background to the provided Canvas.
 		 */
 		private void doDraw(Canvas mCanvas) {
-			 
-			if (!mActivity.isConnected()){
-				
+
+			if (!mActivity.isConnected()) {
+
 				// draw the background
 				mCanvas.drawBitmap(mBackgroundImage, 0, 0, null);
 				//draw pressed action button
 				mCanvas.drawBitmap(mActionDownButton, 0, mCanvasHeight - mActionButton.getHeight(), null);
 				//draw icon in goal
 				// draw the goal
-				mCanvas.drawBitmap(mTargetInactive, (mCanvasWidth - mTarget.getWidth()) / 2,
-						((mCanvasHeight - mActionButton.getHeight()) / 2) - (mTarget.getHeight() / 2), null);
-			}else{
-			
-			
-			// Draw the background image. Operations on the Canvas accumulate
-			if (isInGoal()) { // icon is in goal
-				mInGoal = true;
-				mGrowAdjust = calcGrowAdjust(mX, mY);
-			} else {
-				mGrowAdjust = ICON_MAX_SIZE;
-				if (mInGoal) {// was in goal before
-					mInGoal = false;
-					vibrate();
-
-				}
-
-			}
-
-			// draw the background
-			mCanvas.drawBitmap(mBackgroundImage, 0, 0, null);
-
-			// draw the action button
-			mCanvas.drawBitmap(mActionPressed ? mActionDownButton : mActionButton, 0, mCanvasHeight - mActionButton.getHeight(), null);
-			mActionPressed = false;
-
-			// draw the goal
-			mCanvas.drawBitmap(mTarget, (mCanvasWidth - mTarget.getWidth()) / 2,
-					((mCanvasHeight - mActionButton.getHeight()) / 2) - (mTarget.getHeight() / 2), null);
-
-			// update the icon location and draw (or blink) it
-			if (mInGoal) {
-
-				mIconOrange.setBounds((int) mX - (mGrowAdjust / 2), (int) mY - ((mGrowAdjust / 2)), ((int) mX + (mGrowAdjust / 2)), (int) mY
-						+ (mGrowAdjust / 2));
-				mIconOrange.draw(mCanvas);
-
+				mCanvas.drawBitmap(mTargetInactive, (mCanvasWidth - mTarget.getWidth()) / 2, ((mCanvasHeight - mActionButton.getHeight()) / 2)
+						- (mTarget.getHeight() / 2), null);
 			} else {
 
-				// boundary checking, don't want the move_icon going off-screen.
-				if (mX + ICON_MAX_SIZE / 2 >= mCanvasWidth) {// set at outer edge
+				// Draw the background image. Operations on the Canvas accumulate
+				if (thread.isInGoal()) { // icon is in goal
+					mInGoal = true;
+					mGrowAdjust = calcGrowAdjust(mX, mY);
+				} else {
+					mGrowAdjust = ICON_MAX_SIZE;
+					if (mInGoal) {// was in goal before
+						mInGoal = false;
+						vibrate();
 
-					mX = mCanvasWidth - (ICON_MAX_SIZE / 2);
-				} else if (mX - (ICON_MAX_SIZE / 2) < 0) {
-					mX = ICON_MAX_SIZE / 2;
-				}
-
-				// boundary checking, don't want the move_icon rolling
-				// off-screen.
-				if (mY + ICON_MAX_SIZE / 2 >= (mCanvasHeight - mActionButton.getHeight())) {// set at outer edge
-
-					mY = mCanvasHeight - mActionButton.getHeight() - ICON_MAX_SIZE / 2;
-				} else if (mY - ICON_MAX_SIZE / 2 < 0) {
-					mY = ICON_MAX_SIZE / 2;
-				}
-
-				if (mLastTime > mNextPulse) {
-
-					mPulsingTiltIcon = mPulsingTiltIcon == mIconOrange ? mIconWhite : mIconOrange;
-					if (mNoMotion){
-						mPulsingTiltIcon=mIconOrange;
 					}
-					mNextPulse = mPulsingTiltIcon == mIconOrange ? mLastTime + calcNextPulse() : mLastTime + 90;
-					//Log.i(TAG, "next pulse " + (nextPulse - mLastTime));
+
 				}
 
-				mPulsingTiltIcon.setBounds((int) mX - (mGrowAdjust / 2), (int) mY - (mGrowAdjust / 2), ((int) mX + mGrowAdjust / 2),
-						((int) mY + mGrowAdjust / 2));
-				mPulsingTiltIcon.draw(mCanvas);
+				// draw the background
+				mCanvas.drawBitmap(mBackgroundImage, 0, 0, null);
 
-			}
+				// draw the action button
+				mCanvas.drawBitmap(mActionPressed ? mActionDownButton : mActionButton, 0, mCanvasHeight - mActionButton.getHeight(), null);
+				mActionPressed = false;
+
+				// draw the goal
+				mCanvas.drawBitmap(mTarget, (mCanvasWidth - mTarget.getWidth()) / 2,
+						((mCanvasHeight - mActionButton.getHeight()) / 2) - (mTarget.getHeight() / 2), null);
+
+				// update the icon location and draw (or blink) it
+				if (mInGoal) {
+
+					mIconOrange.setBounds((int) mX - (mGrowAdjust / 2), (int) mY - ((mGrowAdjust / 2)), ((int) mX + (mGrowAdjust / 2)), (int) mY
+							+ (mGrowAdjust / 2));
+					mIconOrange.draw(mCanvas);
+
+				} else {
+
+					// boundary checking, don't want the move_icon going off-screen.
+					if (mX + ICON_MAX_SIZE / 2 >= mCanvasWidth) {// set at outer edge
+
+						mX = mCanvasWidth - (ICON_MAX_SIZE / 2);
+					} else if (mX - (ICON_MAX_SIZE / 2) < 0) {
+						mX = ICON_MAX_SIZE / 2;
+					}
+
+					// boundary checking, don't want the move_icon rolling
+					// off-screen.
+					if (mY + ICON_MAX_SIZE / 2 >= (mCanvasHeight - mActionButton.getHeight())) {// set at outer edge
+
+						mY = mCanvasHeight - mActionButton.getHeight() - ICON_MAX_SIZE / 2;
+					} else if (mY - ICON_MAX_SIZE / 2 < 0) {
+						mY = ICON_MAX_SIZE / 2;
+					}
+
+					if (mLastTime > mNextPulse) {
+
+						mPulsingTiltIcon = mPulsingTiltIcon == mIconOrange ? mIconWhite : mIconOrange;
+						if (mNoMotion) {
+							mPulsingTiltIcon = mIconOrange;
+						}
+						mNextPulse = mPulsingTiltIcon == mIconOrange ? mLastTime + calcNextPulse() : mLastTime + 90;
+						//Log.i(TAG, "next pulse " + (nextPulse - mLastTime));
+					}
+
+					mPulsingTiltIcon.setBounds((int) mX - (mGrowAdjust / 2), (int) mY - (mGrowAdjust / 2), ((int) mX + mGrowAdjust / 2),
+							((int) mY + mGrowAdjust / 2));
+					mPulsingTiltIcon.draw(mCanvas);
+
+				}
 			}
 
 		}
@@ -330,39 +351,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 		}
 
-		
 		@Override
 		public void run() {
 			Log.d(TAG, "--run--");
 			while (mRun) {
 
 				updateTime();
-				updateMoveIndicator(mAccelX, mAccelY);
-				
-				
+				thread.updateMoveIndicator(mAccelX, mAccelY);
+
 				if (mElapsedSinceDraw > REDRAW_SCHED) {
-				    
-				    if ((mElapsedSinceNXTCommand > MINDdroid.UPDATE_TIME) && (mNumAc > 0)) {
-					    
 
-//                      Please don't do motor calculations here, that's definitely not the task of the UI
-//				        int left = 0;
-//				        int right = 0;
-//				        
+					if ((mElapsedSinceNXTCommand > MINDdroid.UPDATE_TIME) && (mNumAc > 0)) {
 
-//				        if (Math.abs(-mNumAcY/mNumAc) >= 10) {
-//				            left = (int) Math.round(3.3*-mNumAcY/mNumAc * (1.0 + (-mNumAcX/mNumAc) / 90.0));
-//				            right = (int) Math.round(3.3*-mNumAcY/mNumAc * (1.0 - (-mNumAcX/mNumAc) / 90.0));                
-//				        }   
-//				        mActivity.updateMotorControl(left, right);
-//				        mNoMotion= (left==0 && right ==0)?true:false;
-				    	 
-					    mActivity.updateMotorControl(-mNumAcY/mNumAc, -mNumAcX/mNumAc);					    
-					    
-					    mNumAcX=0;
-					    mNumAcY=0;
-					    mElapsedSinceNXTCommand = 0;
-					    mNumAc=0;
+						mActivity.updateMotorControl(-mNumAcY / mNumAc, -mNumAcX / mNumAc);
+
+						mNumAcX = 0;
+						mNumAcY = 0;
+						mElapsedSinceNXTCommand = 0;
+						mNumAc = 0;
 					}
 
 					mX = ((mNumX / mNum) + (mPreviousNumX / mPreviousNum)) / 2;
@@ -377,14 +383,13 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					mNum = 0;
 
 					mAvCount = 0;
-				    
-				    
+
 					Canvas c = null;
 					try {
 						c = mSurfaceHolder.lockCanvas(null);
 						synchronized (mSurfaceHolder) {
 							doDraw(c);
-							
+
 						}
 					} finally {
 						// do this in a finally so that if an exception is
@@ -417,8 +422,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			}
 			return map;
 		}
-		
-			
+
 		/**
 		 * Used to signal the thread whether it should be running or not.
 		 * Passing true allows the thread to run; passing false will shut it
@@ -524,6 +528,36 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		}
 
+		void updateMoveIndicator(float mAcX, float mAcY) {
+
+			mX = ((mCanvasWidth / 2)) + (int) ((mAcX / 10) * (mCanvasWidth / 10));
+			mNumX += mX;
+			mNumAcX += mAcX;
+
+			mY = (((mCanvasHeight - mActionButton.getHeight()) / 2)) + (int) ((mAcY / 10) * ((mCanvasHeight - mActionButton.getHeight()) / 10));
+			mNumY += mY;
+			mNumAcY += mAcY;
+
+			mAvCount++;
+			mNum++;
+			mNumAc++;
+
+		}
+
+		public boolean isInGoal() {
+
+			if ((mCanvasWidth - mTarget.getWidth()) / 2 > mX || (mCanvasWidth + mTarget.getWidth()) / 2 < mX) {// x is not within goal
+
+				return false;
+			}
+
+			if (((mCanvasHeight - (mActionButton.getHeight() + (GOAL_HEIGHT))) / 2 > mY || ((mCanvasHeight - mActionButton.getHeight()) + (GOAL_HEIGHT)) / 2 < mY)) {
+				return false;
+			}
+
+			return true;
+		}
+
 	}
 
 	/** used for logging */
@@ -546,29 +580,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private float mAccelY = 0;
 	private float mAccelZ = 0; // heading
 
-	/** buffers for averaging to hold calculated screen position */
-	private float mNumX;
-	private float mNumY;
-	
-	/** buffers to hold tilt readings for averaging */
-	float mNumAcX;
-	float mNumAcY;
-	
-
-	/** number of tilt readings since last draw */
-	private int mNum = 0;
-	
-	/** number of tilt readings since last draw */
-	private int mNumAc =0;
-
-	/** mX value buffer for time between two draws ago and last draw */
-	private float mPreviousNumX;
-
-	/** mY value buffer for time between two draws ago and last draw **/
-	private float mPreviousNumY;
-
-	/** number of tilt readings for time between two draws ago and last draw **/
-	private int mPreviousNum = 0;
 	/** Message handler used by thread to interact with TextView */
 
 	private final SensorEventListener mSensorAccelerometer = new SensorEventListener() {
@@ -617,22 +628,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public GameThread getThread() {
 		return thread;
-	}
-
-	public boolean isInGoal() {
-
-		if ((getThread().mCanvasWidth - getThread().mTarget.getWidth()) / 2 > getThread().mX
-				|| (getThread().mCanvasWidth + getThread().mTarget.getWidth()) / 2 < getThread().mX) {// x is not within goal
-
-			return false;
-		}
-
-		if (((getThread().mCanvasHeight - (getThread().mActionButton.getHeight() + (getThread().GOAL_HEIGHT))) / 2 > getThread().mY || ((getThread().mCanvasHeight - getThread().mActionButton
-				.getHeight()) + (getThread().GOAL_HEIGHT)) / 2 < getThread().mY)) {
-			return false;
-		}
-
-		return true;
 	}
 
 	@Override
@@ -690,23 +685,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public void unregisterListener() {
 		mSensorManager.unregisterListener(mSensorAccelerometer);
-
-	}
-	
-	private void updateMoveIndicator(float mAcX, float mAcY) {
-
-		getThread().mX = ((getThread().mCanvasWidth / 2)) + (int) ((mAcX / 10) * (getThread().mCanvasWidth / 10));
-		mNumX += getThread().mX;
-		mNumAcX+=mAcX;
-
-		getThread().mY = (((getThread().mCanvasHeight - getThread().mActionButton.getHeight()) / 2))
-				+ (int) ((mAcY / 10) * ((getThread().mCanvasHeight - getThread().mActionButton.getHeight()) / 10));
-		mNumY += getThread().mY;
-		mNumAcY+=mAcY;
-
-		getThread().mAvCount++;
-		mNum++;
-		mNumAc++;
 
 	}
 
