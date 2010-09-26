@@ -30,6 +30,7 @@ public class StartSound extends Thread
     public void run() {
         MediaPlayer mp = MediaPlayer.create(myContext, R.raw.startdroid);
         mp.start();
+        mp.setVolume(0.3f, 0.3f);
         try {
             Thread.sleep(2000);
         }
