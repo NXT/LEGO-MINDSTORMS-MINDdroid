@@ -49,6 +49,8 @@ public class BTCommunicator extends Thread
     public static final int STATE_CONNECTERROR = 1002;
 
     private static final UUID SERIAL_PORT_SERVICE_CLASS_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    // this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
+    private static final String OUI_LEGO = "00:16:53";
 
     private BluetoothAdapter btAdapter;
     private BluetoothSocket nxtBTsocket = null;
@@ -92,9 +94,11 @@ public class BTCommunicator extends Thread
             Set<BluetoothDevice> bondedDevices = btAdapter.getBondedDevices();
             BluetoothDevice nxtDevice = null;
          
+            // instead of asking the friendly Bluetooth name we just 
+            // search for the first LEGO device, identified by the OUI
             for (BluetoothDevice bluetoothDevice : bondedDevices)
             {
-                if (bluetoothDevice.getName().equals(myNXTName.toString())) {
+                if (bluetoothDevice.getAddress().indexOf(OUI_LEGO) == 0) {
                     nxtDevice = bluetoothDevice;
                     break;
                 }
