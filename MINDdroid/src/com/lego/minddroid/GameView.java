@@ -38,8 +38,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 */
 		boolean mInGoal = true;
 
-		/** stop pulsing in areas that won't command the motors to move */
-		boolean mNoMotion = false;
 		/**
 		 * to notify users when leaving goal
 		 */
@@ -299,9 +297,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					if (mLastTime > mNextPulse) {
 
 						mPulsingTiltIcon = mPulsingTiltIcon == mIconOrange ? mIconWhite : mIconOrange;
-						if (mNoMotion) {
-							mPulsingTiltIcon = mIconOrange;
-						}
+						 
 						mNextPulse = mPulsingTiltIcon == mIconOrange ? mLastTime + calcNextPulse() : mLastTime + 90;
 						//Log.i(TAG, "next pulse " + (nextPulse - mLastTime));
 					}
