@@ -17,25 +17,25 @@ import android.util.Log;
 
 public class StartSound extends Thread {
 	private Context myContext;
-	AudioManager mAudioManager;
+	AudioManager myAudioManager;
 
 	public StartSound(Context myContext) {
 		this.myContext = myContext;
-		mAudioManager = (AudioManager) myContext.getSystemService(Context.AUDIO_SERVICE);
+		myAudioManager = (AudioManager) myContext.getSystemService(Context.AUDIO_SERVICE);
 	}
 
 	@Override
 	public void run() {
-		if (mAudioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
-			int i=mAudioManager.getStreamVolume(AudioManager.STREAM_RING);	
-			MediaPlayer mp = MediaPlayer.create(myContext, R.raw.startdroid);
-			mp.start();
-			mp.setVolume( ((float)i)/10f,  ((float)i)/10f);
+		if (myAudioManager.getRingerMode() != AudioManager.RINGER_MODE_SILENT) {
+			int ringVolume = myAudioManager.getStreamVolume(AudioManager.STREAM_RING);	
+			MediaPlayer myMediaPlayer = MediaPlayer.create(myContext, R.raw.startdroid);
+			myMediaPlayer.start();
+			myMediaPlayer.setVolume( ((float) ringVolume)/10f,  ((float) ringVolume)/10f);
 			try {
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 			}
-			mp.stop();
+			myMediaPlayer.stop();
 		}
 	}
 }
