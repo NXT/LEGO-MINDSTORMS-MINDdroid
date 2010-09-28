@@ -149,6 +149,12 @@ public class BTCommunicator extends Thread
     }
 
 
+    private void startProgram(String programName) {
+        byte[] message = LCPMessage.getProgramMessage(programName);
+        sendMessage(message);
+    }
+
+
     private void changeMotorSpeed(int motor, int speed) {
         if (speed > 100) 
             speed = 100;
@@ -167,8 +173,8 @@ public class BTCommunicator extends Thread
                                         (byte) 0x80, (byte) 0x04, (byte) 0x01, (byte) 0x64, (byte) 0x03, (byte) 0x00, 
                                         (byte) 0x00, (byte) 0x20, (byte) 0xB4, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
         sendMessage(message);
-    }
-
+    }    
+    
 
     private void reset(int motor) {
         byte[] message = LCPMessage.getResetMessage(motor);
@@ -238,7 +244,8 @@ public class BTCommunicator extends Thread
                     reset(myMessage.getData().getInt("value"));
                     break;
                 case ACTION:
-                    doBeep(myMessage.getData().getInt("value"), 1000);
+                    //doBeep(myMessage.getData().getInt("value"), 1000);
+                    startProgram("action.rxe");
                     break;
                 case DISCONNECT:
                     destroyNXTConnection();

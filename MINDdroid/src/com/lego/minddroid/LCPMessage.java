@@ -14,6 +14,7 @@ package com.lego.minddroid;
   General Public License for more details.
 */
 
+import android.util.Log;
 
 /**
  * Class for composing the proper messages for simple 
@@ -32,10 +33,10 @@ public class LCPMessage {
         message[2] = (byte) 0x80;
         message[3] = (byte) 0x03;
         // Frequency for the tone, Hz (UWORD); Range: 200-14000 Hz
-        message[4] = (byte) (frequency & 0xff);
+        message[4] = (byte) frequency;
         message[5] = (byte) (frequency >> 8);
         // Duration of the tone, ms (UWORD)
-        message[6] = (byte) (duration & 0xff);
+        message[6] = (byte) duration;
         message[7] = (byte) (duration >> 8);
 
         return message;
@@ -52,7 +53,7 @@ public class LCPMessage {
         message[2] = (byte) 0x80;
         message[3] = (byte) 0x04;
         // Output port
-        message[4] = (byte)(motor & 0xff);
+        message[4] = (byte) motor;
         if (speed == 0) {
             message[5] = 0;
             message[6] = 0;
@@ -86,11 +87,12 @@ public class LCPMessage {
     // this message doesn't work correctly at the moment on the NXT
     public static byte[] getMotorMessage(int motor, int speed, int end) {
         byte[] message = getMotorMessage(motor, speed);
+
         // TachoLimit
-        message[10] = (byte) (end & 0xff);
-        message[11] = (byte) ((end >> 8) & 0xff);
-        message[12] = (byte) ((end >> 16) & 0xff);
-        message[13] = (byte) ((end >> 24) & 0xff);
+        message[10] = (byte) end;
+        message[11] = (byte) (end >> 8);
+        message[12] = (byte) (end >> 16);
+        message[13] = (byte) (end >> 24);
 
         return message;
     }
@@ -106,11 +108,28 @@ public class LCPMessage {
         message[2] = (byte) 0x80;
         message[3] = (byte) 0x0A;
         // Output port
-        message[4] = (byte)(motor & 0xff);
+        message[4] = (byte) motor;
         // absolute position
         message[5] = 0;
 
         return message;
     }
+
+    public static byte[] getProgramMessage(String programName) {
+        byte[] message = new byte[24];
+    
+        // message length    
+        message[0] = 22;
+        message[1] = 0;
+        // Direct command telegram, no response
+        message[2] = (byte) 0x80;
+        message[3] = (byte) 0x00;
+        // copy programName and end with 0 delimiter
+        for (int pos=0; pos<programName.length(); pos++) 
+            message[4+pos] = (byte) programName.charAt(pos);
+        message[programName.length()+4] = 0;
+
+        return message;
+    } 
 
 }

@@ -141,7 +141,7 @@ public class MINDdroid extends Activity
             // will have to implement a seperate thread for waiting a special time
             // the below implemented commands don't work correctly
             // sendBTCmessage(BTCommunicator.MOTOR_RESET, BTCommunicator.MOTOR_B);
-            sendBTCmessage(BTCommunicator.MOTOR_B_ACTION, 200);
+            sendBTCmessage(BTCommunicator.ACTION, 0);
         }
     }
 
