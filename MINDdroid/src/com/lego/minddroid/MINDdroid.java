@@ -258,7 +258,8 @@ public class MINDdroid extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_INFO:
-                showAboutDialog();
+                Info.show(this);
+                // showAboutDialog();
                 return true;       
             case MENU_CONNECT:
                 if (myBTCommunicator == null) {

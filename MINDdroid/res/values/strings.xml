@@ -16,4 +16,5 @@
     <string name="eula_title">End User License Agreement</string>
     <string name="eula_accept">Accept</string>
     <string name="eula_refuse">Refuse</string>
+    <string name="info_ok">OK</string>
 </resources>

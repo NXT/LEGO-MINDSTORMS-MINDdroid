@@ -60,6 +60,7 @@ public final class R {
         public static final int eula_refuse=0x7f05000f;
         public static final int eula_title=0x7f05000d;
         public static final int info=0x7f050003;
+        public static final int info_ok=0x7f050010;
         public static final int no_paired_nxt=0x7f050009;
         public static final int nxt_default_name=0x7f050000;
         public static final int problem_at_closing=0x7f05000b;
