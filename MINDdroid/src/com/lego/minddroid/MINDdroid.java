@@ -74,6 +74,10 @@ public class MINDdroid extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        // class Eula added from http://code.google.com/p/apps-for-android/source/browse/trunk/DivideAndConquer/src/com/google/android/divideandconquer/Eula.java?r=93
+        // Tutorial see http://androiddevstudio.com/tutorials/adding-eula-to-android-app
+        Eula.show(this);
+    
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         StartSound mySound = new StartSound(this);

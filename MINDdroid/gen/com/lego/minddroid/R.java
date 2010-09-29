@@ -56,6 +56,9 @@ public final class R {
         public static final int connect=0x7f050004;
         public static final int connecting_please_wait=0x7f050008;
         public static final int disconnect=0x7f050005;
+        public static final int eula_accept=0x7f05000e;
+        public static final int eula_refuse=0x7f05000f;
+        public static final int eula_title=0x7f05000d;
         public static final int info=0x7f050003;
         public static final int no_paired_nxt=0x7f050009;
         public static final int nxt_default_name=0x7f050000;
