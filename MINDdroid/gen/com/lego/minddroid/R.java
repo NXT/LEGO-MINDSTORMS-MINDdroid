@@ -62,22 +62,24 @@ public final class R {
         public static final int app_name=0x7f050001;
         public static final int connect=0x7f050004;
         public static final int connecting_please_wait=0x7f050008;
-        public static final int credits=0x7f050013;
+        public static final int credits=0x7f050015;
+        public static final int current_position=0x7f05000e;
         public static final int disconnect=0x7f050005;
-        public static final int eula_accept=0x7f05000e;
-        public static final int eula_refuse=0x7f05000f;
-        public static final int eula_title=0x7f05000d;
+        public static final int eula_accept=0x7f050010;
+        public static final int eula_refuse=0x7f050011;
+        public static final int eula_title=0x7f05000f;
         public static final int info=0x7f050003;
-        public static final int info_ok=0x7f050010;
+        public static final int info_ok=0x7f050012;
         public static final int no_paired_nxt=0x7f050009;
         public static final int nxt_default_name=0x7f050000;
         public static final int problem_at_closing=0x7f05000b;
         public static final int problem_at_connecting=0x7f05000a;
+        public static final int problem_at_receiving=0x7f05000d;
         public static final int problem_at_sending=0x7f05000c;
         public static final int quit=0x7f050006;
-        public static final int start_button=0x7f050012;
+        public static final int start_button=0x7f050014;
         /**  Splash Menu 
          */
-        public static final int tutorial=0x7f050011;
+        public static final int tutorial=0x7f050013;
     }
 }

@@ -42,11 +42,13 @@ public class BTCommunicator extends Thread
     public static final int MOTOR_B_ACTION = 40;
     public static final int MOTOR_RESET = 10;
     public static final int ACTION=50;
+    public static final int READ_MOTOR_STATE=60;    
     public static final int DISCONNECT = 99;  
 
     public static final int DISPLAY_TOAST = 1000;
     public static final int STATE_CONNECTED = 1001;
     public static final int STATE_CONNECTERROR = 1002;
+    public static final int MOTOR_STATE = 1003;
 
     private static final UUID SERIAL_PORT_SERVICE_CLASS_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     // this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
@@ -61,15 +63,24 @@ public class BTCommunicator extends Thread
     private String myNXTName;
     private MINDdroid myMINDdroid;
 
+    private byte[] returnMessage;
+
     public BTCommunicator(MINDdroid myMINDdroid, Handler uiHandler, String myNXTName) {
         this.myMINDdroid = myMINDdroid;
         this.myNXTName = myNXTName;
         this.uiHandler = uiHandler;
     }
 
+
     public Handler getHandler() {
         return myHandler;
     }
+
+
+    public byte[] getReturnMessage() {
+        return returnMessage;
+    }
+    
 
     public boolean isBTAdapterEnabled() {
         // interestingly this has to be done by the UI thread
@@ -179,9 +190,32 @@ public class BTCommunicator extends Thread
     }
 
 
-    private void sendMessage(byte[] message) {
+    private void readMotorState(int motor) {
+        byte[] message = LCPMessage.getOutputStateMessage(motor);
+        if (sendMessage(message)) {
+            if (nxtDin != null) {
+                // read length of message and the message itself
+                int length;
+                try {
+                    length = nxtDin.readByte();
+                    length = (nxtDin.readByte()<<8) + length;
+                    returnMessage = new byte[length];                    
+                    nxtDin.read(returnMessage);
+                }               
+                catch (IOException e) {
+                    sendToast(myMINDdroid.getResources().getString(R.string.problem_at_receiving));
+                    return;
+                }    
+                if (length >= 25)
+                    sendState(MOTOR_STATE);
+            }       
+        }
+    }
+    
+
+    private boolean sendMessage(byte[] message) {
         if (nxtDos == null) {
-            return;
+            return false;
         }
 
         try {
@@ -191,8 +225,10 @@ public class BTCommunicator extends Thread
             nxtDos.writeByte(messageLength>>8);            
             nxtDos.write(message, 0, message.length);
             nxtDos.flush();        
+            return true;
         } catch (IOException ioe) { 
             sendToast(myMINDdroid.getResources().getString(R.string.problem_at_sending));
+            return false;
         }
     }        
         
@@ -220,7 +256,7 @@ public class BTCommunicator extends Thread
         sendBundle(myBundle);
     }
 
-       
+     
     private void sendBundle(Bundle myBundle) {
         Message myMessage = myHandler.obtainMessage();
         myMessage.setData(myBundle);
@@ -247,6 +283,9 @@ public class BTCommunicator extends Thread
                 case ACTION:
                     //doBeep(myMessage.getData().getInt("value"), 1000);
                     startProgram("action.rxe");
+                    break;
+                case READ_MOTOR_STATE:
+                    readMotorState(myMessage.getData().getInt("value"));
                     break;
                 case DISCONNECT:
                     destroyNXTConnection();

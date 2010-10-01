@@ -14,8 +14,6 @@ package com.lego.minddroid;
   General Public License for more details.
 */
 
-import android.util.Log;
-
 /**
  * Class for composing the proper messages for simple 
  * communication over bluetooth
@@ -78,7 +76,7 @@ public class LCPMessage {
 
     }
 
-    // this message doesn't work correctly at the moment on the NXT
+
     public static byte[] getMotorMessage(int motor, int speed, int end) {
         byte[] message = getMotorMessage(motor, speed);
 
@@ -106,6 +104,7 @@ public class LCPMessage {
         return message;
     }
 
+
     public static byte[] getProgramMessage(String programName) {
         byte[] message = new byte[22];
     
@@ -119,5 +118,19 @@ public class LCPMessage {
 
         return message;
     } 
+
+
+    public static byte[] getOutputStateMessage(int motor) {
+        byte[] message = new byte[3];
+    
+        // Direct command telegram, with response
+        message[0] = (byte) 0x00;
+        message[1] = (byte) 0x06;
+        // Output port
+        message[2] = (byte) motor;        
+
+        return message;
+    } 
+
 
 }

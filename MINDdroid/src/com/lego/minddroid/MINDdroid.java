@@ -129,7 +129,9 @@ public class MINDdroid extends Activity
             // will have to implement a seperate thread for waiting a special time
             // the below implemented commands don't work correctly
             // sendBTCmessage(BTCommunicator.MOTOR_RESET, BTCommunicator.MOTOR_B);
-            sendBTCmessage(BTCommunicator.ACTION, 0);
+
+            // sendBTCmessage(BTCommunicator.ACTION, 0);
+            sendBTCmessage(BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B);
         }
     }
 
@@ -297,8 +299,27 @@ public class MINDdroid extends Activity
                     connectingProgressDialog.dismiss();
                     updateButtonsAndMenu();
                     break;
+                case BTCommunicator.MOTOR_STATE: 
+                    if (myBTCommunicator != null) {
+                        byte[] motorMessage = myBTCommunicator.getReturnMessage();
+                        int position = byteToInt(motorMessage[21]) + 
+                            (byteToInt(motorMessage[22]) << 8) + 
+                            (byteToInt(motorMessage[23]) << 16) + 
+                            (byteToInt(motorMessage[24]) << 24);
+                            showToast(getResources().getString(R.string.current_position) + position);
+                    }
+                    break;                           
             }
         }
     };
+
+
+    private int byteToInt(byte byteValue) {
+        int intValue = (int) (byteValue & (byte) 0x7f);
+        if ((byteValue & (byte) 0x80) != 0)
+            intValue |= 0x80;
+        return intValue;
+    }        
+    
 
 }
