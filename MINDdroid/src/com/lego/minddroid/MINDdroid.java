@@ -68,7 +68,9 @@ public class MINDdroid extends Activity
 		mView = new GameView(getApplicationContext(), this);
 		mView.setFocusable(true);
 		setContentView(mView);
-        reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);        
+        reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT); 
+        // now start the bluetooth connection automatically
+        createBTCommunicator();       
     }
 
 
@@ -229,6 +231,7 @@ public class MINDdroid extends Activity
         myMenu.add(0, MENU_INFO, 1, getResources().getString(R.string.info)).setIcon(R.drawable.ic_menu_about);
         myMenu.add(0, MENU_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
         myMenu.add(0, MENU_QUIT, 3, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
+        updateButtonsAndMenu();
         return true;
     }
 

@@ -24,61 +24,55 @@ public class LCPMessage {
 
 
     public static byte[] getBeepMessage(int frequency, int duration) {
-        byte[] message = new byte[8];
+        byte[] message = new byte[6];
     
-        // message length    
-        message[0] = 6;
-        message[1] = 0;
         // Direct command telegram, no response
-        message[2] = (byte) 0x80;
-        message[3] = (byte) 0x03;
+        message[0] = (byte) 0x80;
+        message[1] = (byte) 0x03;
         // Frequency for the tone, Hz (UWORD); Range: 200-14000 Hz
-        message[4] = (byte) frequency;
-        message[5] = (byte) (frequency >> 8);
+        message[2] = (byte) frequency;
+        message[3] = (byte) (frequency >> 8);
         // Duration of the tone, ms (UWORD)
-        message[6] = (byte) duration;
-        message[7] = (byte) (duration >> 8);
+        message[4] = (byte) duration;
+        message[5] = (byte) (duration >> 8);
 
         return message;
     }
 
 
     public static byte[] getMotorMessage(int motor, int speed) {
-        byte[] message = new byte[14];
+        byte[] message = new byte[12];
 
-        // message length          
-        message[0] = 12;
-        message[1] = 0;
         // Direct command telegram, no response        
-        message[2] = (byte) 0x80;
-        message[3] = (byte) 0x04;
+        message[0] = (byte) 0x80;
+        message[1] = (byte) 0x04;
         // Output port
-        message[4] = (byte) motor;
+        message[2] = (byte) motor;
         if (speed == 0) {
+            message[3] = 0;
+            message[4] = 0;
             message[5] = 0;
             message[6] = 0;
             message[7] = 0;
-            message[8] = 0;
-            message[9] = 0;
         }
         else {
             // Power set option (Range: -100 - 100)
-            message[5] = (byte) speed;
+            message[3] = (byte) speed;
             // Mode byte (Bit-field): MOTORON
-            message[6] = 0x01;
+            message[4] = 0x01;
             // Regulation mode: REGULATION_MODE_MOTOR_SPEED
-            message[7] = 0x01;
+            message[5] = 0x01;
             // Turn Ratio (SBYTE; -100 - 100)
-            message[8] = 0x00;
+            message[6] = 0x00;
             // RunState: MOTOR_RUN_STATE_RUNNING
-            message[9] = 0x20;
+            message[7] = 0x20;
         }
 
         // TachoLimit: run forever
+        message[8] = 0;
+        message[9] = 0;
         message[10] = 0;
         message[11] = 0;
-        message[12] = 0;
-        message[13] = 0;
 
         return message;
 
@@ -89,45 +83,39 @@ public class LCPMessage {
         byte[] message = getMotorMessage(motor, speed);
 
         // TachoLimit
-        message[10] = (byte) end;
-        message[11] = (byte) (end >> 8);
-        message[12] = (byte) (end >> 16);
-        message[13] = (byte) (end >> 24);
+        message[8] = (byte) end;
+        message[9] = (byte) (end >> 8);
+        message[10] = (byte) (end >> 16);
+        message[11] = (byte) (end >> 24);
 
         return message;
     }
 
 
     public static byte[] getResetMessage(int motor) {
-        byte[] message = new byte[6];
+        byte[] message = new byte[4];
     
-        // message length    
-        message[0] = 4;
-        message[1] = 0;
         // Direct command telegram, no response
-        message[2] = (byte) 0x80;
-        message[3] = (byte) 0x0A;
+        message[0] = (byte) 0x80;
+        message[1] = (byte) 0x0A;
         // Output port
-        message[4] = (byte) motor;
+        message[2] = (byte) motor;
         // absolute position
-        message[5] = 0;
+        message[3] = 0;
 
         return message;
     }
 
     public static byte[] getProgramMessage(String programName) {
-        byte[] message = new byte[24];
+        byte[] message = new byte[22];
     
-        // message length    
-        message[0] = 22;
-        message[1] = 0;
         // Direct command telegram, no response
-        message[2] = (byte) 0x80;
-        message[3] = (byte) 0x00;
+        message[0] = (byte) 0x80;
+        message[1] = (byte) 0x00;
         // copy programName and end with 0 delimiter
         for (int pos=0; pos<programName.length(); pos++) 
-            message[4+pos] = (byte) programName.charAt(pos);
-        message[programName.length()+4] = 0;
+            message[2+pos] = (byte) programName.charAt(pos);
+        message[programName.length()+2] = 0;
 
         return message;
     } 
