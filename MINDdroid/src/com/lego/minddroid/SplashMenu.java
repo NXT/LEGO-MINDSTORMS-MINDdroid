@@ -12,7 +12,7 @@ public class SplashMenu extends Activity {
 	public static final int DISPLAY_TUTORIAL = 0;
 	public static final int START = 1;
 	public static final int CREDITS = 2;
-	Activity splashMenu;
+	static Activity splashMenu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,11 @@ public class SplashMenu extends Activity {
 		});
 
 	}
-
+	
+	public static void quitApplication(){
+		splashMenu.finish();
+	}
+	
 	private void showCredits() {
 		Info.show(this);
 	}

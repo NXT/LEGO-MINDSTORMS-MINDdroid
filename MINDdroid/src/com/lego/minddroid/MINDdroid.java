@@ -51,7 +51,6 @@ public class MINDdroid extends Activity
     private ProgressDialog connectingProgressDialog;
     private Handler btcHandler;
     private Menu myMenu;
-
 	private GameView mView;
 
     /** 
@@ -269,6 +268,7 @@ public class MINDdroid extends Activity
             case MENU_QUIT:
                 destroyBTCommunicator();
                 finish(); 
+                SplashMenu.quitApplication();
                 return true;
         }
         return false;
