@@ -47,6 +47,7 @@ public class SplashMenu extends Activity {
 	private void setupButtons() {
 
 		Button tutorial_button = (Button) this.findViewById(R.id.tutorial);
+		
 		tutorial_button.setOnClickListener(new Button.OnClickListener() {
 
 			@Override
