@@ -109,7 +109,7 @@ public class MINDdroid extends Activity
 
     public void destroyBTCommunicator() {
         if (myBTCommunicator != null) {
-            sendBTCmessage(BTCommunicator.DISCONNECT, 0);
+            sendBTCmessage(BTCommunicator.DISCONNECT, 0, 0);
             myBTCommunicator = null;
         }
         connected = false;
@@ -124,14 +124,20 @@ public class MINDdroid extends Activity
 
     public void actionButtonPressed() {
         if (myBTCommunicator != null) {           
-            // sendBTCmessage(BTCommunicator.ACTION, 440);
             mView.getThread().mActionPressed=true;
-            // will have to implement a seperate thread for waiting a special time
-            // the below implemented commands don't work correctly
-            // sendBTCmessage(BTCommunicator.MOTOR_RESET, BTCommunicator.MOTOR_B);
+            // depending on what the robot should when pressing the action button
+            // you have to uncomment/comment one of the following lines
 
-            // sendBTCmessage(BTCommunicator.ACTION, 0);
-            sendBTCmessage(BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B);
+            // sendBTCmessage(BTCommunicator.DO_ACTION, 0);
+
+            sendBTCmessage(BTCommunicator.DO_BEEP, 440, 0);
+
+            sendBTCmessage(BTCommunicator.MOTOR_B, 50, 0);
+            sendBTCmessage(BTCommunicator.MOTOR_B, -50, 600);
+            sendBTCmessage(BTCommunicator.MOTOR_B, 0, 1200);            
+
+            sendBTCmessage(BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B, 1500);
+            
         }
     }
 
@@ -185,19 +191,22 @@ public class MINDdroid extends Activity
             }              
 
             // send messages via the handler
-            sendBTCmessage(BTCommunicator.MOTOR_A, left);
-            sendBTCmessage(BTCommunicator.MOTOR_C, right);
+            sendBTCmessage(BTCommunicator.MOTOR_A, left, 0);
+            sendBTCmessage(BTCommunicator.MOTOR_C, right, 0);
         }
     }
     
 
-    void sendBTCmessage(int message, int value) {
+    void sendBTCmessage(int message, int value, int delay) {
         Bundle myBundle = new Bundle();
         myBundle.putInt("message", message);
         myBundle.putInt("value", value);
         Message myMessage = myHandler.obtainMessage();
         myMessage.setData(myBundle);
-        btcHandler.sendMessage(myMessage);        
+        if (delay == 0) 
+            btcHandler.sendMessage(myMessage);
+        else
+            btcHandler.sendMessageDelayed(myMessage, delay);  
     }
 
 

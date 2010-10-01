@@ -41,7 +41,8 @@ public class BTCommunicator extends Thread
     public static final int MOTOR_C = 2;
     public static final int MOTOR_B_ACTION = 40;
     public static final int MOTOR_RESET = 10;
-    public static final int ACTION=50;
+    public static final int DO_ACTION = 50;
+    public static final int DO_BEEP = 51;    
     public static final int READ_MOTOR_STATE=60;    
     public static final int DISCONNECT = 99;  
 
@@ -92,8 +93,6 @@ public class BTCommunicator extends Thread
     @Override
     public void run() {
         createNXTConnection();
-        // wait for Bluetooth-Messages and send it to the UI-thread
-        // not implemented yet
     }
 
     /**
@@ -280,10 +279,12 @@ public class BTCommunicator extends Thread
                 case MOTOR_RESET:
                     reset(myMessage.getData().getInt("value"));
                     break;
-                case ACTION:
-                    //doBeep(myMessage.getData().getInt("value"), 1000);
+                case DO_ACTION:                
                     startProgram("action.rxe");
                     break;
+                case DO_BEEP:                
+                    doBeep(myMessage.getData().getInt("value"), 1000);
+                    break;                    
                 case READ_MOTOR_STATE:
                     readMotorState(myMessage.getData().getInt("value"));
                     break;

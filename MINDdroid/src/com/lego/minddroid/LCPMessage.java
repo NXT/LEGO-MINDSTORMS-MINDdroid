@@ -56,8 +56,8 @@ public class LCPMessage {
         else {
             // Power set option (Range: -100 - 100)
             message[3] = (byte) speed;
-            // Mode byte (Bit-field): MOTORON
-            message[4] = 0x01;
+            // Mode byte (Bit-field): MOTORON + BREAK
+            message[4] = 0x03;
             // Regulation mode: REGULATION_MODE_MOTOR_SPEED
             message[5] = 0x01;
             // Turn Ratio (SBYTE; -100 - 100)
