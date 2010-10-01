@@ -19,7 +19,7 @@ public class SplashMenu extends Activity {
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		// class Eula added from http://code.google.com/p/apps-for-android/source/browse/trunk/DivideAndConquer/src/com/google/android/divideandconquer/Eula.java?r=93
 		// Tutorial see http://androiddevstudio.com/tutorials/adding-eula-to-android-app
-		Eula.show(this);
+		// Eula.show(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_menu);
 		setupButtons();
