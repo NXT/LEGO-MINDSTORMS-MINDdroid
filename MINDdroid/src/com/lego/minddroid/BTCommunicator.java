@@ -41,12 +41,15 @@ public class BTCommunicator extends Thread
     public static final int MOTOR_C = 2;
     public static final int MOTOR_B_ACTION = 40;
     public static final int MOTOR_RESET = 10;
-    public static final int ACTION=50;
+    public static final int DO_ACTION = 50;
+    public static final int DO_BEEP = 51;    
+    public static final int READ_MOTOR_STATE=60;    
     public static final int DISCONNECT = 99;  
 
     public static final int DISPLAY_TOAST = 1000;
     public static final int STATE_CONNECTED = 1001;
     public static final int STATE_CONNECTERROR = 1002;
+    public static final int MOTOR_STATE = 1003;
 
     private static final UUID SERIAL_PORT_SERVICE_CLASS_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     // this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
@@ -61,15 +64,24 @@ public class BTCommunicator extends Thread
     private String myNXTName;
     private MINDdroid myMINDdroid;
 
+    private byte[] returnMessage;
+
     public BTCommunicator(MINDdroid myMINDdroid, Handler uiHandler, String myNXTName) {
         this.myMINDdroid = myMINDdroid;
         this.myNXTName = myNXTName;
         this.uiHandler = uiHandler;
     }
 
+
     public Handler getHandler() {
         return myHandler;
     }
+
+
+    public byte[] getReturnMessage() {
+        return returnMessage;
+    }
+    
 
     public boolean isBTAdapterEnabled() {
         // interestingly this has to be done by the UI thread
@@ -81,8 +93,6 @@ public class BTCommunicator extends Thread
     @Override
     public void run() {
         createNXTConnection();
-        // wait for Bluetooth-Messages and send it to the UI-thread
-        // not implemented yet
     }
 
     /**
@@ -168,10 +178,7 @@ public class BTCommunicator extends Thread
 
 
     private void rotateTo(int motor, int end) {
-        // byte[] message = LCPMessage.getMotorMessage(motor, -80, end);
-        byte[] message = new byte[] {   12, 0, // message length
-                                        (byte) 0x80, (byte) 0x04, (byte) 0x01, (byte) 0x64, (byte) 0x03, (byte) 0x00, 
-                                        (byte) 0x00, (byte) 0x20, (byte) 0xB4, (byte) 0x00, (byte) 0x00, (byte) 0x00 };
+        byte[] message = LCPMessage.getMotorMessage(motor, -80, end);
         sendMessage(message);
     }    
     
@@ -182,16 +189,45 @@ public class BTCommunicator extends Thread
     }
 
 
-    private void sendMessage(byte[] message) {
+    private void readMotorState(int motor) {
+        byte[] message = LCPMessage.getOutputStateMessage(motor);
+        if (sendMessage(message)) {
+            if (nxtDin != null) {
+                // read length of message and the message itself
+                int length;
+                try {
+                    length = nxtDin.readByte();
+                    length = (nxtDin.readByte()<<8) + length;
+                    returnMessage = new byte[length];                    
+                    nxtDin.read(returnMessage);
+                }               
+                catch (IOException e) {
+                    sendToast(myMINDdroid.getResources().getString(R.string.problem_at_receiving));
+                    return;
+                }    
+                if (length >= 25)
+                    sendState(MOTOR_STATE);
+            }       
+        }
+    }
+    
+
+    private boolean sendMessage(byte[] message) {
         if (nxtDos == null) {
-            return;
+            return false;
         }
 
         try {
+            // send message length
+            int messageLength = message.length;
+            nxtDos.writeByte(messageLength);
+            nxtDos.writeByte(messageLength>>8);            
             nxtDos.write(message, 0, message.length);
             nxtDos.flush();        
+            return true;
         } catch (IOException ioe) { 
             sendToast(myMINDdroid.getResources().getString(R.string.problem_at_sending));
+            return false;
         }
     }        
         
@@ -219,7 +255,7 @@ public class BTCommunicator extends Thread
         sendBundle(myBundle);
     }
 
-       
+     
     private void sendBundle(Bundle myBundle) {
         Message myMessage = myHandler.obtainMessage();
         myMessage.setData(myBundle);
@@ -243,9 +279,14 @@ public class BTCommunicator extends Thread
                 case MOTOR_RESET:
                     reset(myMessage.getData().getInt("value"));
                     break;
-                case ACTION:
-                    //doBeep(myMessage.getData().getInt("value"), 1000);
+                case DO_ACTION:                
                     startProgram("action.rxe");
+                    break;
+                case DO_BEEP:                
+                    doBeep(myMessage.getData().getInt("value"), 1000);
+                    break;                    
+                case READ_MOTOR_STATE:
+                    readMotorState(myMessage.getData().getInt("value"));
                     break;
                 case DISCONNECT:
                     destroyNXTConnection();

@@ -68,7 +68,9 @@ public class MINDdroid extends Activity
 		mView = new GameView(getApplicationContext(), this);
 		mView.setFocusable(true);
 		setContentView(mView);
-        reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);        
+        reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT); 
+        // now start the bluetooth connection automatically
+        createBTCommunicator();       
     }
 
 
@@ -107,7 +109,7 @@ public class MINDdroid extends Activity
 
     public void destroyBTCommunicator() {
         if (myBTCommunicator != null) {
-            sendBTCmessage(BTCommunicator.DISCONNECT, 0);
+            sendBTCmessage(BTCommunicator.DISCONNECT, 0, 0);
             myBTCommunicator = null;
         }
         connected = false;
@@ -122,12 +124,20 @@ public class MINDdroid extends Activity
 
     public void actionButtonPressed() {
         if (myBTCommunicator != null) {           
-            // sendBTCmessage(BTCommunicator.ACTION, 440);
             mView.getThread().mActionPressed=true;
-            // will have to implement a seperate thread for waiting a special time
-            // the below implemented commands don't work correctly
-            // sendBTCmessage(BTCommunicator.MOTOR_RESET, BTCommunicator.MOTOR_B);
-            sendBTCmessage(BTCommunicator.ACTION, 0);
+            // depending on what the robot should when pressing the action button
+            // you have to uncomment/comment one of the following lines
+
+            // sendBTCmessage(BTCommunicator.DO_ACTION, 0);
+
+            sendBTCmessage(BTCommunicator.DO_BEEP, 440, 0);
+
+            sendBTCmessage(BTCommunicator.MOTOR_B, 50, 0);
+            sendBTCmessage(BTCommunicator.MOTOR_B, -50, 600);
+            sendBTCmessage(BTCommunicator.MOTOR_B, 0, 1200);            
+
+            sendBTCmessage(BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B, 1500);
+            
         }
     }
 
@@ -181,19 +191,22 @@ public class MINDdroid extends Activity
             }              
 
             // send messages via the handler
-            sendBTCmessage(BTCommunicator.MOTOR_A, left);
-            sendBTCmessage(BTCommunicator.MOTOR_C, right);
+            sendBTCmessage(BTCommunicator.MOTOR_A, left, 0);
+            sendBTCmessage(BTCommunicator.MOTOR_C, right, 0);
         }
     }
     
 
-    void sendBTCmessage(int message, int value) {
+    void sendBTCmessage(int message, int value, int delay) {
         Bundle myBundle = new Bundle();
         myBundle.putInt("message", message);
         myBundle.putInt("value", value);
         Message myMessage = myHandler.obtainMessage();
         myMessage.setData(myBundle);
-        btcHandler.sendMessage(myMessage);        
+        if (delay == 0) 
+            btcHandler.sendMessage(myMessage);
+        else
+            btcHandler.sendMessageDelayed(myMessage, delay);  
     }
 
 
@@ -229,6 +242,7 @@ public class MINDdroid extends Activity
         myMenu.add(0, MENU_INFO, 1, getResources().getString(R.string.info)).setIcon(R.drawable.ic_menu_about);
         myMenu.add(0, MENU_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
         myMenu.add(0, MENU_QUIT, 3, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
+        updateButtonsAndMenu();
         return true;
     }
 
@@ -294,8 +308,27 @@ public class MINDdroid extends Activity
                     connectingProgressDialog.dismiss();
                     updateButtonsAndMenu();
                     break;
+                case BTCommunicator.MOTOR_STATE: 
+                    if (myBTCommunicator != null) {
+                        byte[] motorMessage = myBTCommunicator.getReturnMessage();
+                        int position = byteToInt(motorMessage[21]) + 
+                            (byteToInt(motorMessage[22]) << 8) + 
+                            (byteToInt(motorMessage[23]) << 16) + 
+                            (byteToInt(motorMessage[24]) << 24);
+                            showToast(getResources().getString(R.string.current_position) + position);
+                    }
+                    break;                           
             }
         }
     };
+
+
+    private int byteToInt(byte byteValue) {
+        int intValue = (int) (byteValue & (byte) 0x7f);
+        if ((byteValue & (byte) 0x80) != 0)
+            intValue |= 0x80;
+        return intValue;
+    }        
+    
 
 }

@@ -13,6 +13,8 @@
     <string name="problem_at_connecting">Problem beim Verbinden zum Roboter!</string>
     <string name="problem_at_closing">Problem beim Beenden der Verbindung!</string>
     <string name="problem_at_sending">Problem beim Senden von Befehlen!</string>
+    <string name="problem_at_receiving">Problem beim Empfangen einer Meldung!</string> 
+    <string name="current_position">Aktuelle Position: </string>   
     <string name="eula_title">Endbenutzer-Lizenzvertrag</string>
     <string name="eula_accept">Akzeptieren</string>
     <string name="eula_refuse">Verweigern</string>
