@@ -11,7 +11,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#ffffff"
+        >
   
         <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
             <ImageView android:src = "@drawable/splash" android:layout_width="wrap_content"   android:layout_height="wrap_content" android:scaleType="centerInside"></ImageView>
@@ -23,24 +25,28 @@
         
         <Button
             android:id="@+id/tutorial"
+            android:textSize="28sp"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="@string/tutorial"
             />
         <Button
             android:id="@+id/start"
+            android:textSize="28sp"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="@string/start_button"
             />
         <Button
             android:id="@+id/credits"
+            android:textSize="28sp"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="@string/credits"
             />
         <TextView
             android:id="@+id/legal_txt"
+           android:textSize="14sp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="This is a placeholder for whatever LEGAL info needs to be displayed here. 
