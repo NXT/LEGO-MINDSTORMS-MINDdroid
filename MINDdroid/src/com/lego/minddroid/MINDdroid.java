@@ -18,32 +18,18 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
-import java.util.Enumeration;
 
 public class MINDdroid extends Activity
 {
@@ -74,10 +60,6 @@ public class MINDdroid extends Activity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        // class Eula added from http://code.google.com/p/apps-for-android/source/browse/trunk/DivideAndConquer/src/com/google/android/divideandconquer/Eula.java?r=93
-        // Tutorial see http://androiddevstudio.com/tutorials/adding-eula-to-android-app
-        Eula.show(this);
-    
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         StartSound mySound = new StartSound(this);
@@ -258,7 +240,7 @@ public class MINDdroid extends Activity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case MENU_INFO:
-                Info.show(this);
+				Info.show(this);
                 // showAboutDialog();
                 return true;       
             case MENU_CONNECT:
@@ -296,7 +278,8 @@ public class MINDdroid extends Activity
 
     // receive messages from the BTCommunicator
     final Handler myHandler = new Handler() {
-        public void handleMessage(Message myMessage) {
+        @Override
+		public void handleMessage(Message myMessage) {
             switch (myMessage.getData().getInt("message")) {
                 case BTCommunicator.DISPLAY_TOAST: 
                     showToast(myMessage.getData().getString("toastText"));

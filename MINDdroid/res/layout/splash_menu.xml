@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:id="@+id/widget54"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+       android:orientation="vertical"
+    >
+         
+    <LinearLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+  
+        <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <ImageView android:src = "@drawable/splash" android:layout_width="wrap_content"   android:layout_height="wrap_content" android:scaleType="centerInside"></ImageView>
+        </FrameLayout>
+         
+        <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
+           <ImageView android:src = "@drawable/minddroid_logo" android:layout_width="wrap_content"   android:layout_height="wrap_content" android:scaleType="centerInside"></ImageView>
+        </FrameLayout> 
+        
+        <Button
+            android:id="@+id/tutorial"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/tutorial"
+            />
+        <Button
+            android:id="@+id/start"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/start_button"
+            />
+        <Button
+            android:id="@+id/credits"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/credits"
+            />
+        <TextView
+            android:id="@+id/legal_txt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="This is a placeholder for whatever LEGAL info needs to be displayed here. 
+             Let's go on and on and on and on and on and on and on and on and on.
+             Lawyers have fun making so many details because they get paid by the hour!!!!!!"
+            
+            />
+     
+    </LinearLayout>
+</ScrollView>
+
+
+ 

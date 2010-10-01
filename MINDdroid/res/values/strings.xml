@@ -17,4 +17,9 @@
     <string name="eula_accept">Accept</string>
     <string name="eula_refuse">Refuse</string>
     <string name="info_ok">OK</string>
+    
+    <!-- Splash Menu -->
+    <string name="tutorial">Tutorial</string>
+    <string name="start_button">Start</string>
+    <string name="credits">Credits</string> 
 </resources>
