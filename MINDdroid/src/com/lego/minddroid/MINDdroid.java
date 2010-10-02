@@ -23,9 +23,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.SeekBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MINDdroid extends Activity {
@@ -35,14 +32,6 @@ public class MINDdroid extends Activity {
 	public static final int MENU_QUIT = Menu.FIRST + 2;
 	private static final int REQUEST_CONNECT_DEVICE = 1000;
 	private static final int REQUEST_ENABLE_BT = 2000;
-	private SensorManager sensorManager;
-	private boolean runWithEmulator = false;
-	private SeekBar pitchSeekBar;
-	private SeekBar rollSeekBar;
-	private Button connectButton;
-	private Button actionButton;
-	private TextView myNXT;
-	private long timeDataSent = 0;
 	private BTCommunicator myBTCommunicator = null;
 	private Toast reusableToast;
 	private boolean connected = false;
@@ -86,18 +75,15 @@ public class MINDdroid extends Activity {
 	}
 
 	public void createBTCommunicator() {
-
-		myBTCommunicator = new BTCommunicator(this, myHandler);
+		// interestingly BT adapter needs to be obtained by the UI thread - so we pass it in in the constructor
+		myBTCommunicator = new BTCommunicator(this, myHandler,BluetoothAdapter.getDefaultAdapter());
 		btcHandler = myBTCommunicator.getHandler();
-
 	}
 
 	public void startBTCommunicator(String mac_address) {
 
 		if (myBTCommunicator == null) {
-
 			createBTCommunicator();
-			myBTCommunicator.isBTAdapterEnabled();
 		}
 
 		myBTCommunicator.setMACAddress(mac_address);

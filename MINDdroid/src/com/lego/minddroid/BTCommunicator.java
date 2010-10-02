@@ -48,7 +48,7 @@ public class BTCommunicator extends Thread {
 	// this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
 	private static final String OUI_LEGO = "00:16:53";
 
-	private BluetoothAdapter btAdapter;
+	BluetoothAdapter btAdapter;
 	private BluetoothSocket nxtBTsocket = null;
 	private DataOutputStream nxtDos = null;
 	private DataInputStream nxtDin = null;
@@ -59,9 +59,10 @@ public class BTCommunicator extends Thread {
 
 	private byte[] returnMessage;
 
-	public BTCommunicator(MINDdroid myMINDdroid, Handler uiHandler) {
+	public BTCommunicator(MINDdroid myMINDdroid, Handler uiHandler, BluetoothAdapter btAdapter) {
 		this.myMINDdroid = myMINDdroid;
 		this.uiHandler = uiHandler;
+		this.btAdapter=btAdapter;
 	}
 
 	public Handler getHandler() {
@@ -73,10 +74,9 @@ public class BTCommunicator extends Thread {
 	}
 
 	public boolean isBTAdapterEnabled() {
-		// interestingly this has to be done by the UI thread
-		btAdapter = BluetoothAdapter.getDefaultAdapter();
 		return (btAdapter == null) ? false : btAdapter.isEnabled();
 	}
+
 
 	@Override
 	public void run() {
