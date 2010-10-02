@@ -109,7 +109,7 @@ public class MINDdroid extends Activity {
 
 	public void destroyBTCommunicator() {
 		if (myBTCommunicator != null) {
-			sendBTCmessage(BTCommunicator.DISCONNECT, 0, 0);
+			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DISCONNECT, 0, 0);
 			myBTCommunicator = null;
 		}
 		connected = false;
@@ -126,15 +126,23 @@ public class MINDdroid extends Activity {
 			// depending on what the robot should when pressing the action button
 			// you have to uncomment/comment one of the following lines
 
-			// sendBTCmessage(BTCommunicator.DO_ACTION, 0);
+			// sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_ACTION, 0, 0);
 
-			sendBTCmessage(BTCommunicator.DO_BEEP, 440, 0);
+            // Super Mario Brothers: Main Theme Start
+			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_BEEP, 659, 100);
+			sendBTCmessage(150, BTCommunicator.DO_BEEP, 659, 100);
+			sendBTCmessage(450, BTCommunicator.DO_BEEP, 659, 250);
+			sendBTCmessage(750, BTCommunicator.DO_BEEP, 523, 100);
+			sendBTCmessage(900, BTCommunicator.DO_BEEP, 659, 250);
+			sendBTCmessage(1200, BTCommunicator.DO_BEEP, 784, 250);
+			sendBTCmessage(1800, BTCommunicator.DO_BEEP, 392, 250);			
 
-			sendBTCmessage(BTCommunicator.MOTOR_B, 50, 0);
-			sendBTCmessage(BTCommunicator.MOTOR_B, -50, 600);
-			sendBTCmessage(BTCommunicator.MOTOR_B, 0, 1200);
+            // MOTOR B: forth an back
+			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_B, 50, 0);
+			sendBTCmessage(600, BTCommunicator.MOTOR_B, -50, 600);
+			sendBTCmessage(1200, BTCommunicator.MOTOR_B, 0, 1200);
 
-			sendBTCmessage(BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B, 1500);
+			// sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B, 1500);
 
 		}
 	}
@@ -183,15 +191,16 @@ public class MINDdroid extends Activity {
 			}
 
 			// send messages via the handler
-			sendBTCmessage(BTCommunicator.MOTOR_A, left, 0);
-			sendBTCmessage(BTCommunicator.MOTOR_C, right, 0);
+			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_A, left, 0);
+			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_C, right, 0);
 		}
 	}
 
-	void sendBTCmessage(int message, int value, int delay) {
+	void sendBTCmessage(int delay, int message, int value1, int value2) {
 		Bundle myBundle = new Bundle();
 		myBundle.putInt("message", message);
-		myBundle.putInt("value", value);
+		myBundle.putInt("value1", value1);
+		myBundle.putInt("value2", value2);
 		Message myMessage = myHandler.obtainMessage();
 		myMessage.setData(myBundle);
 		if (delay == 0)

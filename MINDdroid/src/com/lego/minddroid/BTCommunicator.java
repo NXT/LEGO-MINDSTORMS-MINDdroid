@@ -42,6 +42,8 @@ public class BTCommunicator extends Thread {
 	public static final int STATE_CONNECTERROR = 1002;
 	public static final int MOTOR_STATE = 1003;
 
+	public static final int NO_DELAY = 0;
+
 	private static final UUID SERIAL_PORT_SERVICE_CLASS_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	// this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
 	private static final String OUI_LEGO = "00:16:53";
@@ -236,22 +238,22 @@ public class BTCommunicator extends Thread {
 				case MOTOR_A:
 				case MOTOR_B:
 				case MOTOR_C:
-					changeMotorSpeed(message, myMessage.getData().getInt("value"));
+					changeMotorSpeed(message, myMessage.getData().getInt("value1"));
 					break;
 				case MOTOR_B_ACTION:
-					rotateTo(MOTOR_B, myMessage.getData().getInt("value"));
+					rotateTo(MOTOR_B, myMessage.getData().getInt("value1"));
 					break;
 				case MOTOR_RESET:
-					reset(myMessage.getData().getInt("value"));
+					reset(myMessage.getData().getInt("value1"));
 					break;
 				case DO_ACTION:
 					startProgram("action.rxe");
 					break;
 				case DO_BEEP:
-					doBeep(myMessage.getData().getInt("value"), 1000);
+					doBeep(myMessage.getData().getInt("value1"), myMessage.getData().getInt("value2"));
 					break;
 				case READ_MOTOR_STATE:
-					readMotorState(myMessage.getData().getInt("value"));
+					readMotorState(myMessage.getData().getInt("value1"));
 					break;
 				case DISCONNECT:
 					destroyNXTConnection();
