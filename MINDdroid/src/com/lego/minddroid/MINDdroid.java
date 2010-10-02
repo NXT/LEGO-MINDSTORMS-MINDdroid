@@ -132,55 +132,64 @@ public class MINDdroid extends Activity {
 
 		}
 	}
+	
+	public void updateMotorControl(int left, int right) {
 
-	public void updateMotorControl(float pitch, float roll) {
-
-		int left = 0;
-		int right = 0;
 		if (myBTCommunicator != null) {
-
-			// only when phone is little bit tilted
-			if ((Math.abs(pitch) > 10.0) || (Math.abs(roll) > 10.0)) {
-
-				// limit pitch and roll
-				if (pitch > 33.3)
-					pitch = (float) 33.3;
-				else if (pitch < -33.3)
-					pitch = (float) -33.3;
-
-				if (roll > 33.3)
-					roll = (float) 33.3;
-				else if (roll < -33.3)
-					roll = (float) -33.3;
-
-				// when pitch is very small then do a special turning function    
-				if (Math.abs(pitch) > 10.0) {
-					left = (int) Math.round(3.3 * pitch * (1.0 + roll / 60.0));
-					right = (int) Math.round(3.3 * pitch * (1.0 - roll / 60.0));
-				} else {
-					left = (int) Math.round(3.3 * roll - Math.signum(roll) * 3.3 * Math.abs(pitch));
-					right = -left;
-				}
-
-				// limit the motor outputs
-
-				if (left > 100)
-					left = 100;
-				else if (left < -100)
-					left = -100;
-
-				if (right > 100)
-					right = 100;
-				else if (right < -100)
-					right = -100;
-
-			}
-
 			// send messages via the handler
 			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_A, left, 0);
 			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_C, right, 0);
 		}
 	}
+
+//	public void updateMotorControl(float pitch, float roll) {
+//
+//		int left = 0;
+//		int right = 0;
+//		if (myBTCommunicator != null) {
+//
+//			// only when phone is little bit tilted
+//			if ((Math.abs(pitch) > 10.0) || (Math.abs(roll) > 10.0)) {
+//
+//				// limit pitch and roll
+//				if (pitch > 33.3)
+//					pitch = (float) 33.3;
+//				else if (pitch < -33.3)
+//					pitch = (float) -33.3;
+//
+//				if (roll > 33.3)
+//					roll = (float) 33.3;
+//				else if (roll < -33.3)
+//					roll = (float) -33.3;
+//
+//				// when pitch is very small then do a special turning function    
+//				if (Math.abs(pitch) > 10.0) {
+//					left = (int) Math.round(3.3 * pitch * (1.0 + roll / 60.0));
+//					right = (int) Math.round(3.3 * pitch * (1.0 - roll / 60.0));
+//				} else {
+//					left = (int) Math.round(3.3 * roll - Math.signum(roll) * 3.3 * Math.abs(pitch));
+//					right = -left;
+//				}
+//
+//				// limit the motor outputs
+//
+//				if (left > 100)
+//					left = 100;
+//				else if (left < -100)
+//					left = -100;
+//
+//				if (right > 100)
+//					right = 100;
+//				else if (right < -100)
+//					right = -100;
+//
+//			}
+//
+//			// send messages via the handler
+//			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_A, left, 0);
+//			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_C, right, 0);
+//		}
+//	}
 
 	void sendBTCmessage(int delay, int message, int value1, int value2) {
 		Bundle myBundle = new Bundle();
