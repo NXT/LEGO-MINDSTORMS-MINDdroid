@@ -1,19 +1,15 @@
 package com.lego.minddroid;
 
 /*
-  BTCommunicator is a helper thread for communication to
-  the NXT brick over bluetooth
-
-  This file is free software; you can redistribute it and/or
-  modify it under the terms of the GNU Lesser General Public
-  License as published by the Free Software Foundation; either
-  version 3 of the License, or (at your option) any later version.
-
-  This library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-  General Public License for more details.
-*/
+ * BTCommunicator is a helper thread for communication to the NXT brick over
+ * bluetooth This file is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or (at your
+ * option) any later version. This library is distributed in the hope that it
+ * will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General
+ * Public License for more details.
+ */
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -21,279 +17,253 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.widget.Toast;
-
+import android.util.Log;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
-import java.net.*;
-import java.util.Set;
 import java.util.UUID;
 
 /**
  * Helper thread class for communication over bluetooth
  */
-public class BTCommunicator extends Thread
-{
-    public static final int MOTOR_A = 0;
-    public static final int MOTOR_B = 1;
-    public static final int MOTOR_C = 2;
-    public static final int MOTOR_B_ACTION = 40;
-    public static final int MOTOR_RESET = 10;
-    public static final int DO_ACTION = 50;
-    public static final int DO_BEEP = 51;    
-    public static final int READ_MOTOR_STATE=60;    
-    public static final int DISCONNECT = 99;  
+public class BTCommunicator extends Thread {
+	public static final int MOTOR_A = 0;
+	public static final int MOTOR_B = 1;
+	public static final int MOTOR_C = 2;
+	public static final int MOTOR_B_ACTION = 40;
+	public static final int MOTOR_RESET = 10;
+	public static final int DO_ACTION = 50;
+	public static final int DO_BEEP = 51;
+	public static final int READ_MOTOR_STATE = 60;
+	public static final int DISCONNECT = 99;
 
-    public static final int DISPLAY_TOAST = 1000;
-    public static final int STATE_CONNECTED = 1001;
-    public static final int STATE_CONNECTERROR = 1002;
-    public static final int MOTOR_STATE = 1003;
+	public static final int DISPLAY_TOAST = 1000;
+	public static final int STATE_CONNECTED = 1001;
+	public static final int STATE_CONNECTERROR = 1002;
+	public static final int MOTOR_STATE = 1003;
 
-    private static final UUID SERIAL_PORT_SERVICE_CLASS_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-    // this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
-    private static final String OUI_LEGO = "00:16:53";
+	private static final UUID SERIAL_PORT_SERVICE_CLASS_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+	// this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
+	private static final String OUI_LEGO = "00:16:53";
 
-    private BluetoothAdapter btAdapter;
-    private BluetoothSocket nxtBTsocket = null;
-    private DataOutputStream nxtDos = null;
-    private DataInputStream nxtDin = null;
+	private BluetoothAdapter btAdapter;
+	private BluetoothSocket nxtBTsocket = null;
+	private DataOutputStream nxtDos = null;
+	private DataInputStream nxtDin = null;
 
-    private Handler uiHandler;
-    private String myNXTName;
-    private MINDdroid myMINDdroid;
+	private Handler uiHandler;
+	private String mMACaddress;
+	private MINDdroid myMINDdroid;
 
-    private byte[] returnMessage;
+	private byte[] returnMessage;
 
-    public BTCommunicator(MINDdroid myMINDdroid, Handler uiHandler, String myNXTName) {
-        this.myMINDdroid = myMINDdroid;
-        this.myNXTName = myNXTName;
-        this.uiHandler = uiHandler;
-    }
+	public BTCommunicator(MINDdroid myMINDdroid, Handler uiHandler) {
+		this.myMINDdroid = myMINDdroid;
+		this.uiHandler = uiHandler;
+	}
 
+	public Handler getHandler() {
+		return myHandler;
+	}
 
-    public Handler getHandler() {
-        return myHandler;
-    }
+	public byte[] getReturnMessage() {
+		return returnMessage;
+	}
 
+	public boolean isBTAdapterEnabled() {
+		// interestingly this has to be done by the UI thread
+		btAdapter = BluetoothAdapter.getDefaultAdapter();
+		return (btAdapter == null) ? false : btAdapter.isEnabled();
+	}
 
-    public byte[] getReturnMessage() {
-        return returnMessage;
-    }
-    
+	@Override
+	public void run() {
+		createNXTConnection();
+	}
 
-    public boolean isBTAdapterEnabled() {
-        // interestingly this has to be done by the UI thread
-        btAdapter = BluetoothAdapter.getDefaultAdapter();
-        return (btAdapter == null) ? false : btAdapter.isEnabled();
-    }
+	/**
+	 * Create bluetooth-connection with SerialPortServiceClass_UUID
+	 * 
+	 * @see <a href=
+	 *      "http://lejos.sourceforge.net/forum/viewtopic.php?t=1991&highlight=android"
+	 *      />
+	 */
+	private void createNXTConnection() {
+		try {
+		
+			BluetoothDevice nxtDevice = null;
 
+			nxtDevice = btAdapter.getRemoteDevice(mMACaddress);
 
-    @Override
-    public void run() {
-        createNXTConnection();
-    }
+			if (nxtDevice == null) {
+				sendToast(myMINDdroid.getResources().getString(R.string.no_paired_nxt));
+				sendState(STATE_CONNECTERROR);
+				return;
+			}
 
-    /**
-      * Create bluetooth-connection with SerialPortServiceClass_UUID
-      * @see <a href="http://lejos.sourceforge.net/forum/viewtopic.php?t=1991&highlight=android" />
-      */
-    private void createNXTConnection() {
-        try {
-            Set<BluetoothDevice> bondedDevices = btAdapter.getBondedDevices();
-            BluetoothDevice nxtDevice = null;
-         
-            // instead of asking the friendly Bluetooth name we just 
-            // search for the first LEGO device, identified by the OUI
-            for (BluetoothDevice bluetoothDevice : bondedDevices)
-            {
-                if (bluetoothDevice.getAddress().indexOf(OUI_LEGO) == 0) {
-                    nxtDevice = bluetoothDevice;
-                    break;
-                }
-            } 
+			nxtBTsocket = nxtDevice.createRfcommSocketToServiceRecord(SERIAL_PORT_SERVICE_CLASS_UUID);
+			nxtBTsocket.connect();
+			nxtDin = new DataInputStream(nxtBTsocket.getInputStream());
+			nxtDos = new DataOutputStream(nxtBTsocket.getOutputStream());
+		} catch (IOException e) {
+			sendToast(myMINDdroid.getResources().getString(R.string.problem_at_connecting));
+			sendState(STATE_CONNECTERROR);
+			return;
+		}
+		sendState(STATE_CONNECTED);
+	}
 
-            if (nxtDevice == null)
-            {
-                sendToast(myMINDdroid.getResources().getString(R.string.no_paired_nxt));
-                sendState(STATE_CONNECTERROR);
-                return;
-            }             
+	private void destroyNXTConnection() {
+		try {
+			if (nxtBTsocket != null) {
+				// send stop messages before closing
+				changeMotorSpeed(MOTOR_A, 0);
+				changeMotorSpeed(MOTOR_C, 0);
+				waitSomeTime(500);
+				nxtBTsocket.close();
+				nxtBTsocket = null;
+			}
+			nxtDin = null;
+			nxtDos = null;
+		} catch (IOException e) {
+			sendToast(myMINDdroid.getResources().getString(R.string.problem_at_closing));
+		}
+	}
 
-            nxtBTsocket = nxtDevice.createRfcommSocketToServiceRecord(SERIAL_PORT_SERVICE_CLASS_UUID);
-            nxtBTsocket.connect();
-            nxtDin = new DataInputStream(nxtBTsocket.getInputStream());
-            nxtDos = new DataOutputStream(nxtBTsocket.getOutputStream());          
-        } catch (IOException e) {
-            sendToast(myMINDdroid.getResources().getString(R.string.problem_at_connecting));
-            sendState(STATE_CONNECTERROR);
-            return;
-        }
-        sendState(STATE_CONNECTED);
-    }
-        
+	private void doBeep(int frequency, int duration) {
+		byte[] message = LCPMessage.getBeepMessage(frequency, duration);
+		sendMessage(message);
+		waitSomeTime(20);
+	}
 
-    private void destroyNXTConnection() {
-        try {
-            if (nxtBTsocket != null) {
-                // send stop messages before closing
-                changeMotorSpeed(MOTOR_A, 0);
-                changeMotorSpeed(MOTOR_C, 0);
-                waitSomeTime(500);
-                nxtBTsocket.close();
-                nxtBTsocket = null;
-            }
-            nxtDin = null;
-            nxtDos = null;            
-        } catch (IOException e) {
-            sendToast(myMINDdroid.getResources().getString(R.string.problem_at_closing));
-        }
-    }
+	private void startProgram(String programName) {
+		byte[] message = LCPMessage.getProgramMessage(programName);
+		sendMessage(message);
+	}
 
+	private void changeMotorSpeed(int motor, int speed) {
+		if (speed > 100)
+			speed = 100;
+		else if (speed < -100)
+			speed = -100;
 
-    private void doBeep(int frequency, int duration) {
-        byte[] message = LCPMessage.getBeepMessage(frequency, duration);
-        sendMessage(message);
-        waitSomeTime(20);
-    }
+		byte[] message = LCPMessage.getMotorMessage(motor, speed);
+		sendMessage(message);
+	}
 
+	private void rotateTo(int motor, int end) {
+		byte[] message = LCPMessage.getMotorMessage(motor, -80, end);
+		sendMessage(message);
+	}
 
-    private void startProgram(String programName) {
-        byte[] message = LCPMessage.getProgramMessage(programName);
-        sendMessage(message);
-    }
+	private void reset(int motor) {
+		byte[] message = LCPMessage.getResetMessage(motor);
+		sendMessage(message);
+	}
 
+	private void readMotorState(int motor) {
+		byte[] message = LCPMessage.getOutputStateMessage(motor);
+		if (sendMessage(message)) {
+			if (nxtDin != null) {
+				// read length of message and the message itself
+				int length;
+				try {
+					length = nxtDin.readByte();
+					length = (nxtDin.readByte() << 8) + length;
+					returnMessage = new byte[length];
+					nxtDin.read(returnMessage);
+				} catch (IOException e) {
+					sendToast(myMINDdroid.getResources().getString(R.string.problem_at_receiving));
+					return;
+				}
+				if (length >= 25)
+					sendState(MOTOR_STATE);
+			}
+		}
+	}
 
-    private void changeMotorSpeed(int motor, int speed) {
-        if (speed > 100) 
-            speed = 100;
-        else
-        if (speed < -100)
-            speed = -100;
+	private boolean sendMessage(byte[] message) {
+		if (nxtDos == null) {
+			return false;
+		}
 
-        byte[] message = LCPMessage.getMotorMessage(motor, speed);
-        sendMessage(message);
-    }
+		try {
+			// send message length
+			int messageLength = message.length;
+			nxtDos.writeByte(messageLength);
+			nxtDos.writeByte(messageLength >> 8);
+			nxtDos.write(message, 0, message.length);
+			nxtDos.flush();
+			return true;
+		} catch (IOException ioe) {
+			sendToast(myMINDdroid.getResources().getString(R.string.problem_at_sending));
+			return false;
+		}
+	}
 
+	private void waitSomeTime(int millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+		}
+	}
 
-    private void rotateTo(int motor, int end) {
-        byte[] message = LCPMessage.getMotorMessage(motor, -80, end);
-        sendMessage(message);
-    }    
-    
+	private void sendToast(String toastText) {
+		Bundle myBundle = new Bundle();
+		myBundle.putInt("message", DISPLAY_TOAST);
+		myBundle.putString("toastText", toastText);
+		sendBundle(myBundle);
+	}
 
-    private void reset(int motor) {
-        byte[] message = LCPMessage.getResetMessage(motor);
-        sendMessage(message);
-    }
+	private void sendState(int message) {
+		Bundle myBundle = new Bundle();
+		myBundle.putInt("message", message);
+		sendBundle(myBundle);
+	}
 
+	private void sendBundle(Bundle myBundle) {
+		Message myMessage = myHandler.obtainMessage();
+		myMessage.setData(myBundle);
+		uiHandler.sendMessage(myMessage);
+	}
 
-    private void readMotorState(int motor) {
-        byte[] message = LCPMessage.getOutputStateMessage(motor);
-        if (sendMessage(message)) {
-            if (nxtDin != null) {
-                // read length of message and the message itself
-                int length;
-                try {
-                    length = nxtDin.readByte();
-                    length = (nxtDin.readByte()<<8) + length;
-                    returnMessage = new byte[length];                    
-                    nxtDin.read(returnMessage);
-                }               
-                catch (IOException e) {
-                    sendToast(myMINDdroid.getResources().getString(R.string.problem_at_receiving));
-                    return;
-                }    
-                if (length >= 25)
-                    sendState(MOTOR_STATE);
-            }       
-        }
-    }
-    
+	// receive messages from the UI
+	final Handler myHandler = new Handler() {
+		@Override
+		public void handleMessage(Message myMessage) {
+			int message;
+			switch (message = myMessage.getData().getInt("message")) {
+				case MOTOR_A:
+				case MOTOR_B:
+				case MOTOR_C:
+					changeMotorSpeed(message, myMessage.getData().getInt("value"));
+					break;
+				case MOTOR_B_ACTION:
+					rotateTo(MOTOR_B, myMessage.getData().getInt("value"));
+					break;
+				case MOTOR_RESET:
+					reset(myMessage.getData().getInt("value"));
+					break;
+				case DO_ACTION:
+					startProgram("action.rxe");
+					break;
+				case DO_BEEP:
+					doBeep(myMessage.getData().getInt("value"), 1000);
+					break;
+				case READ_MOTOR_STATE:
+					readMotorState(myMessage.getData().getInt("value"));
+					break;
+				case DISCONNECT:
+					destroyNXTConnection();
+					break;
+			}
+		}
+	};
 
-    private boolean sendMessage(byte[] message) {
-        if (nxtDos == null) {
-            return false;
-        }
+	public void setMACAddress(String mMACaddress) {
+		Log.d("BTCommunicator setMACAddress ", mMACaddress);
+		this.mMACaddress = mMACaddress;
 
-        try {
-            // send message length
-            int messageLength = message.length;
-            nxtDos.writeByte(messageLength);
-            nxtDos.writeByte(messageLength>>8);            
-            nxtDos.write(message, 0, message.length);
-            nxtDos.flush();        
-            return true;
-        } catch (IOException ioe) { 
-            sendToast(myMINDdroid.getResources().getString(R.string.problem_at_sending));
-            return false;
-        }
-    }        
-        
+	}
 
-    private void waitSomeTime(int millis) {
-        try {
-            Thread.sleep(millis);
-        }
-        catch (InterruptedException e) {
-        }
-    }
-
-
-    private void sendToast(String toastText) {
-        Bundle myBundle = new Bundle();
-        myBundle.putInt("message", DISPLAY_TOAST);
-        myBundle.putString("toastText", toastText);
-        sendBundle(myBundle);
-    }
-
-
-    private void sendState(int message) {
-        Bundle myBundle = new Bundle();
-        myBundle.putInt("message", message);
-        sendBundle(myBundle);
-    }
-
-     
-    private void sendBundle(Bundle myBundle) {
-        Message myMessage = myHandler.obtainMessage();
-        myMessage.setData(myBundle);
-        uiHandler.sendMessage(myMessage);
-    }
-
-
-    // receive messages from the UI
-    final Handler myHandler = new Handler() {
-        public void handleMessage(Message myMessage) {
-            int message;
-            switch (message = myMessage.getData().getInt("message")) {
-                case MOTOR_A: 
-                case MOTOR_B:
-                case MOTOR_C: 
-                    changeMotorSpeed(message, myMessage.getData().getInt("value"));
-                    break;
-                case MOTOR_B_ACTION:
-                    rotateTo(MOTOR_B, myMessage.getData().getInt("value"));
-                    break;
-                case MOTOR_RESET:
-                    reset(myMessage.getData().getInt("value"));
-                    break;
-                case DO_ACTION:                
-                    startProgram("action.rxe");
-                    break;
-                case DO_BEEP:                
-                    doBeep(myMessage.getData().getInt("value"), 1000);
-                    break;                    
-                case READ_MOTOR_STATE:
-                    readMotorState(myMessage.getData().getInt("value"));
-                    break;
-                case DISCONNECT:
-                    destroyNXTConnection();
-                    break;
-            }
-        }
-    };
-       
 }
-

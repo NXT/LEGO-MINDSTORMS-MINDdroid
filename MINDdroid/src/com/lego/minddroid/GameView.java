@@ -327,10 +327,20 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 * Pauses the animation.
 		 */
 		public void pause() {
-			// thread.pause();
+			thread.setRunning(false);
 			synchronized (mSurfaceHolder) {
 
 			}
+			boolean retry = true;
+			getThread().setRunning(false);
+			while (retry) {
+				try {
+					getThread().join();
+					retry = false;
+				} catch (InterruptedException e) {
+				}
+			}
+			
 		}
 
 		/**
@@ -599,9 +609,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 	};
-
+	Context context;
 	public GameView(Context context, MINDdroid uiActivity) {
 		super(context);
+		 
 		Log.d(TAG, " ~~~~~~~ UIView ~~~~~~~~");
 		mActivity = uiActivity;
 		mSensorManager = (SensorManager) mActivity.getSystemService(Context.SENSOR_SERVICE);
@@ -609,7 +620,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		SurfaceHolder holder = getHolder();
 		holder.setKeepScreenOn(true);
 		holder.addCallback(this);
-
+		  this.context=context;
 		// create thread only; it's started in surfaceCreated()
 		thread = new GameThread(holder, context, (Vibrator) uiActivity.getSystemService(Context.VIBRATOR_SERVICE), new Handler() {
 			@Override
@@ -658,16 +669,30 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		//Log.d(TAG, "surface created");
-		// start the thread here so that we don't busy-wait in run()
-		// waiting for the surface to be created
-		getThread().setRunning(true);
-		getThread().start();
+	
+		if (getThread().getState()!=Thread.State.TERMINATED){
+		 
+			getThread().setRunning(true);
+	 
+			getThread().start();
+		} else{
+			thread = new GameThread(holder, context , (Vibrator) mActivity.getSystemService(Context.VIBRATOR_SERVICE), new Handler() {
+				@Override
+				public void handleMessage(Message m) {
+
+				}
+			});
+		
+			getThread().setRunning(true);
+			getThread().start();
+		}
+	 
 
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		Log.i (TAG,"surfaceDestroyed");
 		boolean retry = true;
 		getThread().setRunning(false);
 		while (retry) {
