@@ -31,7 +31,7 @@ import android.widget.Toast;
 public class MINDdroid extends Activity {
 	public static final int UPDATE_TIME = 200;
 	public static final int MENU_INFO = Menu.FIRST;
-	public static final int MENU_CONNECT = Menu.FIRST + 1;
+	public static final int MENU_TOGGLE_CONNECT = Menu.FIRST + 1;
 	public static final int MENU_QUIT = Menu.FIRST + 2;
 	private static final int REQUEST_CONNECT_DEVICE = 1000;
 	private static final int REQUEST_ENABLE_BT = 2000;
@@ -76,12 +76,12 @@ public class MINDdroid extends Activity {
 		if (myMenu == null)
 			return;
 
-		myMenu.removeItem(MENU_CONNECT);
+		myMenu.removeItem(MENU_TOGGLE_CONNECT);
 
 		if (connected) {
-			myMenu.add(0, MENU_CONNECT, 2, getResources().getString(R.string.disconnect)).setIcon(R.drawable.ic_menu_connected);
+			myMenu.add(0, MENU_TOGGLE_CONNECT, 2, getResources().getString(R.string.disconnect)).setIcon(R.drawable.ic_menu_connected);
 		} else {
-			myMenu.add(0, MENU_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
+			myMenu.add(0, MENU_TOGGLE_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
 		}
 	}
 
@@ -248,7 +248,7 @@ public class MINDdroid extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		myMenu = menu;
 		myMenu.add(0, MENU_INFO, 1, getResources().getString(R.string.info)).setIcon(R.drawable.ic_menu_about);
-		myMenu.add(0, MENU_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
+		myMenu.add(0, MENU_TOGGLE_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
 		myMenu.add(0, MENU_QUIT, 3, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
 		updateButtonsAndMenu();
 		return true;
@@ -264,7 +264,7 @@ public class MINDdroid extends Activity {
 				Info.show(this);
 				// showAboutDialog();
 				return true;
-			case MENU_CONNECT:
+			case MENU_TOGGLE_CONNECT:
 				Log.d("MINDdroid", "MENU_CONNECT");
 				if (myBTCommunicator == null) {
 
@@ -335,7 +335,7 @@ public class MINDdroid extends Activity {
 	}
 
 	void selectNXT() {
-		Log.d("MINDDroid", "selectNXT ");
+		//Log.d("MINDDroid", "selectNXT ");
 		Intent serverIntent = new Intent(this, DeviceListActivity.class);
 		startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 
@@ -344,7 +344,7 @@ public class MINDdroid extends Activity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-		Log.d("MINDDroid", "onActivityResult " + resultCode);
+		//Log.d("MINDDroid", "onActivityResult " + resultCode);
 		switch (requestCode) {
 			case REQUEST_CONNECT_DEVICE:
 
@@ -353,7 +353,6 @@ public class MINDdroid extends Activity {
 					// Get the device MAC address
 					String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 					startBTCommunicator(address);
-
 					setContentView(mView);
 
 				}
