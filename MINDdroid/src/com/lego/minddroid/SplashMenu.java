@@ -22,7 +22,6 @@ public class SplashMenu extends Activity {
 		// Eula.show(this);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.splash_menu);
-		setupButtons();
 		splashMenu = this;
 	}
 
@@ -44,51 +43,24 @@ public class SplashMenu extends Activity {
 		super.onResume();
 	}
 
-	private void setupButtons() {
-
-		Button tutorial_button = (Button) this.findViewById(R.id.tutorial);
-		
-		tutorial_button.setOnClickListener(new Button.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-			}
-
-		});
-
-		Button start_button = (Button) this.findViewById(R.id.start);
-		start_button.setOnClickListener(new Button.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-
-				Intent playGame = new Intent(splashMenu.getBaseContext(), MINDdroid.class);
-				splashMenu.startActivity(playGame);
-
-			}
-
-		});
-
-		Button credits_button = (Button) this.findViewById(R.id.credits);
-		credits_button.setOnClickListener(new Button.OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				showCredits();
-
-			}
-
-		});
-
-	}
 	
 	public static void quitApplication(){
 		splashMenu.finish();
 	}
 	
-	private void showCredits() {
+	public void showCredits(View v) {
 		Info.show(this);
+	}
+	
+	public void playGame(View v) {
+		Intent playGame = new Intent(splashMenu.getBaseContext(), MINDdroid.class);
+		splashMenu.startActivity(playGame);
+	}
+	
+	public void showTutorial(View v) {
+		//change to real tutorial
+		Info.show(this);
+	 
 	}
 
 }

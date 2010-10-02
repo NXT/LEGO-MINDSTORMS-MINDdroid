@@ -29,13 +29,9 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="@string/tutorial"
-            />
-        <Button
-            android:id="@+id/start"
-            android:textSize="28sp"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:text="@string/start_button"
+            android:drawableLeft="@drawable/logo_black"
+            android:onClick="showTutorial"
+            
             />
         <Button
             android:id="@+id/credits"
@@ -43,10 +39,23 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="@string/credits"
+            android:drawableLeft="@drawable/logo_black"
+            android:onClick="showCredits"
+            
             />
+        <Button
+            android:id="@+id/start"
+            android:textSize="28sp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="@string/start_button"
+            android:drawableLeft="@drawable/logo_new"
+            android:onClick="playGame"
+            />
+     
         <TextView
             android:id="@+id/legal_txt"
-           android:textSize="14sp"
+            android:textSize="14sp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="This is a placeholder for whatever LEGAL info needs to be displayed here. 
