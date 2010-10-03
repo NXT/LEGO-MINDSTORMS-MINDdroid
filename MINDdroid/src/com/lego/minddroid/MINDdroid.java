@@ -199,7 +199,7 @@ public class MINDdroid extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		myMenu = menu;
-		myMenu.add(0, MENU_INFO, 1, getResources().getString(R.string.info)).setIcon(R.drawable.ic_menu_about);
+		myMenu.add(0, MENU_INFO, 1, getResources().getString(R.string.about)).setIcon(R.drawable.ic_menu_about);
 		myMenu.add(0, MENU_TOGGLE_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
 		myMenu.add(0, MENU_QUIT, 3, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
 		updateButtonsAndMenu();
@@ -213,8 +213,9 @@ public class MINDdroid extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case MENU_INFO:
-				Info.show(this);
-				// showAboutDialog();
+				// Info.show(this);
+        		About about = new About();
+        		about.show(this);
 				return true;
 			case MENU_TOGGLE_CONNECT:
 				Log.d("MINDdroid", "MENU_CONNECT");
@@ -236,12 +237,12 @@ public class MINDdroid extends Activity {
 		return false;
 	}
 
-	private void showAboutDialog() {
-		final Dialog dialog = new Dialog(this);
-		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.aboutbox);
-		dialog.show();
-	}
+//	public void showAboutDialog() {
+//		final Dialog dialog = new Dialog(this);
+//		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+//		dialog.setContentView(R.layout.aboutbox);
+//		dialog.show();
+//	}
 
 	private void showToast(String textToShow) {
 		reusableToast.setText(textToShow);

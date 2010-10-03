@@ -49,7 +49,8 @@ public class SplashMenu extends Activity {
 	}
 	
 	public void showCredits(View v) {
-		Info.show(this);
+		About about = new About();
+		about.show(this);
 	}
 	
 	public void playGame(View v) {
@@ -59,7 +60,8 @@ public class SplashMenu extends Activity {
 	
 	public void showTutorial(View v) {
 		//change to real tutorial
-		Info.show(this);
+		About about = new About();
+		about.show(this);
 	 
 	}
 
