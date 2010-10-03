@@ -75,6 +75,7 @@ public class MINDdroid extends Activity {
 	}
 
 	public void createBTCommunicator() {
+		Log.d("MINDDroid","createBTCommunicator" );
 		// interestingly BT adapter needs to be obtained by the UI thread - so we pass it in in the constructor
 		myBTCommunicator = new BTCommunicator(this, myHandler,BluetoothAdapter.getDefaultAdapter());
 		btcHandler = myBTCommunicator.getHandler();
@@ -294,7 +295,7 @@ public class MINDdroid extends Activity {
 		//Log.d("MINDDroid", "onActivityResult " + resultCode);
 		switch (requestCode) {
 			case REQUEST_CONNECT_DEVICE:
-
+				Log.d("MINDDroid", "REQUEST_CONNECT_DEVICE");
 				// When DeviceListActivity returns with a device to connect
 				if (resultCode == Activity.RESULT_OK) {
 					// Get the device MAC address
@@ -309,6 +310,7 @@ public class MINDdroid extends Activity {
 				// When the request to enable Bluetooth returns
 				if (resultCode == Activity.RESULT_OK) {
 					// Bluetooth is now enabled, so select a NXT
+					myBTCommunicator=null;
 					selectNXT();
 
 				} else {

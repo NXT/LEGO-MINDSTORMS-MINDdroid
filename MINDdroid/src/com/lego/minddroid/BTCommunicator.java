@@ -62,7 +62,7 @@ public class BTCommunicator extends Thread {
 	public BTCommunicator(MINDdroid myMINDdroid, Handler uiHandler, BluetoothAdapter btAdapter) {
 		this.myMINDdroid = myMINDdroid;
 		this.uiHandler = uiHandler;
-		this.btAdapter=btAdapter;
+		this.btAdapter= btAdapter;
 	}
 
 	public Handler getHandler() {
@@ -94,7 +94,9 @@ public class BTCommunicator extends Thread {
 		try {
 		
 			BluetoothDevice nxtDevice = null;
-
+			
+			Log.d("BTCommunicator","createNXTConnection() mMACaddress: "+mMACaddress );
+			Log.d("BTCommunicator","createNXTConnection() isBTAdapterEnabled(): "+isBTAdapterEnabled() );
 			nxtDevice = btAdapter.getRemoteDevice(mMACaddress);
 
 			if (nxtDevice == null) {
@@ -102,12 +104,14 @@ public class BTCommunicator extends Thread {
 				sendState(STATE_CONNECTERROR);
 				return;
 			}
-
+			
 			nxtBTsocket = nxtDevice.createRfcommSocketToServiceRecord(SERIAL_PORT_SERVICE_CLASS_UUID);
+			Log.d("BTCommunicator","nxtBTsocket==null "+(nxtBTsocket==null));
 			nxtBTsocket.connect();
 			nxtDin = new DataInputStream(nxtBTsocket.getInputStream());
 			nxtDos = new DataOutputStream(nxtBTsocket.getOutputStream());
 		} catch (IOException e) {
+			Log.d("BTCommunicator","error createNXTConnection()",e);
 			sendToast(myMINDdroid.getResources().getString(R.string.problem_at_connecting));
 			sendState(STATE_CONNECTERROR);
 			return;

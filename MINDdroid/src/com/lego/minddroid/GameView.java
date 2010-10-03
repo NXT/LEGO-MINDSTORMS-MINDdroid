@@ -81,6 +81,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		/** Indicate whether the surface has been created & is ready to draw */
 		private boolean mRun = false;
 
+		/** Scratch rect object. */
+		private RectF mScratchRect;
+
 		/** Handle to the surface manager object we interact with */
 		private SurfaceHolder mSurfaceHolder;
 
@@ -169,7 +172,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			mActionButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_up);
 			mActionDownButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_down);
 			mBackgroundImage = BitmapFactory.decodeResource(res, R.drawable.background_1);
-			new RectF(0, 0, 0, 0);
+			mScratchRect = new RectF(0, 0, 0, 0);
 
 		}
 
