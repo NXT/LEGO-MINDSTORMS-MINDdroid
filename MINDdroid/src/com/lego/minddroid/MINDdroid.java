@@ -71,10 +71,10 @@ public class MINDdroid extends Activity {
 		} else {
 			myMenu.add(0, MENU_TOGGLE_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
 		}
+	
 	}
 
 	public void createBTCommunicator() {
-		Log.d("MINDDroid", "createBTCommunicator");
 		// interestingly BT adapter needs to be obtained by the UI thread - so we pass it in in the constructor
 		myBTCommunicator = new BTCommunicator(this, myHandler, BluetoothAdapter.getDefaultAdapter());
 		btcHandler = myBTCommunicator.getHandler();
@@ -84,7 +84,7 @@ public class MINDdroid extends Activity {
 		if (myBTCommunicator == null) {
 			createBTCommunicator();
 		}
-		//Log.d("MINDDroid", "startBTCommunicator");
+
 		myBTCommunicator.setMACAddress(mac_address);
 		myBTCommunicator.start();
 		updateButtonsAndMenu();
@@ -218,8 +218,7 @@ public class MINDdroid extends Activity {
 				return true;
 			case MENU_TOGGLE_CONNECT:
 				Log.d("MINDdroid", "MENU_CONNECT");
-				if (myBTCommunicator == null) {
-
+				if (myBTCommunicator == null||connected==false) {
 					selectNXT();
 				} else {
 					Log.d("MINDDroid", "destroyBTCommunicator onOptionsItemSelected");
@@ -265,6 +264,7 @@ public class MINDdroid extends Activity {
 				case BTCommunicator.STATE_CONNECTERROR:
 					myBTCommunicator = null;
 					connectingProgressDialog.dismiss();
+					connected = false;
 					updateButtonsAndMenu();
 					break;
 				case BTCommunicator.MOTOR_STATE:
