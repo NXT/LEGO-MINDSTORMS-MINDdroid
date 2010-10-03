@@ -15,7 +15,6 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -75,18 +74,17 @@ public class MINDdroid extends Activity {
 	}
 
 	public void createBTCommunicator() {
-		Log.d("MINDDroid","createBTCommunicator" );
+		Log.d("MINDDroid", "createBTCommunicator");
 		// interestingly BT adapter needs to be obtained by the UI thread - so we pass it in in the constructor
-		myBTCommunicator = new BTCommunicator(this, myHandler,BluetoothAdapter.getDefaultAdapter());
+		myBTCommunicator = new BTCommunicator(this, myHandler, BluetoothAdapter.getDefaultAdapter());
 		btcHandler = myBTCommunicator.getHandler();
 	}
 
 	public void startBTCommunicator(String mac_address) {
-
 		if (myBTCommunicator == null) {
 			createBTCommunicator();
 		}
-
+		//Log.d("MINDDroid", "startBTCommunicator");
 		myBTCommunicator.setMACAddress(mac_address);
 		myBTCommunicator.start();
 		updateButtonsAndMenu();
@@ -115,16 +113,16 @@ public class MINDdroid extends Activity {
 
 			// sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_ACTION, 0, 0);
 
-            // Super Mario Brothers: Main Theme Start
+			// Super Mario Brothers: Main Theme Start
 			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_BEEP, 659, 100);
 			sendBTCmessage(150, BTCommunicator.DO_BEEP, 659, 100);
 			sendBTCmessage(450, BTCommunicator.DO_BEEP, 659, 250);
 			sendBTCmessage(750, BTCommunicator.DO_BEEP, 523, 100);
 			sendBTCmessage(900, BTCommunicator.DO_BEEP, 659, 250);
 			sendBTCmessage(1200, BTCommunicator.DO_BEEP, 784, 250);
-			sendBTCmessage(1800, BTCommunicator.DO_BEEP, 392, 250);			
+			sendBTCmessage(1800, BTCommunicator.DO_BEEP, 392, 250);
 
-            // MOTOR B: forth an back
+			// MOTOR B: forth an back
 			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_B, 50, 0);
 			sendBTCmessage(600, BTCommunicator.MOTOR_B, -50, 600);
 			sendBTCmessage(1200, BTCommunicator.MOTOR_B, 0, 1200);
@@ -133,7 +131,7 @@ public class MINDdroid extends Activity {
 
 		}
 	}
-	
+
 	public void updateMotorControl(int left, int right) {
 
 		if (myBTCommunicator != null) {
@@ -142,7 +140,6 @@ public class MINDdroid extends Activity {
 			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_C, right, 0);
 		}
 	}
-
 
 	void sendBTCmessage(int delay, int message, int value1, int value2) {
 		Bundle myBundle = new Bundle();
@@ -159,6 +156,7 @@ public class MINDdroid extends Activity {
 
 	@Override
 	public void onResume() {
+		Log.d("MINDDroid", "onResume() ");
 		super.onResume();
 		mView.registerListener();
 
@@ -173,6 +171,12 @@ public class MINDdroid extends Activity {
 
 		}
 
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		destroyBTCommunicator();
 	}
 
 	@Override
@@ -283,16 +287,12 @@ public class MINDdroid extends Activity {
 	}
 
 	void selectNXT() {
-		//Log.d("MINDDroid", "selectNXT ");
 		Intent serverIntent = new Intent(this, DeviceListActivity.class);
 		startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
-
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-		//Log.d("MINDDroid", "onActivityResult " + resultCode);
 		switch (requestCode) {
 			case REQUEST_CONNECT_DEVICE:
 				Log.d("MINDDroid", "REQUEST_CONNECT_DEVICE");
@@ -308,13 +308,7 @@ public class MINDdroid extends Activity {
 			case REQUEST_ENABLE_BT:
 				Log.d("MINDDroid", "REQUEST_ENABLE_BT " + resultCode);
 				// When the request to enable Bluetooth returns
-				if (resultCode == Activity.RESULT_OK) {
-					// Bluetooth is now enabled, so select a NXT
-					myBTCommunicator=null;
-					selectNXT();
-
-				} else {
-					// User did not enable Bluetooth or an error occured
+				if (resultCode != Activity.RESULT_OK) {
 					Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
 					finish();
 				}
