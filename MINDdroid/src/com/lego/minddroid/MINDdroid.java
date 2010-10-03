@@ -38,7 +38,7 @@ public class MINDdroid extends Activity {
 	private Handler btcHandler;
 	private Menu myMenu;
 	private GameView mView;
-
+    boolean pairing;
 	/**
 	 * Called when the activity is first created. Inititializes all the
 	 * graphical views.
@@ -300,6 +300,7 @@ public class MINDdroid extends Activity {
 				if (resultCode == Activity.RESULT_OK) {
 					// Get the device MAC address
 					String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+					pairing=data.getExtras().getBoolean(DeviceListActivity.PAIRING);
 					startBTCommunicator(address);
 					setContentView(mView);
 

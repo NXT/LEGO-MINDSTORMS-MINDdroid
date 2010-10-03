@@ -110,8 +110,13 @@ public class BTCommunicator extends Thread {
 			nxtDos = new DataOutputStream(nxtBTsocket.getOutputStream());
 		} catch (IOException e) {
 			Log.d("BTCommunicator", "error createNXTConnection()", e);
+			if (myMINDdroid.pairing){
+			sendToast(myMINDdroid.getResources().getString(R.string.pairing_message));
+			sendState(STATE_CONNECTERROR);	
+			}else{
 			sendToast(myMINDdroid.getResources().getString(R.string.problem_at_connecting));
 			sendState(STATE_CONNECTERROR);
+			}
 			return;
 		}
 		sendState(STATE_CONNECTED);

@@ -44,7 +44,8 @@ import android.widget.AdapterView.OnItemClickListener;
  * Activity in the result Intent.
  */
 public class DeviceListActivity extends Activity {
-    // Debugging
+    static final String PAIRING = "pairing";
+	// Debugging
     private static final String TAG = "DeviceListActivity";
     private static final boolean D = true;
 
@@ -165,7 +166,10 @@ public class DeviceListActivity extends Activity {
 
             // Create the result Intent and include the MAC address
             Intent intent = new Intent();
-            intent.putExtra(EXTRA_DEVICE_ADDRESS, address);
+            Bundle data = new Bundle();
+            data.putString(EXTRA_DEVICE_ADDRESS, address);
+            data.putBoolean(PAIRING,av.getId()==R.id.new_devices);
+            intent.putExtras(data);
 
             // Set result and finish this Activity
             setResult(Activity.RESULT_OK, intent);
