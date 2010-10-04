@@ -127,7 +127,7 @@ public class MINDdroid extends Activity {
 			sendBTCmessage(600, BTCommunicator.MOTOR_B, -50, 600);
 			sendBTCmessage(1200, BTCommunicator.MOTOR_B, 0, 1200);
 
-			// sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B, 1500);
+			sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B, 1500);
 
 		}
 	}
@@ -213,7 +213,6 @@ public class MINDdroid extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case MENU_INFO:
-				// Info.show(this);
         		About about = new About();
         		about.show(this);
 				return true;
@@ -237,12 +236,6 @@ public class MINDdroid extends Activity {
 		return false;
 	}
 
-//	public void showAboutDialog() {
-//		final Dialog dialog = new Dialog(this);
-//		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-//		dialog.setContentView(R.layout.aboutbox);
-//		dialog.show();
-//	}
 
 	private void showToast(String textToShow) {
 		reusableToast.setText(textToShow);

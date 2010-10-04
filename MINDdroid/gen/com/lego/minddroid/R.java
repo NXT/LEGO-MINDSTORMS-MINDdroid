@@ -72,12 +72,12 @@ public final class R {
         public static final int about=0x7f050002;
         /**  About Dialog 
          */
-        public static final int about_general=0x7f05001b;
-        public static final int about_license_gpl=0x7f05001c;
-        public static final int about_license_lego=0x7f05001d;
-        public static final int about_ok=0x7f050020;
-        public static final int about_people=0x7f05001e;
-        public static final int about_thanks=0x7f05001f;
+        public static final int about_general=0x7f05001c;
+        public static final int about_license_gpl=0x7f05001d;
+        public static final int about_license_lego=0x7f05001e;
+        public static final int about_ok=0x7f050021;
+        public static final int about_people=0x7f05001f;
+        public static final int about_thanks=0x7f050020;
         public static final int action=0x7f050006;
         public static final int app_name=0x7f050001;
         public static final int button_scan=0x7f05001a;
@@ -96,6 +96,7 @@ public final class R {
         public static final int none_found=0x7f050017;
         public static final int none_paired=0x7f050016;
         public static final int nxt_default_name=0x7f050000;
+        public static final int pairing_message=0x7f05001b;
         public static final int problem_at_closing=0x7f05000a;
         public static final int problem_at_connecting=0x7f050009;
         public static final int problem_at_receiving=0x7f05000c;

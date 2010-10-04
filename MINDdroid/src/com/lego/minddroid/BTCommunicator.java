@@ -52,6 +52,7 @@ public class BTCommunicator extends Thread {
 	private BluetoothSocket nxtBTsocket = null;
 	private DataOutputStream nxtDos = null;
 	private DataInputStream nxtDin = null;
+	private boolean connected = false;
 
 	private Handler uiHandler;
 	private String mMACaddress;
@@ -79,7 +80,27 @@ public class BTCommunicator extends Thread {
 
 	@Override
 	public void run() {
-		createNXTConnection();
+        Log.d("BTCommunicator","Starting thread: "+Thread.currentThread().getId());
+
+		createNXTconnection();		
+
+        while (connected) {
+	        // read length of message and the message itself
+	        int length;
+	        try {
+		        length = nxtDin.readByte();
+		        length = (nxtDin.readByte() << 8) + length;
+		        returnMessage = new byte[length];
+		        nxtDin.read(returnMessage);
+                if ((length >= 2) && (returnMessage[0] == 0x02)) 
+                    dispatchMessage(returnMessage);		        
+	        } catch (IOException e) {
+	            // don't inform the user when connection is already closed
+	            if (connected)
+			        sendToast(myMINDdroid.getResources().getString(R.string.problem_at_receiving));
+		        return;
+	        }
+        }		
 	}
 
 	/**
@@ -89,7 +110,7 @@ public class BTCommunicator extends Thread {
 	 *      "http://lejos.sourceforge.net/forum/viewtopic.php?t=1991&highlight=android"
 	 *      />
 	 */
-	private void createNXTConnection() {
+	private void createNXTconnection() {
 		try {
 
 			BluetoothSocket nxtBTsocketTEMPORARY;
@@ -108,27 +129,41 @@ public class BTCommunicator extends Thread {
 
 			nxtDin = new DataInputStream(nxtBTsocket.getInputStream());
 			nxtDos = new DataOutputStream(nxtBTsocket.getOutputStream());
+
+			connected = true;
 		} catch (IOException e) {
 			Log.d("BTCommunicator", "error createNXTConnection()", e);
 			if (myMINDdroid.pairing){
-			sendToast(myMINDdroid.getResources().getString(R.string.pairing_message));
-			sendState(STATE_CONNECTERROR);	
-			}else{
-			sendToast(myMINDdroid.getResources().getString(R.string.problem_at_connecting));
-			sendState(STATE_CONNECTERROR);
+    			sendToast(myMINDdroid.getResources().getString(R.string.pairing_message));
+	    		sendState(STATE_CONNECTERROR);	
+			}
+			else {
+	    		sendToast(myMINDdroid.getResources().getString(R.string.problem_at_connecting));
+	    		sendState(STATE_CONNECTERROR);
 			}
 			return;
 		}
 		sendState(STATE_CONNECTED);
 	}
 
-	private void destroyNXTConnection() {
+    private void dispatchMessage(byte[] message) {
+        switch (message[1]) {
+            // GETOUTPUTSTATE return message
+            case 0x06: 
+                if (message.length >= 25)
+    		        sendState(MOTOR_STATE);
+    			break;
+        }
+    }
+
+	private void destroyNXTconnection() {
 		try {
 			if (nxtBTsocket != null) {
-				// send stop messages before closing
-				changeMotorSpeed(MOTOR_A, 0);
-				changeMotorSpeed(MOTOR_C, 0);
-				waitSomeTime(500);
+		        // send stop messages before closing
+		        changeMotorSpeed(MOTOR_A, 0);
+		        changeMotorSpeed(MOTOR_C, 0);
+		        waitSomeTime(500);
+                connected = false;
 				nxtBTsocket.close();
 				nxtBTsocket = null;
 			}
@@ -138,7 +173,7 @@ public class BTCommunicator extends Thread {
 			sendToast(myMINDdroid.getResources().getString(R.string.problem_at_closing));
 		}
 	}
-
+	    
 	private void doBeep(int frequency, int duration) {
 		byte[] message = LCPMessage.getBeepMessage(frequency, duration);
 		sendMessage(message);
@@ -172,23 +207,7 @@ public class BTCommunicator extends Thread {
 
 	private void readMotorState(int motor) {
 		byte[] message = LCPMessage.getOutputStateMessage(motor);
-		if (sendMessage(message)) {
-			if (nxtDin != null) {
-				// read length of message and the message itself
-				int length;
-				try {
-					length = nxtDin.readByte();
-					length = (nxtDin.readByte() << 8) + length;
-					returnMessage = new byte[length];
-					nxtDin.read(returnMessage);
-				} catch (IOException e) {
-					sendToast(myMINDdroid.getResources().getString(R.string.problem_at_receiving));
-					return;
-				}
-				if (length >= 25)
-					sendState(MOTOR_STATE);
-			}
-		}
+		sendMessage(message);
 	}
 
 	private boolean sendMessage(byte[] message) {
@@ -240,6 +259,7 @@ public class BTCommunicator extends Thread {
 	final Handler myHandler = new Handler() {
 		@Override
 		public void handleMessage(Message myMessage) {
+
 			int message;
 			switch (message = myMessage.getData().getInt("message")) {
 				case MOTOR_A:
@@ -263,7 +283,7 @@ public class BTCommunicator extends Thread {
 					readMotorState(myMessage.getData().getInt("value1"));
 					break;
 				case DISCONNECT:
-					destroyNXTConnection();
+					destroyNXTconnection();
 					break;
 			}
 		}
