@@ -14,13 +14,14 @@
         android:orientation="vertical"
         android:background="#ffffff"
         >
-  
+           
         <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
-            <ImageView android:src = "@drawable/splash" android:layout_width="wrap_content"   android:layout_height="wrap_content" android:scaleType="centerInside"></ImageView>
-        </FrameLayout>
-         
-        <FrameLayout android:layout_width="fill_parent" android:layout_height="fill_parent">
-           <ImageView android:src = "@drawable/minddroid_logo" android:layout_width="wrap_content"   android:layout_height="wrap_content" android:scaleType="centerInside"></ImageView>
+            <ImageView 
+                android:src = "@drawable/logo_splash_minddroid" 
+                android:layout_width="wrap_content"   
+                android:layout_height="wrap_content" 
+                android:scaleType="centerInside">
+            </ImageView>
         </FrameLayout> 
         
         <Button

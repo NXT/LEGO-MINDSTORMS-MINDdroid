@@ -20,18 +20,20 @@ public final class R {
         public static final int ic_menu_connect=0x7f020006;
         public static final int ic_menu_connected=0x7f020007;
         public static final int ic_menu_exit=0x7f020008;
-        public static final int icon=0x7f020009;
-        public static final int lego_mindstorms=0x7f02000a;
-        public static final int logo_black=0x7f02000b;
-        public static final int logo_new=0x7f02000c;
-        public static final int minddroid_logo=0x7f02000d;
-        public static final int orange=0x7f02000e;
-        public static final int orange_dot=0x7f02000f;
-        public static final int splash=0x7f020010;
-        public static final int target=0x7f020011;
-        public static final int target_no_orange_dot=0x7f020012;
-        public static final int white=0x7f020013;
-        public static final int white_total=0x7f020014;
+        public static final int ic_splash_legal=0x7f020009;
+        public static final int ic_splash_start=0x7f02000a;
+        public static final int ic_splash_tutorial=0x7f02000b;
+        public static final int icon=0x7f02000c;
+        public static final int logo_black=0x7f02000d;
+        public static final int logo_new=0x7f02000e;
+        public static final int logo_splash_minddroid=0x7f02000f;
+        public static final int orange=0x7f020010;
+        public static final int orange_dot=0x7f020011;
+        public static final int splash=0x7f020012;
+        public static final int target=0x7f020013;
+        public static final int target_no_orange_dot=0x7f020014;
+        public static final int white=0x7f020015;
+        public static final int white_total=0x7f020016;
     }
     public static final class id {
         public static final int AboutOKbutton=0x7f060002;

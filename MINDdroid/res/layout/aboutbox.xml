@@ -7,11 +7,7 @@
 	<ImageView 
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:gravity="center" android:src="@drawable/lego_mindstorms"/>	
-	<ImageView 
-		android:layout_width="fill_parent"
-		android:layout_height="wrap_content"
-		android:gravity="center" android:src="@drawable/minddroid_logo"/>
+		android:gravity="center" android:src="@drawable/logo_splash_minddroid"/>	
     <ScrollView android:id="@+id/ScrollView" 
                 android:layout_marginBottom="50dip"
                 android:layout_width="fill_parent" 
