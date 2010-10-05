@@ -20,9 +20,12 @@
 package com.lego.minddroid;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -47,6 +50,8 @@ public class MINDdroid extends Activity {
 	private Handler btcHandler;
 	private Menu myMenu;
 	private GameView mView;
+	private Activity thisActivity;
+	private boolean bt_error_pending = false;
     boolean pairing;
 	/**
 	 * Called when the activity is first created. Inititializes all the
@@ -55,6 +60,7 @@ public class MINDdroid extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		thisActivity = this;
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		StartSound mySound = new StartSound(this);
 		mySound.start();
@@ -261,12 +267,6 @@ public class MINDdroid extends Activity {
 					connectingProgressDialog.dismiss();
 					updateButtonsAndMenu();
 					break;
-				case BTCommunicator.STATE_CONNECTERROR:
-					myBTCommunicator = null;
-					connectingProgressDialog.dismiss();
-					connected = false;
-					updateButtonsAndMenu();
-					break;
 				case BTCommunicator.MOTOR_STATE:
 					if (myBTCommunicator != null) {
 						byte[] motorMessage = myBTCommunicator.getReturnMessage();
@@ -275,9 +275,31 @@ public class MINDdroid extends Activity {
 						showToast(getResources().getString(R.string.current_position) + position);
 					}
 					break;
+                case BTCommunicator.STATE_CONNECTERROR:
+                    connectingProgressDialog.dismiss();
+                case BTCommunicator.STATE_RECEIVEERROR:
+				case BTCommunicator.STATE_SENDERROR:
+                    destroyBTCommunicator();
+                    if (bt_error_pending == false) {
+                        bt_error_pending = true;
+                        // inform the user of the error with an AlertDialog 
+                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                        builder.setTitle(getResources().getString(R.string.bt_error_dialog_title))
+                               .setMessage(getResources().getString(R.string.bt_error_dialog_message))
+                               .setCancelable(false)
+                               .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                   public void onClick(DialogInterface dialog, int id) {
+                                       bt_error_pending = false; 
+                                       dialog.cancel();
+                                       selectNXT();
+                                   }
+                                });
+                        builder.create().show();        
+                    }
+				    break;
 			}
 		}
-	};
+	};	
 
 	private int byteToInt(byte byteValue) {
 		int intValue = (byteValue & (byte) 0x7f);
@@ -301,9 +323,7 @@ public class MINDdroid extends Activity {
 					setContentView(mView);
 					String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 					pairing=data.getExtras().getBoolean(DeviceListActivity.PAIRING);
-					startBTCommunicator(address);
-					
-
+					startBTCommunicator(address);					
 				}
 				break;
 			case REQUEST_ENABLE_BT:

@@ -49,7 +49,9 @@ public class BTCommunicator extends Thread {
 	public static final int STATE_CONNECTED = 1001;
 	public static final int STATE_CONNECTERROR = 1002;
 	public static final int MOTOR_STATE = 1003;
-
+	public static final int STATE_RECEIVEERROR = 1004;
+	public static final int STATE_SENDERROR = 1005;
+	
 	public static final int NO_DELAY = 0;
 
 	private static final UUID SERIAL_PORT_SERVICE_CLASS_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
@@ -104,7 +106,7 @@ public class BTCommunicator extends Thread {
 	        } catch (IOException e) {
 	            // don't inform the user when connection is already closed
 	            if (connected)
-			        sendToast(myMINDdroid.getResources().getString(R.string.problem_at_receiving));
+	                sendState(STATE_RECEIVEERROR);
 		        return;
 	        }
         }		
@@ -145,7 +147,6 @@ public class BTCommunicator extends Thread {
 	    		sendState(STATE_CONNECTERROR);	
 			}
 			else {
-	    		sendToast(myMINDdroid.getResources().getString(R.string.problem_at_connecting));
 	    		sendState(STATE_CONNECTERROR);
 			}
 			return;
@@ -231,7 +232,7 @@ public class BTCommunicator extends Thread {
 			nxtDos.flush();
 			return true;
 		} catch (IOException ioe) {
-			sendToast(myMINDdroid.getResources().getString(R.string.problem_at_sending));
+            sendState(STATE_SENDERROR);
 			return false;
 		}
 	}

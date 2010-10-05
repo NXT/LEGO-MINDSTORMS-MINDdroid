@@ -20,6 +20,14 @@
     <string name="eula_title">End User License Agreement</string>
     <string name="eula_accept">Accept</string>
     <string name="eula_refuse">Refuse</string>
+
+    <string name="bt_error_dialog_title">Bluetooth Error</string>    
+
+    <string name="bt_error_dialog_message">
+        Something went wrong on the connection to the robot. 
+        Maybe your robot was shut down. Please make sure 
+        everything is OK and start again.
+    </string>    
     
     <!-- Splash Menu -->
     <string name="tutorial">Tutorial</string>
