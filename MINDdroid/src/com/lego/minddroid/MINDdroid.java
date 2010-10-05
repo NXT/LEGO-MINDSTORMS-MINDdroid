@@ -298,10 +298,11 @@ public class MINDdroid extends Activity {
 				// When DeviceListActivity returns with a device to connect
 				if (resultCode == Activity.RESULT_OK) {
 					// Get the device MAC address
+					setContentView(mView);
 					String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
 					pairing=data.getExtras().getBoolean(DeviceListActivity.PAIRING);
 					startBTCommunicator(address);
-					setContentView(mView);
+					
 
 				}
 				break;
