@@ -62,7 +62,6 @@ public class MINDdroid extends Activity {
 		mView = new GameView(getApplicationContext(), this);
 		mView.setFocusable(true);
 		setContentView(mView);
-		Log.d("", "setContentView(mView)");
 		reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 		// select the nxt to connect to
 		selectNXT();
@@ -165,7 +164,6 @@ public class MINDdroid extends Activity {
 
 	@Override
 	public void onResume() {
-		Log.d("MINDDroid", "onResume() ");
 		super.onResume();
 		mView.registerListener();
 
@@ -191,7 +189,6 @@ public class MINDdroid extends Activity {
 	@Override
 	public void onPause() {
 		mView.unregisterListener();
-		Log.d("MINDDroid", "destroyBTCommunicator onPause()");
 		destroyBTCommunicator();
 		super.onStop();
 	}
@@ -298,7 +295,6 @@ public class MINDdroid extends Activity {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 			case REQUEST_CONNECT_DEVICE:
-				Log.d("MINDDroid", "REQUEST_CONNECT_DEVICE");
 				// When DeviceListActivity returns with a device to connect
 				if (resultCode == Activity.RESULT_OK) {
 					// Get the device MAC address
@@ -310,7 +306,6 @@ public class MINDdroid extends Activity {
 				}
 				break;
 			case REQUEST_ENABLE_BT:
-				Log.d("MINDDroid", "REQUEST_ENABLE_BT " + resultCode);
 				// When the request to enable Bluetooth returns
 				if (resultCode != Activity.RESULT_OK) {
 					Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
