@@ -20,10 +20,15 @@ package com.lego.minddroid;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
 public class SplashMenu extends Activity {
+
+	public static final int MENU_ABOUT = Menu.FIRST;
+	public static final int MENU_QUIT = Menu.FIRST + 1;
 
 	public static void quitApplication() {
 		splashMenu.finish();
@@ -59,5 +64,32 @@ public class SplashMenu extends Activity {
 		// TODO Auto-generated method stub
 		super.onResume();
 	}
+
+   /**
+	 * Creates the menu items
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		menu.add(0, MENU_ABOUT, 1, getResources().getString(R.string.about)).setIcon(R.drawable.ic_menu_about);
+		menu.add(0, MENU_QUIT, 2, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
+		return true;
+	}
+
+	/**
+	 * Handles item selections
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case MENU_ABOUT:
+                About about = new About();
+                about.show(this);		
+				return true;
+			case MENU_QUIT:
+				finish();
+				return true;
+		}
+		return false;
+	}	
 
 }

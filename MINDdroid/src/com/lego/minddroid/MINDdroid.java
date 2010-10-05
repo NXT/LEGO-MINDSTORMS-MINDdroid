@@ -38,9 +38,8 @@ import android.widget.Toast;
 
 public class MINDdroid extends Activity {
 	public static final int UPDATE_TIME = 200;
-	public static final int MENU_INFO = Menu.FIRST;
-	public static final int MENU_TOGGLE_CONNECT = Menu.FIRST + 1;
-	public static final int MENU_QUIT = Menu.FIRST + 2;
+	public static final int MENU_TOGGLE_CONNECT = Menu.FIRST;
+	public static final int MENU_QUIT = Menu.FIRST + 1;
 	private static final int REQUEST_CONNECT_DEVICE = 1000;
 	private static final int REQUEST_ENABLE_BT = 2000;
 	private BTCommunicator myBTCommunicator = null;
@@ -81,9 +80,9 @@ public class MINDdroid extends Activity {
 		myMenu.removeItem(MENU_TOGGLE_CONNECT);
 
 		if (connected) {
-			myMenu.add(0, MENU_TOGGLE_CONNECT, 2, getResources().getString(R.string.disconnect)).setIcon(R.drawable.ic_menu_connected);
+			myMenu.add(0, MENU_TOGGLE_CONNECT, 1, getResources().getString(R.string.disconnect)).setIcon(R.drawable.ic_menu_connected);
 		} else {
-			myMenu.add(0, MENU_TOGGLE_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
+			myMenu.add(0, MENU_TOGGLE_CONNECT, 1, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
 		}
 	
 	}
@@ -211,9 +210,8 @@ public class MINDdroid extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		myMenu = menu;
-		myMenu.add(0, MENU_INFO, 1, getResources().getString(R.string.about)).setIcon(R.drawable.ic_menu_about);
-		myMenu.add(0, MENU_TOGGLE_CONNECT, 2, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
-		myMenu.add(0, MENU_QUIT, 3, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
+		myMenu.add(0, MENU_TOGGLE_CONNECT, 1, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
+		myMenu.add(0, MENU_QUIT, 2, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
 		updateButtonsAndMenu();
 		return true;
 	}
@@ -224,10 +222,6 @@ public class MINDdroid extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-			case MENU_INFO:
-        		About about = new About();
-        		about.show(this);
-				return true;
 			case MENU_TOGGLE_CONNECT:
 				Log.d("MINDdroid", "MENU_CONNECT");
 				if (myBTCommunicator == null||connected==false) {
