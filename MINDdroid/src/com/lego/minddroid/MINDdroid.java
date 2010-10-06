@@ -1,28 +1,25 @@
 /**
- *   Copyright 2010 Guenther Hoelzl, Shawn Brown
- *
- *   This file is part of MINDdroid.
- *
- *   MINDdroid is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MINDdroid is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
-**/
+ * Copyright 2010 Guenther Hoelzl, Shawn Brown
+ * 
+ * This file is part of MINDdroid.
+ * 
+ * MINDdroid is free software: you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ * 
+ * MINDdroid is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with
+ * MINDdroid. If not, see <http://www.gnu.org/licenses/>.
+ **/
 
 package com.lego.minddroid;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
@@ -51,7 +48,8 @@ public class MINDdroid extends Activity {
 	private GameView mView;
 	private Activity thisActivity;
 	private boolean bt_error_pending = false;
-    boolean pairing;
+	boolean pairing;
+
 	/**
 	 * Called when the activity is first created. Inititializes all the
 	 * graphical views.
@@ -84,7 +82,7 @@ public class MINDdroid extends Activity {
 		} else {
 			myMenu.add(0, MENU_TOGGLE_CONNECT, 1, getResources().getString(R.string.connect)).setIcon(R.drawable.ic_menu_connect);
 		}
-	
+
 	}
 
 	public void createBTCommunicator() {
@@ -94,6 +92,8 @@ public class MINDdroid extends Activity {
 	}
 
 	public void startBTCommunicator(String mac_address) {
+
+		connectingProgressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.connecting_please_wait), true);
 		if (myBTCommunicator == null) {
 			createBTCommunicator();
 		}
@@ -101,7 +101,6 @@ public class MINDdroid extends Activity {
 		myBTCommunicator.setMACAddress(mac_address);
 		myBTCommunicator.start();
 		updateButtonsAndMenu();
-		connectingProgressDialog = ProgressDialog.show(this, "", getResources().getString(R.string.connecting_please_wait), true);
 
 	}
 
@@ -224,7 +223,7 @@ public class MINDdroid extends Activity {
 		switch (item.getItemId()) {
 			case MENU_TOGGLE_CONNECT:
 				Log.d("MINDdroid", "MENU_CONNECT");
-				if (myBTCommunicator == null||connected==false) {
+				if (myBTCommunicator == null || connected == false) {
 					selectNXT();
 				} else {
 					Log.d("MINDDroid", "destroyBTCommunicator onOptionsItemSelected");
@@ -241,7 +240,6 @@ public class MINDdroid extends Activity {
 		}
 		return false;
 	}
-
 
 	private void showToast(String textToShow) {
 		reusableToast.setText(textToShow);
@@ -269,31 +267,31 @@ public class MINDdroid extends Activity {
 						showToast(getResources().getString(R.string.current_position) + position);
 					}
 					break;
-                case BTCommunicator.STATE_CONNECTERROR:
-                    connectingProgressDialog.dismiss();
-                case BTCommunicator.STATE_RECEIVEERROR:
+				case BTCommunicator.STATE_CONNECTERROR:
+					connectingProgressDialog.dismiss();
+				case BTCommunicator.STATE_RECEIVEERROR:
 				case BTCommunicator.STATE_SENDERROR:
-                    destroyBTCommunicator();
-                    if (bt_error_pending == false) {
-                        bt_error_pending = true;
-                        // inform the user of the error with an AlertDialog 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
-                        builder.setTitle(getResources().getString(R.string.bt_error_dialog_title))
-                               .setMessage(getResources().getString(R.string.bt_error_dialog_message))
-                               .setCancelable(false)
-                               .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                   public void onClick(DialogInterface dialog, int id) {
-                                       bt_error_pending = false; 
-                                       dialog.cancel();
-                                       selectNXT();
-                                   }
-                                });
-                        builder.create().show();        
-                    }
-				    break;
+					destroyBTCommunicator();
+					if (bt_error_pending == false) {
+						bt_error_pending = true;
+						// inform the user of the error with an AlertDialog 
+						AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+						builder.setTitle(getResources().getString(R.string.bt_error_dialog_title))
+								.setMessage(getResources().getString(R.string.bt_error_dialog_message)).setCancelable(false)
+								.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog, int id) {
+										bt_error_pending = false;
+										dialog.cancel();
+										selectNXT();
+									}
+								});
+						builder.create().show();
+					}
+					break;
 			}
 		}
-	};	
+	};
 
 	private int byteToInt(byte byteValue) {
 		int intValue = (byteValue & (byte) 0x7f);
@@ -314,10 +312,9 @@ public class MINDdroid extends Activity {
 				// When DeviceListActivity returns with a device to connect
 				if (resultCode == Activity.RESULT_OK) {
 					// Get the device MAC address
-					setContentView(mView);
 					String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-					pairing=data.getExtras().getBoolean(DeviceListActivity.PAIRING);
-					startBTCommunicator(address);					
+					pairing = data.getExtras().getBoolean(DeviceListActivity.PAIRING);
+					startBTCommunicator(address);
 				}
 				break;
 			case REQUEST_ENABLE_BT:
