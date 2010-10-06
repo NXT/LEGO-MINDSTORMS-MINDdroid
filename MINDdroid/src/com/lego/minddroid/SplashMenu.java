@@ -32,9 +32,9 @@ public class SplashMenu extends Activity {
 	public static final int MENU_QUIT = Menu.FIRST + 1;
 
 	public static void quitApplication() {
-		if (MINDdroid.isBtOnByUs()){
-			BluetoothAdapter.getDefaultAdapter().disable();
-		}
+//		if (MINDdroid.isBtOnByUs()){
+//			BluetoothAdapter.getDefaultAdapter().disable();
+//		}
 		splashMenu.finish();
 
 	}
@@ -53,17 +53,15 @@ public class SplashMenu extends Activity {
 
 	@Override
 	protected void onDestroy() {
-//		if (MINDdroid.isBtOnByUs()){
-//			BluetoothAdapter.getDefaultAdapter().disable();
-//		}
+ 
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
-		if (MINDdroid.isBtOnByUs()){
-			BluetoothAdapter.getDefaultAdapter().disable();
-		}
+//		if (MINDdroid.isBtOnByUs()){
+//			BluetoothAdapter.getDefaultAdapter().disable();
+//		}
 		super.onPause();
 	}
 

@@ -183,7 +183,7 @@ public class MINDdroid extends Activity {
 		if (myBTCommunicator == null) {
 			createBTCommunicator();
 		}
-
+		btOnByUs=false;//reset state
 		// If BT is not on, request that it be enabled.
 		if (!myBTCommunicator.isBTAdapterEnabled()) {
 			btOnByUs=true;

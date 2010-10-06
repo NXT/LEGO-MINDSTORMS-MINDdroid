@@ -43,6 +43,8 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
+	private static final int SHORT_PRESS_MAX_DURATION = 750;
+
 	class GameThread extends Thread {
 		/** time between each redraw */
 		private static final int REDRAW_SCHED = 100;
@@ -175,6 +177,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		/** number of tilt readings for time between two draws ago and last draw **/
 		private int mPreviousNum = 0;
 
+	
+		
 		public GameThread(SurfaceHolder surfaceHolder, Context context, Vibrator vibrator, Handler handler) {
 			// get handles to some important objects
 			mHapticFeedback = vibrator;
@@ -661,9 +665,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private float mAccelX = 0;
 	private float mAccelY = 0;
 	private float mAccelZ = 0; // heading
-
-	/** Message handler used by thread to interact with TextView */
-
+	/**time that action button was pressed - used to calc long or short press */
+	long timePressed=0;
+	 
 	private final SensorEventListener mSensorAccelerometer = new SensorEventListener() {
 
 		@Override
@@ -715,16 +719,34 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// we only want to handle down events .
+		// we only want to handle down events.
+	
+		
+		if (event.getY() > this.getHeight() - getThread().mActionButton.getHeight()) {
+			//Log.d(TAG, "onTouchEvent in button area TouchEvent");
+		
+		switch (event.getAction()){
+			
+		case MotionEvent.ACTION_DOWN:
+			timePressed=System.currentTimeMillis();
+			break;
+			
+		case MotionEvent.ACTION_UP:
+			long upTime=System.currentTimeMillis();
+//			if (timePressed+SHORT_PRESS_MAX_DURATION<upTime){
+//				mActivity.actionButtonPressed();
+//			}else{//long press
+//				Log.d("GameView onTouchEvent" , "Long Press of Action Button delay:" +(upTime-timePressed));
+//				mActivity.actionButtonPressed();
+//			}
+			break;
+		//	mActivity.actionButtonPressed();
+		}
 
-		if (event.getAction() == MotionEvent.ACTION_DOWN) {
-
-			if (event.getY() > this.getHeight() - getThread().mActionButton.getHeight()) {
-				Log.d(TAG, "onTouchEvent in button area TouchEvent");
-
-				// implement action here
-				mActivity.actionButtonPressed();
-			}
+		mActivity.actionButtonPressed();
+ 
+				
+			 
 		}
 		return true;
 	}
