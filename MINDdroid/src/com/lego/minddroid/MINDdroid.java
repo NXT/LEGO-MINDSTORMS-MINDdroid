@@ -49,6 +49,15 @@ public class MINDdroid extends Activity {
 	private Activity thisActivity;
 	private boolean bt_error_pending = false;
 	boolean pairing;
+	private static boolean btOnByUs= false;
+
+	public static boolean isBtOnByUs() {
+		return btOnByUs;
+	}
+
+	public static void setBtOnByUs(boolean btOnByUs) {
+		MINDdroid.btOnByUs = btOnByUs;
+	}
 
 	/**
 	 * Called when the activity is first created. Inititializes all the
@@ -177,9 +186,10 @@ public class MINDdroid extends Activity {
 
 		// If BT is not on, request that it be enabled.
 		if (!myBTCommunicator.isBTAdapterEnabled()) {
+			btOnByUs=true;
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-
+		
 		}
 
 	}

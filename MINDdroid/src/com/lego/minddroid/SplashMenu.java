@@ -19,6 +19,7 @@
 package com.lego.minddroid;
 
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,9 @@ public class SplashMenu extends Activity {
 	public static final int MENU_QUIT = Menu.FIRST + 1;
 
 	public static void quitApplication() {
+		if (MINDdroid.isBtOnByUs()){
+			BluetoothAdapter.getDefaultAdapter().disable();
+		}
 		splashMenu.finish();
 
 	}
@@ -49,13 +53,17 @@ public class SplashMenu extends Activity {
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
+//		if (MINDdroid.isBtOnByUs()){
+//			BluetoothAdapter.getDefaultAdapter().disable();
+//		}
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
-		// TODO Auto-generated method stub
+		if (MINDdroid.isBtOnByUs()){
+			BluetoothAdapter.getDefaultAdapter().disable();
+		}
 		super.onPause();
 	}
 
