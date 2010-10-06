@@ -134,14 +134,14 @@ public class MINDdroid extends Activity {
 
 			// sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_ACTION, 0, 0);
 
-			// Super Mario Brothers: Main Theme Start
-			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_BEEP, 659, 100);
-			sendBTCmessage(150, BTCommunicator.DO_BEEP, 659, 100);
-			sendBTCmessage(450, BTCommunicator.DO_BEEP, 659, 250);
-			sendBTCmessage(750, BTCommunicator.DO_BEEP, 523, 100);
-			sendBTCmessage(900, BTCommunicator.DO_BEEP, 659, 250);
-			sendBTCmessage(1200, BTCommunicator.DO_BEEP, 784, 250);
-			sendBTCmessage(1800, BTCommunicator.DO_BEEP, 392, 250);
+			// Wolfgang Amadeus Mozart "Zauberfloete - Der Vogelfaenger bin ich ja"
+			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_BEEP, 392, 100);
+			sendBTCmessage(200, BTCommunicator.DO_BEEP, 440, 100);
+			sendBTCmessage(400, BTCommunicator.DO_BEEP, 494, 100);
+			sendBTCmessage(600, BTCommunicator.DO_BEEP, 523, 100);
+			sendBTCmessage(800, BTCommunicator.DO_BEEP, 587, 300);
+			sendBTCmessage(1200, BTCommunicator.DO_BEEP, 523, 300);
+			sendBTCmessage(1600, BTCommunicator.DO_BEEP, 494, 300);
 
 			// MOTOR B: forth an back
 			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_B, 50, 0);

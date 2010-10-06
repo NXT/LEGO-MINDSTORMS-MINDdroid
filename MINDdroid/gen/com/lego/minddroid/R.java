@@ -24,54 +24,43 @@ public final class R {
         public static final int ic_splash_start=0x7f02000a;
         public static final int ic_splash_tutorial=0x7f02000b;
         public static final int icon=0x7f02000c;
-        public static final int logo_black=0x7f02000d;
-        public static final int logo_new=0x7f02000e;
-        public static final int logo_splash_minddroid=0x7f02000f;
-        public static final int orange=0x7f020010;
-        public static final int orange_dot=0x7f020011;
-        public static final int splash=0x7f020012;
-        public static final int target=0x7f020013;
-        public static final int target_no_orange_dot=0x7f020014;
-        public static final int white=0x7f020015;
-        public static final int white_total=0x7f020016;
+        public static final int logo_new=0x7f02000d;
+        public static final int logo_splash_minddroid=0x7f02000e;
+        public static final int orange=0x7f02000f;
+        public static final int orange_dot=0x7f020010;
+        public static final int target=0x7f020011;
+        public static final int target_no_orange_dot=0x7f020012;
+        public static final int white=0x7f020013;
+        public static final int white_total=0x7f020014;
     }
     public static final class id {
-        public static final int AboutOKbutton=0x7f060002;
+        public static final int AboutOKbutton=0x7f060003;
         public static final int AboutPeople=0x7f060001;
         public static final int ScrollView=0x7f060000;
-        public static final int action_button=0x7f060011;
-        public static final int button_scan=0x7f060007;
-        public static final int connect_button=0x7f060010;
-        public static final int heading_tv=0x7f060009;
-        public static final int minddroid_layout=0x7f060008;
-        public static final int new_devices=0x7f060006;
-        public static final int nxtName=0x7f06000f;
-        public static final int nxt_tv=0x7f06000e;
-        public static final int paired_devices=0x7f060004;
-        public static final int pitch_tv=0x7f06000a;
-        public static final int roll_tv=0x7f06000c;
-        public static final int seekbar1=0x7f06000b;
-        public static final int seekbar2=0x7f06000d;
-        public static final int title_new_devices=0x7f060005;
-        public static final int title_paired_devices=0x7f060003;
+        public static final int button_scan=0x7f060008;
+        public static final int legalImage=0x7f060002;
+        public static final int new_devices=0x7f060007;
+        public static final int paired_devices=0x7f060005;
+        public static final int title_new_devices=0x7f060006;
+        public static final int title_paired_devices=0x7f060004;
     }
     public static final class layout {
         public static final int aboutbox=0x7f030000;
         public static final int device_list=0x7f030001;
         public static final int device_name=0x7f030002;
-        public static final int main=0x7f030003;
     }
     public static final class raw {
         public static final int startdroid=0x7f040000;
     }
     public static final class string {
         public static final int about=0x7f050002;
+        public static final int about_LEGO_legal=0x7f050023;
         /**  About Dialog 
          */
         public static final int about_general=0x7f05001e;
         public static final int about_license_gpl=0x7f05001f;
         public static final int about_license_lego=0x7f050020;
-        public static final int about_ok=0x7f050023;
+        public static final int about_ok=0x7f050024;
         public static final int about_people=0x7f050021;
         public static final int about_thanks=0x7f050022;
         public static final int action=0x7f050006;

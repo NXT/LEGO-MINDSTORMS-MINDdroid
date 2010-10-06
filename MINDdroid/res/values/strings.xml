@@ -70,8 +70,9 @@
     <string name="about_thanks">
         Thank you for downloading and using MINDdroid Application for Android with your
         LEGO MINDSTORMS robots!
-        \n\n
-        © 2010  The LEGO Group. All rights reserved.
+    </string>     
+    <string name="about_LEGO_legal">            
+        © 2010  The LEGO Group.\nAll rights reserved.
     </string>     
     <string name="about_ok">OK</string>
 </resources>
