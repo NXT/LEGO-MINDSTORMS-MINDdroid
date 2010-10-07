@@ -30,13 +30,19 @@ public final class R {
         public static final int orange_dot=0x7f020010;
         public static final int target=0x7f020011;
         public static final int target_no_orange_dot=0x7f020012;
-        public static final int white=0x7f020013;
-        public static final int white_total=0x7f020014;
+        public static final int tutorial_01=0x7f020013;
+        public static final int tutorial_02=0x7f020014;
+        public static final int tutorial_03=0x7f020015;
+        public static final int tutorial_04=0x7f020016;
+        public static final int tutorial_05=0x7f020017;
+        public static final int white=0x7f020018;
+        public static final int white_total=0x7f020019;
     }
     public static final class id {
         public static final int AboutOKbutton=0x7f060003;
         public static final int AboutPeople=0x7f060001;
         public static final int ScrollView=0x7f060000;
+        public static final int TutorialImageView=0x7f060009;
         public static final int button_scan=0x7f060008;
         public static final int legalImage=0x7f060002;
         public static final int new_devices=0x7f060007;
@@ -48,21 +54,22 @@ public final class R {
         public static final int aboutbox=0x7f030000;
         public static final int device_list=0x7f030001;
         public static final int device_name=0x7f030002;
+        public static final int tutorial=0x7f030003;
     }
     public static final class raw {
         public static final int startdroid=0x7f040000;
     }
     public static final class string {
         public static final int about=0x7f050002;
-        public static final int about_LEGO_legal=0x7f050023;
+        public static final int about_LEGO_legal=0x7f050024;
         /**  About Dialog 
          */
-        public static final int about_general=0x7f05001e;
-        public static final int about_license_gpl=0x7f05001f;
-        public static final int about_license_lego=0x7f050020;
-        public static final int about_ok=0x7f050024;
-        public static final int about_people=0x7f050021;
-        public static final int about_thanks=0x7f050022;
+        public static final int about_general=0x7f05001f;
+        public static final int about_license_gpl=0x7f050020;
+        public static final int about_license_lego=0x7f050021;
+        public static final int about_ok=0x7f050025;
+        public static final int about_people=0x7f050022;
+        public static final int about_thanks=0x7f050023;
         public static final int action=0x7f050006;
         public static final int app_name=0x7f050001;
         public static final int bt_error_dialog_message=0x7f050012;
@@ -99,5 +106,6 @@ public final class R {
         /**  Splash Menu 
          */
         public static final int tutorial=0x7f050013;
+        public static final int wait_till_bt_on=0x7f05001e;
     }
 }
