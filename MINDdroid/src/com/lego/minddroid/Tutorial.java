@@ -62,6 +62,8 @@ class Tutorial {
 	}
 
 	public void setNewContent(int resourceID, boolean onlyImage) {
+        if (dialog.isShowing())
+            dialog.dismiss();        
 		dialog.setContentView(resourceID);
 	    if (onlyImage) {
             image = (ImageView) dialog.findViewById(R.id.TutorialImageView);
@@ -76,7 +78,7 @@ class Tutorial {
             		    if (currentScene == 1)
             		        setNewContent(R.layout.tutorial_text, false);
             		    else    
-                		    image.setImageResource(imageID[currentScene]);
+                		    setNewContent(R.layout.tutorial_image, true);
 				    }    
 
         		}
@@ -91,10 +93,9 @@ class Tutorial {
         		{
                     currentScene++;
                     setNewContent(R.layout.tutorial_image, true);
-        	        //dialog.dismiss();
         		}
         	});
-    	    
     	}		    
+        dialog.show();        	            	    
 	}	
 }
