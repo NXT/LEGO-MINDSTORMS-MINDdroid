@@ -194,7 +194,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			mTargetInactive = BitmapFactory.decodeResource(res, R.drawable.target);
 			mActionButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_up);
 			mActionDownButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_down);
-			mBackgroundImage = BitmapFactory.decodeResource(res, R.drawable.background_1);
+			mBackgroundImage = BitmapFactory.decodeResource(res, R.drawable.background_2);
 			mScratchRect = new RectF(0, 0, 0, 0);
 
 		}
