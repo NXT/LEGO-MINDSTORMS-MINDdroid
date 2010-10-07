@@ -183,9 +183,8 @@ public class MINDdroid extends Activity {
 		if (myBTCommunicator == null) {
 			createBTCommunicator();
 		}
-		btOnByUs=false;//reset state
-		// If BT is not on, request that it be enabled.
 		if (!myBTCommunicator.isBTAdapterEnabled()) {
+			showToast(getResources().getString(R.string.wait_till_bt_on));
 			btOnByUs=true;
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);

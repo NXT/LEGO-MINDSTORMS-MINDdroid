@@ -43,7 +43,7 @@
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
     <string name="pairing_message">After pairing, press menu and connect.</string>
-
+    <string name="wait_till_bt_on">Bluetooth needs to be turned on.  Just a second ...</string>
     <!-- About Dialog -->
     <string name="about_general">
         MINDdroid is a result of a co-creation between LEGO® MINDSTORMS®  

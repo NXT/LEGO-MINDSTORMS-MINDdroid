@@ -32,12 +32,14 @@ public class SplashMenu extends Activity {
 	public static final int MENU_QUIT = Menu.FIRST + 1;
 
 	public static void quitApplication() {
-//		if (MINDdroid.isBtOnByUs()){
-//			BluetoothAdapter.getDefaultAdapter().disable();
-//		}
+		if (MINDdroid.isBtOnByUs()) {
+			BluetoothAdapter.getDefaultAdapter().disable();
+			MINDdroid.setBtOnByUs(false);
+		}
 		splashMenu.finish();
 
 	}
+
 	private View splashMenuView;
 
 	private static Activity splashMenu;
@@ -53,15 +55,16 @@ public class SplashMenu extends Activity {
 
 	@Override
 	protected void onDestroy() {
- 
+
 		super.onDestroy();
 	}
 
 	@Override
 	protected void onPause() {
-//		if (MINDdroid.isBtOnByUs()){
-//			BluetoothAdapter.getDefaultAdapter().disable();
-//		}
+		if (MINDdroid.isBtOnByUs()) {
+			BluetoothAdapter.getDefaultAdapter().disable();
+			MINDdroid.setBtOnByUs(false);
+		}
 		super.onPause();
 	}
 
@@ -71,7 +74,7 @@ public class SplashMenu extends Activity {
 		super.onResume();
 	}
 
-   /**
+	/**
 	 * Creates the menu items
 	 */
 	@Override
@@ -88,14 +91,14 @@ public class SplashMenu extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case MENU_ABOUT:
-                About about = new About();
-                about.show(this);		
+				About about = new About();
+				about.show(this);
 				return true;
 			case MENU_QUIT:
 				finish();
 				return true;
 		}
 		return false;
-	}	
+	}
 
 }
