@@ -44,6 +44,7 @@
     <string name="button_scan">Scan for devices</string>
     <string name="pairing_message">After pairing, press menu and connect.</string>
     <string name="wait_till_bt_on">Bluetooth needs to be turned on.  Just a second ...</string>
+
     <!-- About Dialog -->
     <string name="about_general">
         MINDdroid is a result of a co-creation between LEGO® MINDSTORMS®  
@@ -75,4 +76,18 @@
         © 2010  The LEGO Group.\nAll rights reserved.
     </string>     
     <string name="about_ok">OK</string>
+
+    <!-- Tutorial -->
+    <string name="tutorial_1">    
+        MINDdroid is an Android Application for the real-time direct action remote
+        control of LEGO MINDSTORMS NXT robots utilizing direct BlueTooth wireless
+        connection between both devices - Android phone and your NXT robot and built-in accelerometer
+        and tilt sensors found on most Android powered hand-held phones and devices.\n
+        No computer or programming needed. Just make sure that your NXT intelligent
+        brick is on and has BlueTooth on and is paired to your hand-held device or a
+        phone beforehand. In the menu the middle button enables you to connect to your
+        NXT robot model. It takes about 2-3 seconds to connect. And it takes 2 to tango...    
+    </string>
+
+    
 </resources>
