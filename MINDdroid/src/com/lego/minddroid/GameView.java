@@ -666,7 +666,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private float mAccelY = 0;
 	private float mAccelZ = 0; // heading
 	/**time that action button was pressed - used to calc long or short press */
-	long timePressed=0;
+	long mTimeButtonUp=0;
 	 
 	private final SensorEventListener mSensorAccelerometer = new SensorEventListener() {
 
@@ -719,34 +719,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		// we only want to handle down events.
 	
-		
 		if (event.getY() > this.getHeight() - getThread().mActionButton.getHeight()) {
-			//Log.d(TAG, "onTouchEvent in button area TouchEvent");
 		
 		switch (event.getAction()){
 			
 		case MotionEvent.ACTION_DOWN:
-			timePressed=System.currentTimeMillis();
+			mTimeButtonUp=System.currentTimeMillis();
 			break;
 			
 		case MotionEvent.ACTION_UP:
-			long upTime=System.currentTimeMillis();
-//			if (timePressed+SHORT_PRESS_MAX_DURATION<upTime){
-//				mActivity.actionButtonPressed();
-//			}else{//long press
-//				Log.d("GameView onTouchEvent" , "Long Press of Action Button delay:" +(upTime-timePressed));
-//				mActivity.actionButtonPressed();
-//			}
+			long mTimeButtonDown=System.currentTimeMillis();
+			if (mTimeButtonDown-mTimeButtonUp<SHORT_PRESS_MAX_DURATION){//short press
+				mActivity.actionButtonPressed();
+			}else{//long press
+				mActivity.actionButtonPressed();
+			}
 			break;
-		//	mActivity.actionButtonPressed();
 		}
-
-		mActivity.actionButtonPressed();
- 
-				
-			 
 		}
 		return true;
 	}
