@@ -20,8 +20,8 @@
             android:id="@+id/TutorialTextView"
             android:layout_width="fill_parent"
            	android:layout_height="wrap_content"
-            android:textSize="6pt"
-            android:gravity="center"/>
+            android:textSize="10pt"
+            android:gravity="left"/>
     </LinearLayout> 
     </ScrollView>
     <RelativeLayout android:layout_marginTop="-150dip" android:gravity="bottom" android:layout_height="wrap_content" android:layout_width="fill_parent">   

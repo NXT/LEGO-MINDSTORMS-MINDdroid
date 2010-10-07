@@ -43,7 +43,9 @@ class Tutorial {
     private Dialog dialog;
     private int currentScene = 0;
     private ImageView image;
-    private int[] resourceID = new int[] { 
+    private TextView text;
+    private Activity myActivity;
+    private int[] imageID = new int[] { 
         R.drawable.tutorial_01,
         R.drawable.tutorial_02,
         R.drawable.tutorial_03,        
@@ -52,26 +54,47 @@ class Tutorial {
     };
    
 	public void show(final Activity myActivity) {
+	    this.myActivity = myActivity;
 		dialog = new Dialog(myActivity);
 		dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		dialog.setContentView(R.layout.tutorial_image);
-
-        image = (ImageView) dialog.findViewById(R.id.TutorialImageView);
-        image.setImageResource(resourceID[currentScene]);
-    	image.setOnClickListener(new OnClickListener() {
-    		public void onClick(View v)
-    		{
-    		    if (++currentScene == 5)
-        			dialog.dismiss();
-        		else {
-        		    image.setImageResource(resourceID[currentScene]);
-				}    
-
-    		}
-    	});
-
+		setNewContent(R.layout.tutorial_image, true);
 		dialog.show();
-
 	}
-	
+
+	public void setNewContent(int resourceID, boolean onlyImage) {
+		dialog.setContentView(resourceID);
+	    if (onlyImage) {
+            image = (ImageView) dialog.findViewById(R.id.TutorialImageView);
+            image.setImageResource(imageID[currentScene]);
+        	image.setOnClickListener(new OnClickListener() {
+        		public void onClick(View v)
+        		{
+        		    currentScene++;
+        		    if (currentScene == 5)
+            			dialog.dismiss();
+            		else {
+            		    if (currentScene == 1)
+            		        setNewContent(R.layout.tutorial_text, false);
+            		    else    
+                		    image.setImageResource(imageID[currentScene]);
+				    }    
+
+        		}
+        	});  
+    	}
+    	else {
+    	    text = (TextView) dialog.findViewById(R.id.TutorialTextView);
+    	    text.setText(myActivity.getResources().getString(R.string.tutorial_1));
+        	Button buttonOK = (Button) dialog.findViewById(R.id.AboutOKbutton);
+        	buttonOK.setOnClickListener(new OnClickListener() {
+        		public void onClick(View v)
+        		{
+                    currentScene++;
+                    setNewContent(R.layout.tutorial_image, true);
+        	        //dialog.dismiss();
+        		}
+        	});
+    	    
+    	}		    
+	}	
 }
