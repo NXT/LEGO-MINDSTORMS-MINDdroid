@@ -6,7 +6,9 @@
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="quit">Quit</string>    
-    <string name="action">Action!</string>    
+    <string name="action">Action!</string>   
+    <string name="next">Next</string>   
+
 
     <!-- bluetooth messages -->
     <string name="connecting_please_wait">Connecting to your robot.\nPlease wait...</string>
@@ -78,6 +80,14 @@
     <string name="about_ok">OK</string>
 
     <!-- Tutorial -->
+    <string name="want_to_know_more">
+        Want to know more ... 
+    </string>    
+    
+    <string name="tutorial_welcome_droid">
+        Welcome, droid!
+    </string>    
+    
     <string name="tutorial_1">    
         MINDdroid is an Android Application for the real-time direct action remote
         control of LEGO MINDSTORMS NXT robots utilizing direct BlueTooth wireless
@@ -89,5 +99,39 @@
         NXT robot model. It takes about 2-3 seconds to connect. And it takes 2 to tango...    
     </string>
 
+    <string name="tutorial_2">    
+        It interacts in a real-time with NXT robot models built to drive and shoot or
+        drive and throw or drive and hit or just drive using ports A (left) and C (right)
+        for driving motors. By tilting your mobile device forward down it moves forward, by
+        tilting it backwards down it makes your NXT robot model move in the opposite direction
+        or backwards.
+    </string>
+
+    <string name="tutorial_3">    
+        Twisting your hand to the left, it will make it turn left and twist right - turn right.
+        It has an Action button that triggers instant 180° turn and back motor action connected
+        to the port B on NXT intelligent brick. It just works with the default and easy to build
+        model Shooter-Bot or any other Tribot.
+    </string>
+
+    <string name="tutorial_4">    
+        It will not work with walker robot models like our famed AlphaRex.
+    </string>
+
+    <string name="tutorial_5">    
+        It indicates the direction you are tilting your hand-held device to and the direction
+        your NXT robot moves. Short haptic feedback indicates that you just started driving around.
+        Having your phone flat on your palm will make NXT robot stop and you can stare into the NXT
+        logo. The more you tilt, faster the robot moves and faster the square blinks. Cool, huh?    
+    </string>
+
+    <string name="tutorial_6">    
+        Because we can. And we think it is a fun. Moreover, it will inspire you and many others
+        to start building cool Applications for interacting with NXT and Android devices and even
+        more cool LEGO MINDSTORMS robots. Because you can.\n\nNow go, try it out, have fun,
+        play good and do not forget to visit us at http://mindstorms.com for more news,
+        info and upcoming appies and goodies.
+    </string>
+        
     
 </resources>

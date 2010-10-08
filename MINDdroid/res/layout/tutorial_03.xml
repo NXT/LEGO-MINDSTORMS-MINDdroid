@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+   	android:padding="5dp" >
+    <ScrollView android:id="@+id/ScrollView" 
+                android:layout_marginBottom="150dip"
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content" 
+                xmlns:android="http://schemas.android.com/apk/res/android">		
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:scrollbars="vertical"
+	    android:scrollbarAlwaysDrawVerticalTrack="true" 
+       	android:padding="5dp">
+        <TextView
+            android:id="@+id/TutorialTextView"
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="10pt"
+            android:textColor="#00ccff"
+            android:autoLink="web"  
+            android:linksClickable="true"                        
+            android:gravity="left"/>
+    </LinearLayout> 
+    </ScrollView>
+    <RelativeLayout android:layout_marginTop="-150dip" android:gravity="bottom" android:layout_height="wrap_content" android:layout_width="fill_parent">   
+    	<ImageView 
+    	    android:id="@+id/legalImage"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:gravity="center" android:src="@drawable/ic_splash_legal"/>
+        <Button
+            android:id="@+id/nextButton"
+            android:textSize="20sp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"   
+            android:layout_below="@+id/legalImage"         
+            android:text="@string/next"
+        />
+    </RelativeLayout>      
+</LinearLayout>
