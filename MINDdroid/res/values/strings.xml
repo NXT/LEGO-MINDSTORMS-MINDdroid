@@ -9,15 +9,15 @@
     <string name="action">Action!</string>   
     <string name="next">Next</string>
     <string name="options">Robot Type</string>  
-    <string name="model_type_selected">Model Type set to:</string>   
+    <string name="model_type_selected">Model type set to:</string>   
 
     <!-- bluetooth messages -->
     <string name="connecting_please_wait">Connecting to your robot.\nPlease wait...</string>
     <string name="no_paired_nxt">No paired NXT robot found!</string>
-    <string name="problem_at_connecting">Problem at creating a connection!</string>
-    <string name="problem_at_closing">Problem at closing the connection!</string>
-    <string name="problem_at_sending">Problem at sending a message!</string>
-    <string name="problem_at_receiving">Problem at receiving a message!</string>  
+    <string name="problem_at_connecting">Problem in creating a connection!</string>
+    <string name="problem_at_closing">Problem in closing the connection!</string>
+    <string name="problem_at_sending">Problem in sending a message!</string>
+    <string name="problem_at_receiving">Problem in receiving a message!</string>  
 
     <string name="current_position">Current position: </string>
     <string name="eula_title">End User License Agreement</string>
@@ -27,7 +27,7 @@
     <string name="bt_error_dialog_title">Bluetooth Error</string>    
 
     <string name="bt_error_dialog_message">
-        Something went wrong on the connection to the robot. 
+        Something went wrong connecting to the robot. 
         Maybe your robot was shut down. Please make sure 
         everything is OK and start again.
     </string>    
@@ -39,7 +39,7 @@
     
     <!--  DeviceListActivity -->
     <string name="scanning">scanning for devices...</string>
-    <string name="select_device">select a device to connect</string>
+    <string name="select_device">Select a device to connect</string>
     <string name="none_paired">No devices have been paired</string>
     <string name="none_found">No devices found</string>
     <string name="title_paired_devices">Paired Devices</string>
@@ -103,8 +103,8 @@
     <string name="tutorial_2">    
         It interacts in a real-time with NXT robot models built to drive and shoot or
         drive and throw or drive and hit or just drive using ports A (left) and C (right)
-        for driving motors. By tilting your mobile device forward down it moves forward, by
-        tilting it backwards down it makes your NXT robot model move in the opposite direction
+        for driving motors. By tilting your mobile device down it moves forward.
+        Tilting it up makes your NXT robot model move in the opposite direction
         or backwards.
     </string>
 
@@ -130,7 +130,7 @@
         Because we can. And we think it is a fun. Moreover, it will inspire you and many others
         to start building cool Applications for interacting with NXT and Android devices and even
         more cool LEGO MINDSTORMS robots. Because you can.\n\nNow go, try it out, have fun,
-        play good and do not forget to visit us at http://mindstorms.com for more news,
+        play to your heart's content and do not forget to visit us at http://mindstorms.com for more news,
         info and upcoming appies and goodies.
     </string>
         
