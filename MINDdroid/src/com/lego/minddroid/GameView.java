@@ -26,7 +26,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -102,9 +101,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		/** Indicate whether the surface has been created & is ready to draw */
 		private boolean mRun = false;
 
-		/** Scratch rect object. */
-		private RectF mScratchRect;
-
 		/** Handle to the surface manager object we interact with */
 		private SurfaceHolder mSurfaceHolder;
 
@@ -123,7 +119,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 * time when haptic feedback will stop - needed to ensure we don't take
 		 * tilt measurements while handset if vibrating
 		 */
-		private long mFeedbackEnd = 0;
+		//private long mFeedbackEnd = 0;
 
 		/**
 		 * track how long since we redrew screen
@@ -154,37 +150,26 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		/** */
 		boolean mToNXT = false;
 
-		/** buffers for averaging to hold calculated screen position */
-		private float mNumX;
-		private float mNumY;
-
 		/** buffers to hold tilt readings for averaging */
 		float mNumAcX;
 		float mNumAcY;
 
-		/** number of tilt readings since last draw */
-		private int mNum = 0;
+        /** digital filtering variables **/
+		private float xX0 = 0;
+	    private float xX1 = 0;
+	    private float xY0 = 0;
+	    private float xY1 = 0;
 
-		/** number of tilt readings since last draw */
-		private int mNumAc = 0;
-
-		/** mX value buffer for time between two draws ago and last draw */
-		private float mPreviousNumX;
-
-		/** mY value buffer for time between two draws ago and last draw **/
-		private float mPreviousNumY;
-
-		/** number of tilt readings for time between two draws ago and last draw **/
-		private int mPreviousNum = 0;
-
-	
+	    private float yX0 = 0;
+	    private float yX1 = 0;
+	    private float yY0 = 0;
+	    private float yY1 = 0;
 		
 		public GameThread(SurfaceHolder surfaceHolder, Context context, Vibrator vibrator, Handler handler) {
 			// get handles to some important objects
 			mHapticFeedback = vibrator;
 			mSurfaceHolder = surfaceHolder;
 			mHandler = handler;
-			mContext = context;
 			Resources res = context.getResources();
 			mIconOrange = context.getResources().getDrawable(R.drawable.orange);
 			// load background image as a Bitmap instead of a Drawable b/c
@@ -195,8 +180,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			mActionButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_up);
 			mActionDownButton = BitmapFactory.decodeResource(res, R.drawable.action_btn_down);
 			mBackgroundImage = BitmapFactory.decodeResource(res, R.drawable.background_2);
-			mScratchRect = new RectF(0, 0, 0, 0);
-
 		}
 
 		private int calcGrowAdjust(float mX2, float mY2) {
@@ -275,9 +258,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					if (mInGoal) {// was in goal before
 						mInGoal = false;
 						vibrate();
-
 					}
-
 				}
 
 				// draw the background
@@ -322,7 +303,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 						mPulsingTiltIcon = mPulsingTiltIcon == mIconOrange ? mIconWhite : mIconOrange;
 						 
 						mNextPulse = mPulsingTiltIcon == mIconOrange ? mLastTime + calcNextPulse() : mLastTime + 90;
-						//Log.i(TAG, "next pulse " + (nextPulse - mLastTime));
 					}
 
 					mPulsingTiltIcon.setBounds((int) mX - (mGrowAdjust / 2), (int) mY - (mGrowAdjust / 2), ((int) mX + mGrowAdjust / 2),
@@ -382,29 +362,31 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		@Override
 		public void run() {
+		    
 			Log.d(TAG, "--run--");
 			while (mRun) {
+				
+				// sleep some time
+				try {
+				    Thread.sleep(30);
+				}
+				catch (InterruptedException e) {
+				}
 
 				updateTime();
 				updateMoveIndicator(mAccelX, mAccelY);
-
+				
 				// is it time to update the screen?
 				if (mElapsedSinceDraw > REDRAW_SCHED) {
 
 					//is it time to update motor movement?
-					if ((mElapsedSinceNXTCommand > MINDdroid.UPDATE_TIME) && (mNumAc > 0)) {
+					if (mElapsedSinceNXTCommand > MINDdroid.UPDATE_TIME) {
 						//calculate and send command to move motors							
-						doMotorMovement(-mNumAcY / mNumAc, -mNumAcX / mNumAc);
-						// reset averaging
-						resetMotorAverage();
+						doMotorMovement(-mNumAcY, -mNumAcX);
 					}
 
-					//calculate icon position
-					mX = ((mNumX / mNum) + (mPreviousNumX / mPreviousNum)) / 2;
-					mY = ((mNumY / mNum) + (mPreviousNumY / mPreviousNum)) / 2;
-
-					resetIconAverage();
 					lockCanvasAndDraw();
+                    
 				}
 			}
 		}
@@ -430,25 +412,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 											// moment in updateTime
 				}
 			}
-		}
-
-		public void resetIconAverage() {
-			mPreviousNumY = mNumY;
-			mPreviousNumX = mNumX;
-			mPreviousNum = mNum;
-
-			mNumY = 0;
-			mNumX = 0;
-			mNum = 0;
-
-			mAvCount = 0;
-		}
-
-		public void resetMotorAverage() {
-			mNumAcX = 0;
-			mNumAcY = 0;
-			mElapsedSinceNXTCommand = 0;
-			mNumAc = 0;
 		}
 
 		/**
@@ -610,23 +573,33 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 		public void vibrate() {
 			mHapticFeedback.vibrate(HAPTIC_FEEDBACK_LENGTH);
-			mFeedbackEnd = System.currentTimeMillis() + HAPTIC_FEEDBACK_LENGTH + 15;
+			//mFeedbackEnd = System.currentTimeMillis() + HAPTIC_FEEDBACK_LENGTH + 15;
 
 		}
 
 		void updateMoveIndicator(float mAcX, float mAcY) {
 
+            // IIR filtering for x direction
+		    xX1 = xX0;    
+            xX0 = mAcX;
+            xY1 = xY0;            
+            xY0 = (float) 0.07296293 * xX0 + (float) 0.07296293 * xX1 + (float) 0.8540807 * xY1;
+            mAcX = xY0;
+            
+            // IIR filtering for y direction
+		    yX1 = yX0;    
+            yX0 = mAcY;
+            yY1 = yY0;            
+            yY0 = (float) 0.07296293 * yX0 + (float) 0.07296293 * yX1 + (float) 0.8540807 * yY1;
+            mAcY = yY0;
+
 			mX = ((mCanvasWidth / 2)) + (int) ((mAcX / 10) * (mCanvasWidth / 10));
-			mNumX += mX;
-			mNumAcX += mAcX;
+
+			mNumAcX = mAcX;
 
 			mY = (((mCanvasHeight - mActionButton.getHeight()) / 2)) + (int) ((mAcY / 10) * ((mCanvasHeight - mActionButton.getHeight()) / 10));
-			mNumY += mY;
-			mNumAcY += mAcY;
 
-			mAvCount++;
-			mNum++;
-			mNumAc++;
+			mNumAcY = mAcY;
 
 		}
 
@@ -656,11 +629,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 	private SensorManager mSensorManager;
 
-	//private Typeface mFont = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
-
-	/** Handle to the application context, used to e.g. fetch Drawables. */
-	private Context mContext;
-
 	/** orientation (tilt) readings */
 	private float mAccelX = 0;
 	private float mAccelY = 0;
@@ -682,9 +650,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			mAccelX = 0 - event.values[2];
 			mAccelY = 0 - event.values[1];
 			mAccelZ = event.values[0];
-
-			// !!! should be called somewhere above after the digital filtering !!!
-			//mActivity.updateOrientation(event.values[0], event.values[1], event.values[2], true);
 
 		}
 
@@ -798,3 +763,4 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	}
 
 }
+
