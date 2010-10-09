@@ -5,7 +5,7 @@
 	android:orientation="vertical"
    	android:padding="5dp" >
     <ScrollView android:id="@+id/ScrollView" 
-                android:layout_marginBottom="150dip"
+                android:layout_marginBottom="50dip"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
                 xmlns:android="http://schemas.android.com/apk/res/android">		
@@ -50,18 +50,12 @@
             android:text="@string/tutorial_4"/>
     </LinearLayout> 
     </ScrollView>
-    <RelativeLayout android:layout_marginTop="-150dip" android:gravity="bottom" android:layout_height="wrap_content" android:layout_width="fill_parent">   
-    	<ImageView 
-    	    android:id="@+id/legalImage"
-	    	android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
-	    	android:gravity="center" android:src="@drawable/ic_splash_legal"/>
+    <RelativeLayout android:layout_marginTop="-50dip" android:gravity="bottom" android:layout_height="wrap_content" android:layout_width="fill_parent">   
         <Button
             android:id="@+id/nextButton"
             android:textSize="20sp"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"   
-            android:layout_below="@+id/legalImage"         
             android:text="@string/next"
         />
     </RelativeLayout>      

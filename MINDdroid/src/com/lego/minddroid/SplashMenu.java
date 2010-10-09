@@ -89,7 +89,7 @@ public class SplashMenu extends Activity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_OPTIONS, 1, getResources().getString(R.string.options)).setIcon(R.drawable.ic_menu_about);
+		menu.add(0, MENU_OPTIONS, 1, getResources().getString(R.string.options)).setIcon(R.drawable.ic_menu_preferences);
 		menu.add(0, MENU_ABOUT, 2, getResources().getString(R.string.about)).setIcon(R.drawable.ic_menu_about);
 		menu.add(0, MENU_QUIT, 3, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
 		return true;
