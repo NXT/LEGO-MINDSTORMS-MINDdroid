@@ -12,16 +12,16 @@
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:orientation="vertical">
 		
-		<RadioButton android:id="@+id/robot_type_1" android:text="Harv's Pick"
-			android:drawableBottom="@drawable/car"  android:layout_width="wrap_content"
+		<RadioButton android:id="@+id/robot_type_1" android:text="Shooterbot"
+			android:drawableBottom="@drawable/shooterbot"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-		<RadioButton android:id="@+id/robot_type_2" android:text="Guenther's Model"
-			android:drawableBottom="@drawable/guenthers_model"  android:layout_width="wrap_content"
+		<RadioButton android:id="@+id/robot_type_2" android:text="Tribot"
+			android:drawableBottom="@drawable/tribot"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-		<RadioButton android:id="@+id/robot_type_3" android:text="8547 Bonus Model #2"
-			android:drawableBottom="@drawable/llama"  android:layout_width="wrap_content"
+		<RadioButton android:id="@+id/robot_type_3" android:text="Robocator"
+			android:drawableBottom="@drawable/robocator"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp"/>
 	</RadioGroup>
 </LinearLayout>

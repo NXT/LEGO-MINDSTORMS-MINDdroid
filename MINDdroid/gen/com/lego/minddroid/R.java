@@ -16,27 +16,27 @@ public final class R {
         public static final int background_1=0x7f020002;
         public static final int background_2=0x7f020003;
         public static final int blue=0x7f020004;
-        public static final int car=0x7f020005;
-        public static final int gplv3=0x7f020006;
-        public static final int guenthers_model=0x7f020007;
-        public static final int hand_small=0x7f020008;
-        public static final int ic_menu_about=0x7f020009;
-        public static final int ic_menu_connect=0x7f02000a;
-        public static final int ic_menu_connected=0x7f02000b;
-        public static final int ic_menu_exit=0x7f02000c;
-        public static final int ic_menu_preferences=0x7f02000d;
-        public static final int ic_splash_legal=0x7f02000e;
-        public static final int ic_splash_start=0x7f02000f;
-        public static final int ic_splash_tutorial=0x7f020010;
-        public static final int icon=0x7f020011;
-        public static final int llama=0x7f020012;
-        public static final int logo_new=0x7f020013;
-        public static final int logo_splash_minddroid=0x7f020014;
-        public static final int orange=0x7f020015;
-        public static final int orange_dot=0x7f020016;
-        public static final int shooter_small=0x7f020017;
-        public static final int target=0x7f020018;
-        public static final int target_no_orange_dot=0x7f020019;
+        public static final int gplv3=0x7f020005;
+        public static final int hand_small=0x7f020006;
+        public static final int ic_menu_about=0x7f020007;
+        public static final int ic_menu_connect=0x7f020008;
+        public static final int ic_menu_connected=0x7f020009;
+        public static final int ic_menu_exit=0x7f02000a;
+        public static final int ic_menu_preferences=0x7f02000b;
+        public static final int ic_splash_legal=0x7f02000c;
+        public static final int ic_splash_start=0x7f02000d;
+        public static final int ic_splash_tutorial=0x7f02000e;
+        public static final int icon=0x7f02000f;
+        public static final int logo_new=0x7f020010;
+        public static final int logo_splash_minddroid=0x7f020011;
+        public static final int orange=0x7f020012;
+        public static final int orange_dot=0x7f020013;
+        public static final int robocator=0x7f020014;
+        public static final int shooter_small=0x7f020015;
+        public static final int shooterbot=0x7f020016;
+        public static final int target=0x7f020017;
+        public static final int target_no_orange_dot=0x7f020018;
+        public static final int tribot=0x7f020019;
         public static final int tutorial_01=0x7f02001a;
         public static final int tutorial_02=0x7f02001b;
         public static final int tutorial_03=0x7f02001c;
@@ -81,19 +81,20 @@ public final class R {
     }
     public static final class string {
         public static final int about=0x7f050002;
-        public static final int about_LEGO_legal=0x7f050027;
+        public static final int about_LEGO_legal=0x7f050028;
         /**  About Dialog 
          */
-        public static final int about_general=0x7f050022;
-        public static final int about_license_gpl=0x7f050023;
-        public static final int about_license_lego=0x7f050024;
-        public static final int about_ok=0x7f050028;
-        public static final int about_people=0x7f050025;
-        public static final int about_thanks=0x7f050026;
+        public static final int about_general=0x7f050023;
+        public static final int about_license_gpl=0x7f050024;
+        public static final int about_license_lego=0x7f050025;
+        public static final int about_ok=0x7f050029;
+        public static final int about_people=0x7f050026;
+        public static final int about_thanks=0x7f050027;
         public static final int action=0x7f050006;
         public static final int app_name=0x7f050001;
         public static final int bt_error_dialog_message=0x7f050015;
         public static final int bt_error_dialog_title=0x7f050014;
+        public static final int bt_off_message=0x7f050022;
         public static final int button_scan=0x7f05001f;
         public static final int connect=0x7f050003;
         /**  bluetooth messages 
@@ -129,16 +130,16 @@ public final class R {
         /**  Splash Menu 
          */
         public static final int tutorial=0x7f050016;
-        public static final int tutorial_1=0x7f05002b;
-        public static final int tutorial_2=0x7f05002c;
-        public static final int tutorial_3=0x7f05002d;
-        public static final int tutorial_4=0x7f05002e;
-        public static final int tutorial_5=0x7f05002f;
-        public static final int tutorial_6=0x7f050030;
-        public static final int tutorial_welcome_droid=0x7f05002a;
+        public static final int tutorial_1=0x7f05002c;
+        public static final int tutorial_2=0x7f05002d;
+        public static final int tutorial_3=0x7f05002e;
+        public static final int tutorial_4=0x7f05002f;
+        public static final int tutorial_5=0x7f050030;
+        public static final int tutorial_6=0x7f050031;
+        public static final int tutorial_welcome_droid=0x7f05002b;
         public static final int wait_till_bt_on=0x7f050021;
         /**  Tutorial 
          */
-        public static final int want_to_know_more=0x7f050029;
+        public static final int want_to_know_more=0x7f05002a;
     }
 }

@@ -27,9 +27,8 @@
     <string name="bt_error_dialog_title">Bluetooth Error</string>    
 
     <string name="bt_error_dialog_message">
-        Something went wrong connecting to the robot. 
-        Maybe your robot was shut down. Please make sure 
-        everything is OK and start again.
+        Oops! It seems that your robot is not switched on. Please make sure that
+        your robot is on, has BlueTooth activated and then try again to connect.
     </string>    
     
     <!-- Splash Menu -->
@@ -47,6 +46,8 @@
     <string name="button_scan">Scan for devices</string>
     <string name="pairing_message">After pairing, press menu and connect.</string>
     <string name="wait_till_bt_on">Bluetooth needs to be turned on.  Just a second ...</string>
+    <string name="bt_off_message">Bluetooth turned off. See you later!</string>
+    
 
     <!-- About Dialog -->
     <string name="about_general">
@@ -102,7 +103,7 @@
 
     <string name="tutorial_2">    
         It interacts in a real-time with NXT robot models built to drive and shoot or
-        drive and throw or drive and hit or just drive using ports A (left) and C (right)
+        drive and throw or drive and hit or just drive using ports B (left) and C (right)
         for driving motors. By tilting your mobile device down it moves forward.
         Tilting it up makes your NXT robot model move in the opposite direction
         or backwards.
@@ -111,7 +112,7 @@
     <string name="tutorial_3">    
         Twisting your hand to the left, it will make it turn left and twist right - turn right.
         It has an Action button that triggers instant 180° turn and back motor action connected
-        to the port B on NXT intelligent brick. It just works with the default and easy to build
+        to the port A on NXT intelligent brick. It just works with the default and easy to build
         model Shooter-Bot or any other Tribot.
     </string>
 
@@ -127,7 +128,7 @@
     </string>
 
     <string name="tutorial_6">    
-        Because we can. And we think it is a fun. Moreover, it will inspire you and many others
+        Because we can. And we think it is fun. Moreover, it will inspire you and many others
         to start building cool Applications for interacting with NXT and Android devices and even
         more cool LEGO MINDSTORMS robots. Because you can.\n\nNow go, try it out, have fun,
         play to your heart\'s content and do not forget to visit us at http://mindstorms.com for more news,

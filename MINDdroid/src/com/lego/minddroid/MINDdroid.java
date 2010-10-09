@@ -51,6 +51,12 @@ public class MINDdroid extends Activity {
 	boolean pairing;
 	private static boolean btOnByUs = false;
 	private int mRobotType;
+	private int motorLeft;
+	private int directionLeft; // +/- 1
+	private int motorRight;
+	private int directionRight; // +/- 1
+	private int motorAction;
+	private int directionAction; // +/- 1
 
 	public static boolean isBtOnByUs() {
 		return btOnByUs;
@@ -84,15 +90,23 @@ public class MINDdroid extends Activity {
 	}
 
 	private void setUpByType() {
+        // default
+        motorLeft = BTCommunicator.MOTOR_B;
+        directionLeft = 1;
+        motorRight = BTCommunicator.MOTOR_C;
+        directionRight = 1;
+        motorAction = BTCommunicator.MOTOR_A;
+        directionAction = 1;
+        	
 		switch (mRobotType) {
-			case R.id.robot_type_2://
-				Log.d("MINDdroid", "robotType 2");
+			case R.id.robot_type_2:
+                motorLeft = BTCommunicator.MOTOR_A;
+                motorRight = BTCommunicator.MOTOR_C;
+                motorAction = BTCommunicator.MOTOR_B;			    
 				break;
-			case R.id.robot_type_3://llama
-				Log.d("MINDdroid", "robotType 3");
+			case R.id.robot_type_3:
 				break;
-			default://
-				Log.d("MINDdroid", "robotType 1");
+			default:			    
 				break;
 		}
 
@@ -162,12 +176,12 @@ public class MINDdroid extends Activity {
 			sendBTCmessage(1200, BTCommunicator.DO_BEEP, 523, 300);
 			sendBTCmessage(1600, BTCommunicator.DO_BEEP, 494, 300);
 
-			// MOTOR B: forth an back
-			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_B, 50, 0);
-			sendBTCmessage(600, BTCommunicator.MOTOR_B, -50, 600);
-			sendBTCmessage(1200, BTCommunicator.MOTOR_B, 0, 1200);
+			// MOTOR ACTION: forth an back
+			sendBTCmessage(BTCommunicator.NO_DELAY, motorAction, 75*directionAction, 0);
+			sendBTCmessage(500, motorAction, -75*directionAction, 500);
+			sendBTCmessage(1200, motorAction, 0, 1200);
 
-			sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, BTCommunicator.MOTOR_B, 1500);
+			sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, motorAction, 1500);
 
 		}
 	}
@@ -176,8 +190,8 @@ public class MINDdroid extends Activity {
 
 		if (myBTCommunicator != null) {
 			// send messages via the handler
-			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_A, left, 0);
-			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.MOTOR_C, right, 0);
+			sendBTCmessage(BTCommunicator.NO_DELAY, motorLeft, left*directionLeft, 0);
+			sendBTCmessage(BTCommunicator.NO_DELAY, motorRight, right*directionRight, 0);
 		}
 	}
 
@@ -203,11 +217,10 @@ public class MINDdroid extends Activity {
 			createBTCommunicator();
 		}
 		if (!myBTCommunicator.isBTAdapterEnabled()) {
-			showToast(getResources().getString(R.string.wait_till_bt_on));
-			btOnByUs = true;
+		    btOnByUs = true;
+    		showToast(getResources().getString(R.string.wait_till_bt_on));		    
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-
 		}
 
 	}
@@ -263,6 +276,8 @@ public class MINDdroid extends Activity {
 				Log.d("MINDDroid", "destroyBTCommunicator onOptionsItemSelected");
 				destroyBTCommunicator();
 				finish();
+				if (btOnByUs)
+				    showToast(getResources().getString(R.string.bt_off_message));		    
 				SplashMenu.quitApplication();
 				return true;
 		}
