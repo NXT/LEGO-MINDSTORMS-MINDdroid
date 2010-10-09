@@ -20,17 +20,26 @@ package com.lego.minddroid;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.Toast;
 
 public class SplashMenu extends Activity {
 
-	public static final int MENU_ABOUT = Menu.FIRST;
-	public static final int MENU_QUIT = Menu.FIRST + 1;
-
+	public static final int MENU_OPTIONS = Menu.FIRST;
+	public static final int MENU_ABOUT = Menu.FIRST + 1;
+	public static final int MENU_QUIT = Menu.FIRST + 2;
+	public static final String MINDDROID_PREFS = "Mprefs";
+	public static final String MINDDROID_ROBOT_TYPE = "MrobotType";
+	private int mRobotType;
+	
+	
 	public static void quitApplication() {
 		if (MINDdroid.isBtOnByUs()) {
 			BluetoothAdapter.getDefaultAdapter().disable();
@@ -48,6 +57,7 @@ public class SplashMenu extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		mRobotType=lookupRobotType();
 		splashMenuView = new SplashMenuView(getApplicationContext(), this);
 		setContentView(splashMenuView);
 		splashMenu = this;
@@ -79,10 +89,12 @@ public class SplashMenu extends Activity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		menu.add(0, MENU_ABOUT, 1, getResources().getString(R.string.about)).setIcon(R.drawable.ic_menu_about);
-		menu.add(0, MENU_QUIT, 2, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
+		menu.add(0, MENU_OPTIONS, 1, getResources().getString(R.string.options)).setIcon(R.drawable.ic_menu_about);
+		menu.add(0, MENU_ABOUT, 2, getResources().getString(R.string.about)).setIcon(R.drawable.ic_menu_about);
+		menu.add(0, MENU_QUIT, 3, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
 		return true;
 	}
+	
 
 	/**
 	 * Handles item selections
@@ -90,6 +102,10 @@ public class SplashMenu extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
+			case MENU_OPTIONS:
+				Options options = new Options(this);
+				options.show();
+			    return true;
 			case MENU_ABOUT:
 				About about = new About();
 				about.show(this);
@@ -99,6 +115,24 @@ public class SplashMenu extends Activity {
 				return true;
 		}
 		return false;
+	}
+
+	public void setRobotType(int mRobotType) {
+		SharedPreferences mUserPreferences = getSharedPreferences(MINDDROID_PREFS, Context.MODE_PRIVATE);
+		Editor mPrefsEditor = mUserPreferences.edit();
+		mPrefsEditor.putInt(MINDDROID_ROBOT_TYPE, mRobotType);
+		mPrefsEditor.commit();
+		this.mRobotType = mRobotType;
+	}
+
+	public int lookupRobotType() {
+		SharedPreferences mUserPreferences;
+		mUserPreferences =  getSharedPreferences(MINDDROID_PREFS, Context.MODE_PRIVATE);
+		return mUserPreferences.getInt(MINDDROID_ROBOT_TYPE, R.id.robot_type_1);
+	}
+	
+	public int getRobotType(){
+		return mRobotType;
 	}
 
 }

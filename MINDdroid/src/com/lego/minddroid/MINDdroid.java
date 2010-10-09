@@ -49,7 +49,8 @@ public class MINDdroid extends Activity {
 	private Activity thisActivity;
 	private boolean bt_error_pending = false;
 	boolean pairing;
-	private static boolean btOnByUs= false;
+	private static boolean btOnByUs = false;
+	private int mRobotType;
 
 	public static boolean isBtOnByUs() {
 		return btOnByUs;
@@ -67,6 +68,9 @@ public class MINDdroid extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		thisActivity = this;
+		mRobotType = this.getIntent().getIntExtra(SplashMenu.MINDDROID_ROBOT_TYPE, R.id.robot_type_1);
+		setUpByType();
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		StartSound mySound = new StartSound(this);
 		mySound.start();
@@ -77,6 +81,21 @@ public class MINDdroid extends Activity {
 		reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 		// select the nxt to connect to
 		selectNXT();
+	}
+
+	private void setUpByType() {
+		switch (mRobotType) {
+			case R.id.robot_type_2://
+				Log.d("MINDdroid", "robotType 2");
+				break;
+			case R.id.robot_type_3://llama
+				Log.d("MINDdroid", "robotType 3");
+				break;
+			default://
+				Log.d("MINDdroid", "robotType 1");
+				break;
+		}
+
 	}
 
 	private void updateButtonsAndMenu() {
@@ -185,10 +204,10 @@ public class MINDdroid extends Activity {
 		}
 		if (!myBTCommunicator.isBTAdapterEnabled()) {
 			showToast(getResources().getString(R.string.wait_till_bt_on));
-			btOnByUs=true;
+			btOnByUs = true;
 			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		
+
 		}
 
 	}

@@ -7,8 +7,9 @@
     <string name="disconnect">Disconnect</string>
     <string name="quit">Quit</string>    
     <string name="action">Action!</string>   
-    <string name="next">Next</string>   
-
+    <string name="next">Next</string>
+    <string name="options">Robot Type</string>  
+    <string name="model_type_selected">Model Type set to:</string>   
 
     <!-- bluetooth messages -->
     <string name="connecting_please_wait">Connecting to your robot.\nPlease wait...</string>
