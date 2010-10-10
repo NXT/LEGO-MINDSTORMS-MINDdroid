@@ -1,26 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="nxt_default_name">NXT</string>
-    <string name="app_name">MINDdroid</string>
-    <string name="about">Info</string>
-    <string name="connect">Verbinden</string>
-    <string name="disconnect">Trennen</string>
-    <string name="quit">Beenden</string>    
-    <string name="action">Action!</string>    
-
-    <!-- bluetooth messages -->
-    <string name="connecting_please_wait">Verbinde mich zum Roboter.\nBitte warte...</string>
-    <string name="no_paired_nxt">Kein gepaarter NXT Roboter gefunden!</string>
-    <string name="problem_at_connecting">Problem beim Verbinden zum Roboter!</string>
-    <string name="problem_at_closing">Problem beim Beenden der Verbindung!</string>
-    <string name="problem_at_sending">Problem beim Senden von Befehlen!</string>
-    <string name="problem_at_receiving">Problem beim Empfangen einer Meldung!</string> 
-    <string name="current_position">Aktuelle Position: </string>   
-    <string name="eula_title">Endbenutzer-Lizenzvertrag</string>
-    <string name="eula_accept">Akzeptieren</string>
-    <string name="eula_refuse">Verweigern</string>
-
-    <!-- Info Dialog -->
-    
-    
 </resources>

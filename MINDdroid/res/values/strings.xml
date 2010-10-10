@@ -20,9 +20,9 @@
     <string name="problem_at_receiving">Problem in receiving a message!</string>  
 
     <string name="current_position">Current position: </string>
-    <string name="eula_title">End User License Agreement</string>
-    <string name="eula_accept">Accept</string>
-    <string name="eula_refuse">Refuse</string>
+    <string name="lama_title">LEGO Application MINDdroid Agreement</string>
+    <string name="lama_accept">Accept</string>
+    <string name="lama_refuse">Refuse</string>
 
     <string name="bt_error_dialog_title">Bluetooth Error</string>    
 

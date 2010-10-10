@@ -101,15 +101,14 @@ public final class R {
         public static final int button_scan=0x7f050020;
         public static final int connect=0x7f050003;
         /**  bluetooth messages 
- bluetooth messages 
          */
         public static final int connecting_please_wait=0x7f05000a;
         public static final int credits=0x7f050019;
         public static final int current_position=0x7f050010;
         public static final int disconnect=0x7f050004;
-        public static final int eula_accept=0x7f050012;
-        public static final int eula_refuse=0x7f050013;
-        public static final int eula_title=0x7f050011;
+        public static final int lama_accept=0x7f050012;
+        public static final int lama_refuse=0x7f050013;
+        public static final int lama_title=0x7f050011;
         public static final int model_type_selected=0x7f050009;
         public static final int next=0x7f050007;
         public static final int no_paired_nxt=0x7f05000b;

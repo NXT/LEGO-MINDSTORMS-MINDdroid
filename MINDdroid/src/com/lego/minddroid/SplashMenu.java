@@ -55,6 +55,7 @@ public class SplashMenu extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+        Lama.show(this);        	
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		mRobotType=lookupRobotType();
