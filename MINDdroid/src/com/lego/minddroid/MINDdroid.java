@@ -50,7 +50,7 @@ public class MINDdroid extends Activity {
 	private boolean bt_error_pending = false;
 	boolean pairing;
 	private static boolean btOnByUs = false;
-	private int mRobotType;
+	int mRobotType;
 	int motorLeft;
 	private int directionLeft; // +/- 1
 	int motorRight;
@@ -231,8 +231,10 @@ public class MINDdroid extends Activity {
 	protected void onStart() {
 		super.onStart();
 		if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-    		showToast(getResources().getString(R.string.wait_till_bt_on));		    
-			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+    		showToast(getResources().getString(R.string.wait_till_bt_on));	
+    		//s
+    		Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			//Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		}else {
 			selectNXT(); 
