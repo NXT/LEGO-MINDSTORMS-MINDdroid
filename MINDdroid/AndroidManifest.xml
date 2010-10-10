@@ -19,6 +19,9 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
+		<activity android:name=".EnableBT" android:label="@string/app_name"
+			android:screenOrientation="portrait">
+		</activity>
 	</application>
 	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 	<uses-permission android:name="android.permission.BLUETOOTH" />

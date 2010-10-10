@@ -27,7 +27,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -85,35 +84,35 @@ public class MINDdroid extends Activity {
 		mView.setFocusable(true);
 		setContentView(mView);
 		reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-		
+
 	}
 
-	private void setUpByType() {        	
+	private void setUpByType() {
 		switch (mRobotType) {
 			case R.id.robot_type_2:
-                motorLeft = BTCommunicator.MOTOR_A;
-		        directionLeft = 1;
-                motorRight = BTCommunicator.MOTOR_C;
-		        directionRight = 1;
-                motorAction = BTCommunicator.MOTOR_B;			    
-		        directionAction = 1;				
+				motorLeft = BTCommunicator.MOTOR_A;
+				directionLeft = 1;
+				motorRight = BTCommunicator.MOTOR_C;
+				directionRight = 1;
+				motorAction = BTCommunicator.MOTOR_B;
+				directionAction = 1;
 				break;
 			case R.id.robot_type_3:
-		        motorLeft = BTCommunicator.MOTOR_B;
-		        directionLeft = 1;
-		        motorRight = BTCommunicator.MOTOR_C;
-		        directionRight = 1;
-		        motorAction = BTCommunicator.MOTOR_A;
-		        directionAction = 1;				
+				motorLeft = BTCommunicator.MOTOR_B;
+				directionLeft = 1;
+				motorRight = BTCommunicator.MOTOR_C;
+				directionRight = 1;
+				motorAction = BTCommunicator.MOTOR_A;
+				directionAction = 1;
 				break;
-			default:	
-			    // default - robot_type_1
-		        motorLeft = BTCommunicator.MOTOR_B;
-		        directionLeft = 1;
-		        motorRight = BTCommunicator.MOTOR_C;
-		        directionRight = 1;
-		        motorAction = BTCommunicator.MOTOR_A;
-		        directionAction = 1;				
+			default:
+				// default - robot_type_1
+				motorLeft = BTCommunicator.MOTOR_B;
+				directionLeft = 1;
+				motorRight = BTCommunicator.MOTOR_C;
+				directionRight = 1;
+				motorAction = BTCommunicator.MOTOR_A;
+				directionAction = 1;
 				break;
 		}
 	}
@@ -153,15 +152,13 @@ public class MINDdroid extends Activity {
 	}
 
 	public void destroyBTCommunicator() {
-		Log.d("MINDdroid destroyBTCommunicator" , "");
+
 		if (myBTCommunicator != null) {
 			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DISCONNECT, 0, 0);
 			myBTCommunicator = null;
 		}
-		Log.d("MINDdroid destroyBTCommunicator" , "message sent");
 		connected = false;
 		updateButtonsAndMenu();
-		Log.d("MINDdroid destroyBTCommunicator" , "connected = false and menu updated");
 	}
 
 	public boolean isConnected() {
@@ -186,8 +183,8 @@ public class MINDdroid extends Activity {
 			sendBTCmessage(1600, BTCommunicator.DO_BEEP, 494, 300);
 
 			// MOTOR ACTION: forth an back
-			sendBTCmessage(BTCommunicator.NO_DELAY, motorAction, 75*directionAction, 0);
-			sendBTCmessage(500, motorAction, -75*directionAction, 500);
+			sendBTCmessage(BTCommunicator.NO_DELAY, motorAction, 75 * directionAction, 0);
+			sendBTCmessage(500, motorAction, -75 * directionAction, 500);
 			sendBTCmessage(1200, motorAction, 0, 1200);
 
 			sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, motorAction, 1500);
@@ -199,8 +196,8 @@ public class MINDdroid extends Activity {
 
 		if (myBTCommunicator != null) {
 			// send messages via the handler
-			sendBTCmessage(BTCommunicator.NO_DELAY, motorLeft, left*directionLeft, 0);
-			sendBTCmessage(BTCommunicator.NO_DELAY, motorRight, right*directionRight, 0);
+			sendBTCmessage(BTCommunicator.NO_DELAY, motorLeft, left * directionLeft, 0);
+			sendBTCmessage(BTCommunicator.NO_DELAY, motorRight, right * directionRight, 0);
 		}
 	}
 
@@ -231,16 +228,15 @@ public class MINDdroid extends Activity {
 	protected void onStart() {
 		super.onStart();
 		if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
-    		showToast(getResources().getString(R.string.wait_till_bt_on));	
-    		//s
-    		Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			showToast(getResources().getString(R.string.wait_till_bt_on));
+			Intent enableIntent = new Intent(this, EnableBT.class);
 			//Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		}else {
-			selectNXT(); 
+		} else {
+			selectNXT();
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -279,11 +275,9 @@ public class MINDdroid extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case MENU_TOGGLE_CONNECT:
-				Log.d("MINDdroid", "MENU_CONNECT");
 				if (myBTCommunicator == null || connected == false) {
 					selectNXT();
 				} else {
-					Log.d("MINDDroid", "destroyBTCommunicator onOptionsItemSelected");
 					destroyBTCommunicator();
 					updateButtonsAndMenu();
 				}
@@ -292,7 +286,7 @@ public class MINDdroid extends Activity {
 				destroyBTCommunicator();
 				finish();
 				if (btOnByUs)
-				    showToast(getResources().getString(R.string.bt_off_message));		    
+					showToast(getResources().getString(R.string.bt_off_message));
 				SplashMenu.quitApplication();
 				return true;
 		}
@@ -376,22 +370,21 @@ public class MINDdroid extends Activity {
 				}
 				break;
 			case REQUEST_ENABLE_BT:
-    		    Log.d("REQUEST_ENABLE_BT !BluetoothAdapter.getDefaultAdapter().isEnabled()","enabled:"+BluetoothAdapter.getDefaultAdapter().isEnabled());
-                // When the request to enable Bluetooth returns
-                switch (resultCode) {
-				    case Activity.RESULT_OK:
-					    btOnByUs = true;
-					    selectNXT();
-					    break;
-				    case Activity.RESULT_CANCELED:
-					    Toast.makeText(this,R.string.bt_needs_to_be_enabled , Toast.LENGTH_SHORT).show();//"You need to enable BT to start!"
-     				    finish();
-					    break;
-				    default:
-					    Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
-					    finish();
-					    break;
-			    }
- 		}
+				// When the request to enable Bluetooth returns
+				switch (resultCode) {
+					case Activity.RESULT_OK:
+						btOnByUs = true;
+						selectNXT();
+						break;
+					case Activity.RESULT_CANCELED:
+						Toast.makeText(this, R.string.bt_needs_to_be_enabled, Toast.LENGTH_SHORT).show();//"You need to enable BT to start!"
+						finish();
+						break;
+					default:
+						Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
+						finish();
+						break;
+				}
+		}
 	}
 }
