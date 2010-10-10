@@ -168,8 +168,9 @@ public class BTCommunicator extends Thread {
 			try {
 			if (nxtBTsocket != null) {
 		        // send stop messages before closing
-		        changeMotorSpeed(myMINDdroid.motorLeft, 0);
-		        changeMotorSpeed(myMINDdroid.motorRight, 0);
+		        changeMotorSpeed(MOTOR_A, 0);
+		        changeMotorSpeed(MOTOR_B, 0);
+		        changeMotorSpeed(MOTOR_C, 0);
 		        waitSomeTime(500);
                 connected = false;
 				nxtBTsocket.close();

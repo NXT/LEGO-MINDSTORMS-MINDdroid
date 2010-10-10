@@ -50,7 +50,7 @@ public class MINDdroid extends Activity {
 	private boolean bt_error_pending = false;
 	boolean pairing;
 	private static boolean btOnByUs = false;
-	public int mRobotType;
+	private int mRobotType;
 	int motorLeft;
 	private int directionLeft; // +/- 1
 	int motorRight;
