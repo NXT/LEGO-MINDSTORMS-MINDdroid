@@ -46,7 +46,7 @@
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
     <string name="pairing_message">After pairing, press menu and connect.</string>
-    <string name="wait_till_bt_on">Bluetooth needs to be turned on.  Just a second ...</string>
+    <string name="wait_till_bt_on">Turning Bluetooth on (to connect to your robot)</string>
     <string name="bt_off_message">Bluetooth turned off. See you later!</string>
     
 
