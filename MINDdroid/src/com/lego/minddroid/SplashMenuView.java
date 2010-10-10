@@ -111,7 +111,6 @@ public class SplashMenuView extends View {
 				tutorial.show(splashMenuActivity);
 			} else if (event.getY() > startButtonYStart && event.getY() <= startButtonYStart + ic_splash_start.getHeight()) {
 				Intent playGame = new Intent(splashMenuActivity.getBaseContext(), MINDdroid.class);
-				Log.d("SplashMenuView","type: "+((SplashMenu)splashMenuActivity).getRobotType());
 				playGame.putExtra(SplashMenu.MINDDROID_ROBOT_TYPE, ((SplashMenu)splashMenuActivity).getRobotType());
 				splashMenuActivity.startActivity(playGame);
 			}
