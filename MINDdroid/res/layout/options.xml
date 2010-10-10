@@ -20,8 +20,8 @@
 			android:drawableBottom="@drawable/tribot"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-		<RadioButton android:id="@+id/robot_type_3" android:text="Robocator"
-			android:drawableBottom="@drawable/robocator"  android:layout_width="wrap_content"
+		<RadioButton android:id="@+id/robot_type_3" android:text="RoboGator"
+			android:drawableBottom="@drawable/robogator"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp"/>
 	</RadioGroup>
 </LinearLayout>

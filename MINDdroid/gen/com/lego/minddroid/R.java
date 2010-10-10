@@ -32,7 +32,7 @@ public final class R {
         public static final int mobiles_small=0x7f020012;
         public static final int orange=0x7f020013;
         public static final int orange_dot=0x7f020014;
-        public static final int robocator=0x7f020015;
+        public static final int robogator=0x7f020015;
         public static final int shooter_small=0x7f020016;
         public static final int shooterbot=0x7f020017;
         public static final int target=0x7f020018;
