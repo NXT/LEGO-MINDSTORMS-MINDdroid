@@ -88,9 +88,7 @@ public class MINDdroid extends Activity {
 		
 	}
 
-	private void setUpByType() {
-  
-        	
+	private void setUpByType() {        	
 		switch (mRobotType) {
 			case R.id.robot_type_2:
                 motorLeft = BTCommunicator.MOTOR_A;
@@ -100,14 +98,13 @@ public class MINDdroid extends Activity {
 			case R.id.robot_type_3:
 				break;
 			default:	
-			      // default　- robot_type_1
+			    // default - robot_type_1
 		        motorLeft = BTCommunicator.MOTOR_B;
 		        directionLeft = 1;
 		        motorRight = BTCommunicator.MOTOR_C;
 		        directionRight = 1;
 		        motorAction = BTCommunicator.MOTOR_A;
-		        directionAction = 1;
-				
+		        directionAction = 1;				
 				break;
 		}
 
@@ -220,8 +217,6 @@ public class MINDdroid extends Activity {
 		if (myBTCommunicator == null) {
 			createBTCommunicator();
 		}
-	
-
 	}
 
 	@Override
@@ -371,23 +366,22 @@ public class MINDdroid extends Activity {
 				}
 				break;
 			case REQUEST_ENABLE_BT:
-				 Log.d("REQUEST_ENABLE_BT !BluetoothAdapter.getDefaultAdapter().isEnabled()","enabled:"+BluetoothAdapter.getDefaultAdapter().isEnabled());
-				// When the request to enable Bluetooth returns
-               switch (resultCode) {
-				case Activity.RESULT_OK:
-					btOnByUs = true;
-					selectNXT();
-					break;
-				case Activity.RESULT_CANCELED:
-					Toast.makeText(this,R.string.bt_needs_to_be_enabled , Toast.LENGTH_SHORT).show();//"You need to enable BT to start!"
- 				    finish();
-					break;
-				default:
-					Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
-					finish();
-					break;
-			}
- 
-		}
+    		    Log.d("REQUEST_ENABLE_BT !BluetoothAdapter.getDefaultAdapter().isEnabled()","enabled:"+BluetoothAdapter.getDefaultAdapter().isEnabled());
+                // When the request to enable Bluetooth returns
+                switch (resultCode) {
+				    case Activity.RESULT_OK:
+					    btOnByUs = true;
+					    selectNXT();
+					    break;
+				    case Activity.RESULT_CANCELED:
+					    Toast.makeText(this,R.string.bt_needs_to_be_enabled , Toast.LENGTH_SHORT).show();//"You need to enable BT to start!"
+     				    finish();
+					    break;
+				    default:
+					    Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
+					    finish();
+					    break;
+			    }
+ 		}
 	}
 }

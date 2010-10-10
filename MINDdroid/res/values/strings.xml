@@ -110,8 +110,11 @@
         or backwards.
     </string>
 
-    <string name="tutorial_3">    
+    <string name="tutorial_3a">    
         Twisting your hand to the left, it will make it turn left and twist right - turn right.
+    </string>
+
+    <string name="tutorial_3b">    
         It has an Action button that triggers instant 180° turn and back motor action connected
         to the port A on NXT intelligent brick. It just works with the default and easy to build
         model Shooter-Bot or any other Tribot.

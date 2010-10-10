@@ -35,13 +35,25 @@
             android:textSize="10pt"
             android:gravity="left"
             android:textColor="#00ccff"
-            android:text="@string/tutorial_3"/>
+            android:text="@string/tutorial_3a"/>
+    	<ImageView 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:gravity="center" android:src="@drawable/mobiles_small"/>	    	            
+        <TextView
+            android:id="@+id/TutorialTextView3"
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="10pt"
+            android:gravity="left"
+            android:textColor="#00ccff"
+            android:text="@string/tutorial_3b"/>
     	<ImageView 
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="wrap_content"
 	    	android:gravity="center" android:src="@drawable/shooter_small"/>	    	            
         <TextView
-            android:id="@+id/TutorialTextView3"
+            android:id="@+id/TutorialTextView4"
             android:layout_width="fill_parent"
            	android:layout_height="wrap_content"
             android:textSize="10pt"
