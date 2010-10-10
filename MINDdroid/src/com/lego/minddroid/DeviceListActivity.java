@@ -1,5 +1,5 @@
 /**
- *   Copyright 2010 Guenther Hoelzl, Shawn Brown
+ *   (Changes from original are) Copyright 2010 Guenther Hoelzl, Shawn Brown
  *
  *   This file is part of MINDdroid.
  *
@@ -15,6 +15,9 @@
  *
  *   You should have received a copy of the GNU General Public License
  *   along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
+ *   
+ * 
+ * (original work is) Copyright (C) 2009 The Android Open Source Project
 **/
 
 package com.lego.minddroid;
