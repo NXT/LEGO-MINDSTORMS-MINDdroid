@@ -165,11 +165,11 @@ public class BTCommunicator extends Thread {
     }
 
 	private void destroyNXTconnection() {
-		try {
+			try {
 			if (nxtBTsocket != null) {
 		        // send stop messages before closing
-		        changeMotorSpeed(MOTOR_A, 0);
-		        changeMotorSpeed(MOTOR_C, 0);
+		        changeMotorSpeed(myMINDdroid.motorLeft, 0);
+		        changeMotorSpeed(myMINDdroid.motorRight, 0);
 		        waitSomeTime(500);
                 connected = false;
 				nxtBTsocket.close();
@@ -298,7 +298,6 @@ public class BTCommunicator extends Thread {
 	};
 
 	public void setMACAddress(String mMACaddress) {
-		Log.d("BTCommunicator setMACAddress ", mMACaddress);
 		this.mMACaddress = mMACaddress;
 
 	}

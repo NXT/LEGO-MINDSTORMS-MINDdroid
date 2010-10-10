@@ -51,9 +51,9 @@ public class MINDdroid extends Activity {
 	boolean pairing;
 	private static boolean btOnByUs = false;
 	private int mRobotType;
-	private int motorLeft;
+	int motorLeft;
 	private int directionLeft; // +/- 1
-	private int motorRight;
+	int motorRight;
 	private int directionRight; // +/- 1
 	private int motorAction;
 	private int directionAction; // +/- 1
@@ -90,13 +90,7 @@ public class MINDdroid extends Activity {
 	}
 
 	private void setUpByType() {
-        // default
-        motorLeft = BTCommunicator.MOTOR_B;
-        directionLeft = 1;
-        motorRight = BTCommunicator.MOTOR_C;
-        directionRight = 1;
-        motorAction = BTCommunicator.MOTOR_A;
-        directionAction = 1;
+  
         	
 		switch (mRobotType) {
 			case R.id.robot_type_2:
@@ -106,7 +100,15 @@ public class MINDdroid extends Activity {
 				break;
 			case R.id.robot_type_3:
 				break;
-			default:			    
+			default:	
+			      // default　- robot_type_1
+		        motorLeft = BTCommunicator.MOTOR_B;
+		        directionLeft = 1;
+		        motorRight = BTCommunicator.MOTOR_C;
+		        directionRight = 1;
+		        motorAction = BTCommunicator.MOTOR_A;
+		        directionAction = 1;
+				
 				break;
 		}
 
@@ -147,12 +149,15 @@ public class MINDdroid extends Activity {
 	}
 
 	public void destroyBTCommunicator() {
+		Log.d("MINDdroid destroyBTCommunicator" , "");
 		if (myBTCommunicator != null) {
 			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DISCONNECT, 0, 0);
 			myBTCommunicator = null;
 		}
+		Log.d("MINDdroid destroyBTCommunicator" , "message sent");
 		connected = false;
 		updateButtonsAndMenu();
+		Log.d("MINDdroid destroyBTCommunicator" , "connected = false and menu updated");
 	}
 
 	public boolean isConnected() {
@@ -273,7 +278,6 @@ public class MINDdroid extends Activity {
 				}
 				return true;
 			case MENU_QUIT:
-				Log.d("MINDDroid", "destroyBTCommunicator onOptionsItemSelected");
 				destroyBTCommunicator();
 				finish();
 				if (btOnByUs)
