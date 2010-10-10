@@ -443,22 +443,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		}
 
 		public void doMotorMovement(float pitch, float roll) {
+			
+		
 			int left=0;
 			int right=0;
 			// only when phone is little bit tilted
 			if ((Math.abs(pitch) > 10.0) || (Math.abs(roll) > 10.0)) {
-
+				//Log.d("GameView doMotorMovement ","pitch:roll "+pitch+":"+roll  );
 				// limit pitch and roll
-				if (pitch > 33.3)
+				if (pitch > 33.3){
 					pitch = (float) 33.3;
-				else if (pitch < -33.3)
-					pitch = (float) -33.3;
+				}else if (pitch < -33.3){
+					pitch = (float) -33.3;}
 
-				if (roll > 33.3)
+				if (roll > 33.3){
 					roll = (float) 33.3;
-				else if (roll < -33.3)
+				}else if (roll < -33.3){
 					roll = (float) -33.3;
-
+				}
+				//Log.d("GameView doMotorMovement ","calculated pitch:roll "+pitch+":"+roll  );
 				// when pitch is very small then do a special turning function    
 				if (Math.abs(pitch) > 10.0) {
 					left = (int) Math.round(3.3 * pitch * (1.0 + roll / 60.0));
@@ -468,8 +471,11 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					right = -left;
 				}
 
+				
+				
+				//Log.d("GameView doMotorMovement ","left:right "+left+":"+right  );
 				// limit the motor outputs
-
+				//Log.d("GameView doMotorMovement ","--------mX:"+mX+"-----my:"+mY+"------------------" );
 				if (left > 100)
 					left = 100;
 				else if (left < -100)
@@ -479,6 +485,17 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					right = 100;
 				else if (right < -100)
 					right = -100;
+				
+				
+				if (mActivity.mRobotType==R.id.robot_type_1 && pitch < -10) {
+					
+					int back_left=right;
+					int back_right=left;
+					
+					left=back_left;
+					right=back_right;
+					
+				}
 
 			}
 			
