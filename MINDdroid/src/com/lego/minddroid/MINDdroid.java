@@ -92,10 +92,19 @@ public class MINDdroid extends Activity {
 		switch (mRobotType) {
 			case R.id.robot_type_2:
                 motorLeft = BTCommunicator.MOTOR_A;
+		        directionLeft = 1;
                 motorRight = BTCommunicator.MOTOR_C;
+		        directionRight = 1;
                 motorAction = BTCommunicator.MOTOR_B;			    
+		        directionAction = 1;				
 				break;
 			case R.id.robot_type_3:
+		        motorLeft = BTCommunicator.MOTOR_B;
+		        directionLeft = 1;
+		        motorRight = BTCommunicator.MOTOR_C;
+		        directionRight = 1;
+		        motorAction = BTCommunicator.MOTOR_A;
+		        directionAction = 1;				
 				break;
 			default:	
 			    // default - robot_type_1
@@ -107,7 +116,6 @@ public class MINDdroid extends Activity {
 		        directionAction = 1;				
 				break;
 		}
-
 	}
 
 	private void updateButtonsAndMenu() {
