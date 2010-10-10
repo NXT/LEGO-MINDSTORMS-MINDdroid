@@ -50,7 +50,7 @@ public class MINDdroid extends Activity {
 	private boolean bt_error_pending = false;
 	boolean pairing;
 	private static boolean btOnByUs = false;
-	private int mRobotType;
+	public int mRobotType;
 	int motorLeft;
 	private int directionLeft; // +/- 1
 	int motorRight;
@@ -85,8 +85,7 @@ public class MINDdroid extends Activity {
 		mView.setFocusable(true);
 		setContentView(mView);
 		reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-		// select the nxt to connect to
-		selectNXT();
+		
 	}
 
 	private void setUpByType() {
@@ -221,15 +220,22 @@ public class MINDdroid extends Activity {
 		if (myBTCommunicator == null) {
 			createBTCommunicator();
 		}
-		if (!myBTCommunicator.isBTAdapterEnabled()) {
-		    btOnByUs = true;
-    		showToast(getResources().getString(R.string.wait_till_bt_on));		    
-			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-		}
+	
 
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
+    		showToast(getResources().getString(R.string.wait_till_bt_on));		    
+			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+		}else {
+			selectNXT(); 
+		}
+	}
+	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -365,11 +371,23 @@ public class MINDdroid extends Activity {
 				}
 				break;
 			case REQUEST_ENABLE_BT:
+				 Log.d("REQUEST_ENABLE_BT !BluetoothAdapter.getDefaultAdapter().isEnabled()","enabled:"+BluetoothAdapter.getDefaultAdapter().isEnabled());
 				// When the request to enable Bluetooth returns
-				if (resultCode != Activity.RESULT_OK) {
+               switch (resultCode) {
+				case Activity.RESULT_OK:
+					btOnByUs = true;
+					selectNXT();
+					break;
+				case Activity.RESULT_CANCELED:
+					Toast.makeText(this,R.string.bt_needs_to_be_enabled , Toast.LENGTH_SHORT).show();//"You need to enable BT to start!"
+ 				    finish();
+					break;
+				default:
 					Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
 					finish();
-				}
+					break;
+			}
+ 
 		}
 	}
 }

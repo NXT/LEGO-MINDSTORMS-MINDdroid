@@ -30,6 +30,7 @@
         Oops! It seems that your robot is not switched on. Please make sure that
         your robot is on, has BlueTooth activated and then try again to connect.
     </string>    
+    <string name="bt_needs_to_be_enabled">You need to enable BT to start!"</string>
     
     <!-- Splash Menu -->
     <string name="tutorial">Tutorial</string>
