@@ -229,8 +229,8 @@ public class MINDdroid extends Activity {
 		super.onStart();
 		if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
 			showToast(getResources().getString(R.string.wait_till_bt_on));
-			Intent enableIntent = new Intent(this, EnableBT.class);
-			//Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			//Intent enableIntent = new Intent(this, EnableBT.class);
+			Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
 		} else {
 			selectNXT();
