@@ -141,7 +141,7 @@ public class BTCommunicator extends Thread {
 
 			connected = true;
 		} catch (IOException e) {
-			Log.d("BTCommunicator", "error createNXTConnection()", e);
+			//Log.d("BTCommunicator", "error createNXTConnection()", e);
 			if (myMINDdroid.pairing){
     			sendToast(myMINDdroid.getResources().getString(R.string.pairing_message));
 	    		sendState(STATE_CONNECTERROR);	

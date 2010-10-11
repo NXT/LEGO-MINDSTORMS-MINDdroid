@@ -363,7 +363,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		@Override
 		public void run() {
 		    
-			Log.d(TAG, "--run--");
+		//	Log.d(TAG, "--run--");
 			while (mRun) {
 				
 				// sleep some time
@@ -675,7 +675,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	public GameView(Context context, MINDdroid uiActivity) {
 		super(context);
 		 
-		Log.d(TAG, " ~~~~~~~ UIView ~~~~~~~~");
+	//	Log.d(TAG, " ~~~~~~~ UIView ~~~~~~~~");
 		mActivity = uiActivity;
 		mSensorManager = (SensorManager) mActivity.getSystemService(Context.SENSOR_SERVICE);
 		// register our interest in hearing about changes to our surface
@@ -692,7 +692,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		});
 
 		setFocusable(true); // make sure we get key events
-		Log.d(TAG, "UIView finished");
+	//.d(TAG, "UIView finished");
 	}
 
 	public GameThread getThread() {
