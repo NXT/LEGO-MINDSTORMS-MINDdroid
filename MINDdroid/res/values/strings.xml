@@ -117,7 +117,7 @@
     <string name="tutorial_3b">    
         It has an Action button that triggers instant 180° turn and back motor action connected
         to the port A on NXT intelligent brick. It works really well with the easy-to-build
-        starter model Shooter-Bot [or any other Tribot].
+        starter model Shooter-Bot [A-action, B-right motor C-left motor] or any other Tribot .
     </string>
 
     <string name="tutorial_4">    
