@@ -9,7 +9,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
-public class EnableBT extends Activity {
+public class EnableBT extends Activity { //currently unused.  Will be implemented to allow connection without user having to say "Yes turn bt on" (when it isn't)
 
 	boolean processStarted = false;
 	StatusReciever statusReciever;
