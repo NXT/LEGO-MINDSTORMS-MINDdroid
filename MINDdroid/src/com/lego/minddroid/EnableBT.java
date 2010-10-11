@@ -11,7 +11,7 @@ import android.util.Log;
 
 public class EnableBT extends Activity {
 
-	boolean prcessStarted = false;
+	boolean processStarted = false;
 	StatusReciever statusReciever;
 
 	@Override
@@ -21,8 +21,8 @@ public class EnableBT extends Activity {
 
 		statusReciever = new StatusReciever();
 		registerReceiver(statusReciever, new IntentFilter("android.bluetooth.adapter.action.STATE_CHANGED"));
-		prcessStarted = turnOnBt();
-		if (!prcessStarted) {
+		processStarted = turnOnBt();
+		if (!processStarted) {
 			sendFailureStatus();
 		}
 	}
@@ -48,7 +48,23 @@ public class EnableBT extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		unregisterReceiver(statusReciever);
+		 try {
+			unregisterReceiver(statusReciever);
+		} catch (Exception e) {
+			// not registered
+			 
+		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		try {
+			unregisterReceiver(statusReciever);
+		} catch (Exception e) {
+			// not registered
+		}
+		super.onDestroy();
+ 
 	}
 
 	public class StatusReciever extends BroadcastReceiver {
