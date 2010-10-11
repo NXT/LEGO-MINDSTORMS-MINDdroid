@@ -88,7 +88,7 @@
     </string>    
     
     <string name="tutorial_welcome_droid">
-        Welcome, droid!
+        Welcome, Welcome!
     </string>    
     
     <string name="tutorial_1">    
@@ -116,8 +116,8 @@
 
     <string name="tutorial_3b">    
         It has an Action button that triggers instant 180° turn and back motor action connected
-        to the port A on NXT intelligent brick. It just works with the default and easy to build
-        model Shooter-Bot or any other Tribot.
+        to the port A on NXT intelligent brick. It works really well with the easy-to-build
+        starter model Shooter-Bot [or any other Tribot].
     </string>
 
     <string name="tutorial_4">    
@@ -125,17 +125,16 @@
     </string>
 
     <string name="tutorial_5">    
-        It indicates the direction you are tilting your hand-held device to and the direction
+        It indicates the direction you are tilting your hand-held device in and the direction
         your NXT robot moves. Short haptic feedback indicates that you just started driving around.
-        Having your phone flat on your palm will make NXT robot stop and you can stare into the NXT
-        logo. The more you tilt, faster the robot moves and faster the square blinks. Cool, huh?    
+        Holding your phone flat in your palm will make NXT robot stand still.  The more you tilt, the faster the robot moves and the faster the square blinks. Cool, huh?    
     </string>
 
     <string name="tutorial_6">    
         Because we can. And we think it is fun. Moreover, it will inspire you and many others
         to start building cool Applications for interacting with NXT and Android devices and even
-        more cool LEGO MINDSTORMS robots. Because you can.\n\nNow go, try it out, have fun,
-        play good and do not forget to visit us at http://mindstorms.com for more news,
+        more cool LEGO MINDSTORMS robots. Because you can!\n\nNow go, try it out, have fun,
+        play well and do not forget to visit us at http://mindstorms.com for more news,
         info and upcoming appies and goodies.
     </string>
         
