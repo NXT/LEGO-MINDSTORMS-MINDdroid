@@ -43,6 +43,7 @@ public class Options {
 		robot_type_1.setOnClickListener(radio_listener);
 		robot_type_2.setOnClickListener(radio_listener);
 		robot_type_3.setOnClickListener(radio_listener);
+		robot_type_3.setEnabled(false);
 	}
 
 	public void show() {
