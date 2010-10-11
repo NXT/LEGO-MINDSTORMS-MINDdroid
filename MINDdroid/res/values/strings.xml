@@ -104,9 +104,8 @@
 
     <string name="tutorial_2">    
         It interacts in a real-time with NXT robot models built to drive and shoot or
-        drive and throw or drive and hit or just drive using ports B (left) and C (right)
-        for driving motors. By tilting your mobile device down it moves forward.
-        Tilting it up makes your NXT robot model move in the opposite direction
+        drive and throw or drive and hit or just drive. By tilting your mobile device down
+        it moves forward. Tilting it up makes your NXT robot model move in the opposite direction
         or backwards.
     </string>
 
@@ -115,9 +114,11 @@
     </string>
 
     <string name="tutorial_3b">    
-        It has an Action button that triggers instant 180° turn and back motor action connected
-        to the port A on NXT intelligent brick. It works really well with the easy-to-build
-        starter model Shooter-Bot [A-action, B-right motor C-left motor] or 8527 Tribot built from the instructions.  Select the robot type via the menu button on your Android phone when you are on the Tutorial/Start screen.
+        It has an Action button that triggers instant 180° turn and back on the motor dedicated
+        for doing simple tasks.  It works really well with the easy-to-build
+        starter model Shooter-Bot [A-action, B-right motor, C-left motor] or 8527 Tribot built 
+        [A-right motor, B-action, C-left motor] from the instructions.  Select the robot type
+        via the menu button on your Android phone when you are on the "Tutorial/Start" screen.
     </string>
 
     <string name="tutorial_4">    
@@ -127,7 +128,8 @@
     <string name="tutorial_5">    
         It indicates the direction you are tilting your hand-held device in and the direction
         your NXT robot moves. Short haptic feedback indicates that you just started driving around.
-        Holding your phone flat in your palm will make NXT robot stand still.  The more you tilt, the faster the robot moves and the faster the square blinks. Cool, huh?    
+        Holding your phone flat in your palm will make NXT robot stand still.  The more you tilt,
+        the faster the robot moves and the faster the square blinks. Cool, huh?    
     </string>
 
     <string name="tutorial_6">    
