@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+   	android:padding="5dp" >
+	<ImageView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center" android:src="@drawable/logo_splash_minddroid"/>	   	
+    <TextView
+       	android:padding="10dp"
+        android:id="@+id/TutorialTextView"
+        android:layout_width="fill_parent"
+       	android:layout_height="wrap_content"
+       	android:textColor="#00ccff"
+        android:textSize="12pt"
+        android:gravity="center"/>
+	<ImageView 
+	    android:id="@+id/legalImage"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:gravity="center" android:src="@drawable/ic_splash_legal"/>    
+    <Button
+        android:id="@+id/nextButton"
+        android:textSize="20sp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"   
+        android:layout_below="@+id/legalImage"         
+        android:text="@string/want_to_know_more"/>
+</LinearLayout>

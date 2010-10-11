@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+   	android:padding="5dp" >
+    <ScrollView android:id="@+id/ScrollView" 
+                android:layout_marginBottom="50dip"
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content" 
+                xmlns:android="http://schemas.android.com/apk/res/android">		
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:scrollbars="vertical"
+	    android:scrollbarAlwaysDrawVerticalTrack="true" 
+       	android:padding="5dp">
+        <TextView
+            android:id="@+id/TutorialTextView1"
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="10pt"
+            android:gravity="left"
+            android:textColor="#00ccff"
+            android:text="@string/tutorial_2"/>
+    	<ImageView 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:gravity="center" android:src="@drawable/hand_small"/>	    	            
+        <TextView
+            android:id="@+id/TutorialTextView2"
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="10pt"
+            android:gravity="left"
+            android:textColor="#00ccff"
+            android:text="@string/tutorial_3a"/>
+    	<ImageView 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:gravity="center" android:src="@drawable/mobiles_small"/>	    	            
+        <TextView
+            android:id="@+id/TutorialTextView3"
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="10pt"
+            android:gravity="left"
+            android:textColor="#00ccff"
+            android:text="@string/tutorial_3b"/>
+    	<ImageView 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:gravity="center" android:src="@drawable/shooter_small"/>	    	            
+        <TextView
+            android:id="@+id/TutorialTextView4"
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="10pt"
+            android:gravity="left"
+            android:textColor="#00ccff"
+            android:text="@string/tutorial_4"/>
+    </LinearLayout> 
+    </ScrollView>
+    <RelativeLayout android:layout_marginTop="-50dip" android:gravity="bottom" android:layout_height="wrap_content" android:layout_width="fill_parent">   
+        <Button
+            android:id="@+id/nextButton"
+            android:textSize="20sp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"   
+            android:text="@string/next"
+        />
+    </RelativeLayout>      
+</LinearLayout>

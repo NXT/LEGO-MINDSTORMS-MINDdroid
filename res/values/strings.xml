@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nxt_default_name">NXT</string>
+    <string name="app_name">MINDdroid</string>
+    <string name="about">About</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="quit">Quit</string>    
+    <string name="action">Action!</string>   
+    <string name="next">Next</string>
+    <string name="options">Robot Type</string>  
+    <string name="model_type_selected">Model type set to:</string>   
+
+    <!-- bluetooth messages -->
+    <string name="connecting_please_wait">Connecting to your robot.\nPlease wait...</string>
+    <string name="no_paired_nxt">No paired NXT robot found!</string>
+    <string name="problem_at_connecting">Problem in creating a connection!</string>
+    <string name="problem_at_closing">Problem in closing the connection!</string>
+    <string name="problem_at_sending">Problem in sending a message!</string>
+    <string name="problem_at_receiving">Problem in receiving a message!</string>  
+
+    <string name="current_position">Current position: </string>
+    <string name="lama_title">LEGO Application MINDdroid Agreement</string>
+    <string name="lama_accept">I want to play!</string>
+    <string name="lama_refuse">No, thanks</string>
+
+    <string name="bt_error_dialog_title">Bluetooth Error</string>    
+
+    <string name="bt_error_dialog_message">
+        Oops! It seems that your robot is not switched on. Please make sure that
+        your robot is on, has BlueTooth activated and then try again to connect.
+    </string>    
+    <string name="bt_needs_to_be_enabled">You need to enable BT to start!"</string>
+    
+    <!-- Splash Menu -->
+    <string name="tutorial">Tutorial</string>
+    <string name="start_button">Start</string>
+    <string name="credits">Credits</string>
+    
+    <!--  DeviceListActivity -->
+    <string name="scanning">scanning for devices...</string>
+    <string name="select_device">Select a device to connect</string>
+    <string name="none_paired">No devices have been paired</string>
+    <string name="none_found">No devices found</string>
+    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_other_devices">Other Available Devices</string>
+    <string name="button_scan">Scan for devices</string>
+    <string name="pairing_message">After pairing, press menu and connect.</string>
+    <string name="wait_till_bt_on">Turning Bluetooth on (to connect to your robot)</string>
+    <string name="bt_off_message">Bluetooth turned off. See you later!</string>
+    
+
+    <!-- About Dialog -->
+    <string name="about_general">
+        MINDdroid is a result of a co-creation between LEGO® MINDSTORMS®  
+        and its worldwide community of users and it is endorsed by the LEGO Group.
+    </string>    
+    <string name="about_license_gpl">
+        Source code for MINDdroid is released under GPLv3 licence\nsee http://gplv3.fsf.org/
+    </string>    
+    <string name="about_license_lego">
+        LEGO and LEGO MINDSTORMS logo, icons and sounds are excluded from this licence
+        and remain property of the LEGO Group.
+    </string>    
+    <string name="about_people">
+        <b>Idea and code</b>\n
+        Günther Hölzl\nHTL Mössingerstraße, Austria\nhttp://www.htl-klu.at\n\n
+        Shawn Brown\nTokyo, Japan\nhttp://github.com/Shawn-in-Tokyo\n\n
+        <b>UI, menu and a logo design</b>\n
+        Matias Billeschou\nLEGO SYSTEM A/S, Denmark\nhttp://www.lego.com\n\n
+        <b>Icons and overall graphic design</b>\n
+        Vaidas Bagonas\nLEGO SYSTEM A/S, Denmark\nhttp://www.lego.com\n\n
+        <b>UX, concept and production</b>\n
+        Harv Stanic\nLEGO SYSTEM A/S, Denmark\nhttp://www.lego.com
+    </string>
+    <string name="about_thanks">
+        Thank you for downloading and using MINDdroid Application for Android with your
+        LEGO MINDSTORMS robots!
+    </string>     
+    <string name="about_LEGO_legal">            
+        © 2010  The LEGO Group.\nAll rights reserved.
+    </string>     
+    <string name="about_ok">OK</string>
+
+    <!-- Tutorial -->
+    <string name="want_to_know_more">
+        Want to know more ... 
+    </string>    
+    
+    <string name="tutorial_welcome_droid">
+        Welcome, Welcome!
+    </string>    
+    
+    <string name="tutorial_1">    
+        MINDdroid is an Android Application for the real-time direct action remote
+        control of LEGO MINDSTORMS NXT robots utilizing direct BlueTooth wireless
+        connection between both devices - Android phone and your NXT robot and built-in accelerometer
+        and tilt sensors found on most Android powered hand-held phones and devices.\n
+        No computer or programming needed. Just make sure that your NXT intelligent
+        brick is on and has BlueTooth on and is paired to your hand-held device or a
+        phone beforehand. In the menu the middle button enables you to connect to your
+        NXT robot model. It takes about 2-3 seconds to connect. And it takes 2 to tango...    
+    </string>
+
+    <string name="tutorial_2">    
+        It interacts in a real-time with NXT robot models built to drive and shoot or
+        drive and throw or drive and hit or just drive. By tilting your mobile device down
+        it moves forward. Tilting it up makes your NXT robot model move in the opposite direction
+        or backwards.
+    </string>
+
+    <string name="tutorial_3a">    
+        Twisting your hand to the left, it will make it turn left and twist right - turn right.
+    </string>
+
+    <string name="tutorial_3b">    
+        It has an Action button that triggers instant 180° turn and back on the motor dedicated
+        for doing simple tasks.  It works really well with the easy-to-build
+        starter model Shooter-Bot [A-action, B-right motor, C-left motor] or 8527 Tribot built 
+        [A-right motor, B-action, C-left motor] from the instructions.  Select the robot type
+        via the menu button on your Android phone when you are on the "Tutorial/Start" screen.
+    </string>
+
+    <string name="tutorial_4">    
+        It will not work with walker robot models like our famed AlphaRex.
+    </string>
+
+    <string name="tutorial_5">    
+        It indicates the direction you are tilting your hand-held device in and the direction
+        your NXT robot moves. Short haptic feedback indicates that you just started driving around.
+        Holding your phone flat in your palm will make NXT robot stand still.  The more you tilt,
+        the faster the robot moves and the faster the square blinks. Cool, huh?    
+    </string>
+
+    <string name="tutorial_6">    
+        Because we can. And we think it is fun. Moreover, it will inspire you and many others
+        to start building cool Applications for interacting with NXT and Android devices and even
+        more cool LEGO MINDSTORMS robots. Because you can!\n\nNow go, try it out, have fun,
+        play well and do not forget to visit us at http://mindstorms.com for more news,
+        info and upcoming appies and goodies.
+    </string>
+        
+    
+</resources>
