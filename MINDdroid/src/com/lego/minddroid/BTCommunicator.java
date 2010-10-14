@@ -19,9 +19,9 @@
 
 package com.lego.minddroid;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
+import backport.android.bluetooth.BluetoothAdapter;
+import backport.android.bluetooth.BluetoothDevice;
+import backport.android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -94,6 +94,11 @@ public class BTCommunicator extends Thread {
 		createNXTconnection();		
 
         while (connected) {
+        	try {
+			    Thread.sleep(30);
+			}
+			catch (InterruptedException e) {
+			}
 	        // read length of message and the message itself
 	        int length;
 	        try {

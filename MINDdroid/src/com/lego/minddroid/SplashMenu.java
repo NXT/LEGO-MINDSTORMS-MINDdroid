@@ -19,7 +19,7 @@
 package com.lego.minddroid;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
+import backport.android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
