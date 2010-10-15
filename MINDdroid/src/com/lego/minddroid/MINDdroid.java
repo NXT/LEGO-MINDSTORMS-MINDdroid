@@ -147,10 +147,12 @@ public class MINDdroid extends Activity {
 
 		switch (((Thread) myBTCommunicator).getState()) {
 		case NEW:
-		case RUNNABLE:
 		    myBTCommunicator.setMACAddress(mac_address);
 		    myBTCommunicator.start();
 		    break;
+		    
+		  //case RUNNABLE:  //already running - but this can't be in good state after failed connection due to request to pair
+		  //break;
 
 		default:
 		    connected=false;
