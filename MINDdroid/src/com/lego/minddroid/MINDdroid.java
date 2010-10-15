@@ -206,13 +206,6 @@ public class MINDdroid extends Activity {
 		}
 	}
 	
-	public void actionButtonLongPress() {
-	    if (myBTCommunicator != null) {
-		mView.getThread().mActionPressed = true;
-		sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_ACTION, 0, 0);
-	    }
-	    
-	}
 
 	public void updateMotorControl(int left, int right) {
 
