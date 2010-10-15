@@ -145,8 +145,22 @@ public class MINDdroid extends Activity {
 			createBTCommunicator();
 		}
 
-		myBTCommunicator.setMACAddress(mac_address);
-		myBTCommunicator.start();
+		switch (((Thread) myBTCommunicator).getState()) {
+		case NEW:
+		case RUNNABLE:
+		    myBTCommunicator.setMACAddress(mac_address);
+		    myBTCommunicator.start();
+		    break;
+
+		default:
+		    connected=false;
+		    myBTCommunicator = null;
+		    createBTCommunicator();
+		    myBTCommunicator.setMACAddress(mac_address);
+		    myBTCommunicator.start();
+		    break;
+		}
+	 
 		updateButtonsAndMenu();
 
 	}
@@ -191,6 +205,14 @@ public class MINDdroid extends Activity {
 
 		}
 	}
+	
+	public void actionButtonLongPress() {
+	    if (myBTCommunicator != null) {
+		mView.getThread().mActionPressed = true;
+		sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_ACTION, 0, 0);
+	    }
+	    
+	}
 
 	public void updateMotorControl(int left, int right) {
 
@@ -218,10 +240,6 @@ public class MINDdroid extends Activity {
 	public void onResume() {
 		super.onResume();
 		mView.registerListener();
-
-		if (myBTCommunicator == null) {
-			createBTCommunicator();
-		}
 	}
 
 	@Override
@@ -387,4 +405,6 @@ public class MINDdroid extends Activity {
 				}
 		}
 	}
+
+	
 }
