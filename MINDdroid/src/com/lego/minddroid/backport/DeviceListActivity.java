@@ -20,7 +20,7 @@
  * (original work is) Copyright (C) 2009 The Android Open Source Project
 **/
 
-package com.lego.minddroid;
+package com.lego.minddroid.backport;
 
 import java.util.Set;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lego.minddroid;
+package com.lego.minddroid.backport;
 
 import android.app.Activity;
 import android.app.AlertDialog;

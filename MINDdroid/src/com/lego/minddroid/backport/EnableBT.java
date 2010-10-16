@@ -1,4 +1,4 @@
-package com.lego.minddroid;
+package com.lego.minddroid.backport;
 
 import android.app.Activity;
 import backport.android.bluetooth.BluetoothAdapter;

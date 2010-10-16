@@ -17,7 +17,7 @@
  *   along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
 **/
 
-package com.lego.minddroid;
+package com.lego.minddroid.backport;
 
 import android.app.Activity;
 import android.app.Dialog;
