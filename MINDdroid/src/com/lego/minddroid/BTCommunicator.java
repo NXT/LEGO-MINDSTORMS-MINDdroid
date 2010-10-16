@@ -53,6 +53,8 @@ public class BTCommunicator extends Thread {
     public static final int STATE_RECEIVEERROR = 1004;
     public static final int STATE_SENDERROR = 1005;
     public static final int FIRMWARE_VERSION = 1006;
+    public static final int FIND_FILES = 1007;
+    
 
     public static final int NO_DELAY = 0;
 
@@ -179,6 +181,14 @@ public class BTCommunicator extends Thread {
                 sendState(FIRMWARE_VERSION);
                 
             break;                
+        
+        case (byte) 0x86:
+            // FIND FIRST return message
+            if (message.length >= 28)
+                sendState(FIND_FILES);
+                
+            break;
+
         }
     }
 
@@ -245,6 +255,11 @@ public class BTCommunicator extends Thread {
         sendMessage(message);
     }
     
+    private void findFiles() {
+        byte[] message = LCPMessage.getFindFilesMessage(0, "*");
+        sendMessage(message);
+    }
+        
     private boolean sendMessage(byte[] message) {
         if (nxtDos == null) {
             return false;
@@ -323,6 +338,9 @@ public class BTCommunicator extends Thread {
             case GET_FIRMWARE_VERSION:
                 getFirmwareVersion();
                 break;    
+            case FIND_FILES:
+                findFiles();
+                break;
             case DISCONNECT:
                 destroyNXTconnection();
                 break;

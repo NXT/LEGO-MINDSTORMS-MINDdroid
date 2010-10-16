@@ -150,6 +150,23 @@ public class LCPMessage {
 
         return message;
     }
+    
+    
+    public static byte[] getFindFilesMessage(int handle, String searchString) {
+        byte[] message = new byte[22];
+
+        // System command, reply required
+        message[0] = (byte) 0x01;
+        message[1] = (byte) 0x86;
+        
+        // copy searchString and end with 0 delimiter
+        for (int pos=0; pos<searchString.length(); pos++)
+            message[2+pos] = (byte) searchString.charAt(pos);
+
+        message[searchString.length()+2] = 0;        
+
+        return message;
+    }
 
 
 }

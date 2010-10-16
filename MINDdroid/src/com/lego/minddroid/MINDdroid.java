@@ -390,9 +390,22 @@ public class MINDdroid extends Activity {
                         firmwareMessage[4] + ":" + 
                         firmwareMessage[5] + ":" + 
                         firmwareMessage[6]);
+                    // afterwards we search for all files on the robot
+                    sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 0, 0);                    
+                    
                 }
                 
                 break;
+                
+            case BTCommunicator.FIND_FILES:
+                if (myBTCommunicator != null) {
+                    byte[] fileMessage = myBTCommunicator.getReturnMessage();
+                    String fileName = new String(fileMessage, 4, 20);                    
+                    Log.d("MINDdroid","find file:" + fileName);
+                }
+                
+                break;                    
+            
             }
         }
     };
