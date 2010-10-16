@@ -94,11 +94,7 @@ public class BTCommunicator extends Thread {
 		createNXTconnection();		
 
         while (connected) {
-        	try {
-			    Thread.sleep(30);
-			}
-			catch (InterruptedException e) {
-			}
+
 	        // read length of message and the message itself
 	        int length;
 	        try {

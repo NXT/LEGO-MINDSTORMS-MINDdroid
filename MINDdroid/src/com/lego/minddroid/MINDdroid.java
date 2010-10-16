@@ -190,13 +190,13 @@ public class MINDdroid extends Activity {
 			// sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_ACTION, 0, 0);
 
 			// Wolfgang Amadeus Mozart "Zauberfloete - Der Vogelfaenger bin ich ja"
-			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_BEEP, 392, 100);
-			sendBTCmessage(200, BTCommunicator.DO_BEEP, 440, 100);
-			sendBTCmessage(400, BTCommunicator.DO_BEEP, 494, 100);
-			sendBTCmessage(600, BTCommunicator.DO_BEEP, 523, 100);
-			sendBTCmessage(800, BTCommunicator.DO_BEEP, 587, 300);
-			sendBTCmessage(1200, BTCommunicator.DO_BEEP, 523, 300);
-			sendBTCmessage(1600, BTCommunicator.DO_BEEP, 494, 300);
+//			sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_BEEP, 392, 100);
+//			sendBTCmessage(200, BTCommunicator.DO_BEEP, 440, 100);
+//			sendBTCmessage(400, BTCommunicator.DO_BEEP, 494, 100);
+//			sendBTCmessage(600, BTCommunicator.DO_BEEP, 523, 100);
+//			sendBTCmessage(800, BTCommunicator.DO_BEEP, 587, 300);
+//			sendBTCmessage(1200, BTCommunicator.DO_BEEP, 523, 300);
+//			sendBTCmessage(1600, BTCommunicator.DO_BEEP, 494, 300);
 
 			// MOTOR ACTION: forth an back
 			sendBTCmessage(BTCommunicator.NO_DELAY, motorAction, 75 * directionAction, 0);
