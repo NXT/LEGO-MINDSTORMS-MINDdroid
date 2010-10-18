@@ -183,10 +183,13 @@ public class BTCommunicator extends Thread {
             break;                
         
         case (byte) 0x86:
+        case (byte) 0x87:        
             // FIND FIRST return message
-            if (message.length >= 28)
-                sendState(FIND_FILES);
-                
+            if (message.length >= 28) {
+                // Success
+                if (message[2] == 0)
+                    sendState(FIND_FILES);
+            }                
             break;
 
         }
@@ -255,8 +258,8 @@ public class BTCommunicator extends Thread {
         sendMessage(message);
     }
     
-    private void findFiles() {
-        byte[] message = LCPMessage.getFindFilesMessage(0, "*");
+    private void findFiles(boolean findFirst, int handle) {
+        byte[] message = LCPMessage.getFindFilesMessage(findFirst, handle, "*");
         sendMessage(message);
     }
         
@@ -339,7 +342,7 @@ public class BTCommunicator extends Thread {
                 getFirmwareVersion();
                 break;    
             case FIND_FILES:
-                findFiles();
+                findFiles(myMessage.getData().getInt("value1") == 0, myMessage.getData().getInt("value2"));
                 break;
             case DISCONNECT:
                 destroyNXTconnection();

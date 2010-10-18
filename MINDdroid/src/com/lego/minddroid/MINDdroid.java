@@ -33,6 +33,11 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
+
 public class MINDdroid extends Activity {
     public static final int UPDATE_TIME = 200;
     public static final int MENU_TOGGLE_CONNECT = Menu.FIRST;
@@ -57,6 +62,7 @@ public class MINDdroid extends Activity {
     private int directionRight; // +/- 1
     private int motorAction;
     private int directionAction; // +/- 1
+    private List programList;
 
     public static boolean isBtOnByUs() {
         return btOnByUs;
@@ -342,6 +348,7 @@ public class MINDdroid extends Activity {
                 break;
             case BTCommunicator.STATE_CONNECTED:
                 connected = true;
+                programList = new ArrayList();
                 connectingProgressDialog.dismiss();
                 updateButtonsAndMenu();
                 sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.GET_FIRMWARE_VERSION, 0, 0);
@@ -391,8 +398,7 @@ public class MINDdroid extends Activity {
                         firmwareMessage[5] + ":" + 
                         firmwareMessage[6]);
                     // afterwards we search for all files on the robot
-                    sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 0, 0);                    
-                    
+                    sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 0, 0);                                        
                 }
                 
                 break;
@@ -400,8 +406,15 @@ public class MINDdroid extends Activity {
             case BTCommunicator.FIND_FILES:
                 if (myBTCommunicator != null) {
                     byte[] fileMessage = myBTCommunicator.getReturnMessage();
-                    String fileName = new String(fileMessage, 4, 20);                    
-                    Log.d("MINDdroid","find file:" + fileName);
+                    String fileName = new String(fileMessage, 4, 20);
+                    fileName = fileName.replaceAll("\0","");
+                    if (fileName.endsWith(".nxj") || fileName.endsWith(".rxe")) {
+                        programList.add(fileName);
+                        Log.d("MINDdroid","added file to list: " + fileName);
+                    }
+                    // find next entry with appropriate handle
+                    sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 
+                        1, byteToInt(fileMessage[3]));                                        
                 }
                 
                 break;                    
