@@ -54,7 +54,7 @@ public class BTCommunicator extends Thread {
     public static final int STATE_SENDERROR = 1005;
     public static final int FIRMWARE_VERSION = 1006;
     public static final int FIND_FILES = 1007;
-    
+
 
     public static final int NO_DELAY = 0;
 
@@ -168,29 +168,33 @@ public class BTCommunicator extends Thread {
     private void dispatchMessage(byte[] message) {
         switch (message[1]) {
 
-        case 0x06:
-            // GETOUTPUTSTATE return message
-            if (message.length >= 25)
-                sendState(MOTOR_STATE);
+            case 0x06:
 
-            break;
-            
-        case (byte) 0x88:
-            // GET FIRMWARE MESSAGE return message
-            if (message.length >= 7) 
-                sendState(FIRMWARE_VERSION);
-                
-            break;                
-        
-        case (byte) 0x86:
-        case (byte) 0x87:        
-            // FIND FIRST return message
-            if (message.length >= 28) {
-                // Success
-                if (message[2] == 0)
-                    sendState(FIND_FILES);
-            }                
-            break;
+                // GETOUTPUTSTATE return message
+                if (message.length >= 25)
+                    sendState(MOTOR_STATE);
+
+                break;
+
+            case (byte) 0x88:
+
+                // GET FIRMWARE MESSAGE return message
+                if (message.length >= 7)
+                    sendState(FIRMWARE_VERSION);
+
+                break;
+
+            case (byte) 0x86:
+            case (byte) 0x87:
+
+                // FIND FIRST return message
+                if (message.length >= 28) {
+                    // Success
+                    if (message[2] == 0)
+                        sendState(FIND_FILES);
+                }
+
+                break;
 
         }
     }
@@ -252,17 +256,17 @@ public class BTCommunicator extends Thread {
         byte[] message = LCPMessage.getOutputStateMessage(motor);
         sendMessage(message);
     }
-    
+
     private void getFirmwareVersion() {
         byte[] message = LCPMessage.getFirmwareVersionMessage();
         sendMessage(message);
     }
-    
+
     private void findFiles(boolean findFirst, int handle) {
         byte[] message = LCPMessage.getFindFilesMessage(findFirst, handle, "*");
         sendMessage(message);
     }
-        
+
     private boolean sendMessage(byte[] message) {
         if (nxtDos == null) {
             return false;
@@ -318,35 +322,35 @@ public class BTCommunicator extends Thread {
             int message;
 
             switch (message = myMessage.getData().getInt("message")) {
-            case MOTOR_A:
-            case MOTOR_B:
-            case MOTOR_C:
-                changeMotorSpeed(message, myMessage.getData().getInt("value1"));
-                break;
-            case MOTOR_B_ACTION:
-                rotateTo(MOTOR_B, myMessage.getData().getInt("value1"));
-                break;
-            case MOTOR_RESET:
-                reset(myMessage.getData().getInt("value1"));
-                break;
-            case DO_ACTION:
-                startProgram("action.rxe");
-                break;
-            case DO_BEEP:
-                doBeep(myMessage.getData().getInt("value1"), myMessage.getData().getInt("value2"));
-                break;
-            case READ_MOTOR_STATE:
-                readMotorState(myMessage.getData().getInt("value1"));
-                break;
-            case GET_FIRMWARE_VERSION:
-                getFirmwareVersion();
-                break;    
-            case FIND_FILES:
-                findFiles(myMessage.getData().getInt("value1") == 0, myMessage.getData().getInt("value2"));
-                break;
-            case DISCONNECT:
-                destroyNXTconnection();
-                break;
+                case MOTOR_A:
+                case MOTOR_B:
+                case MOTOR_C:
+                    changeMotorSpeed(message, myMessage.getData().getInt("value1"));
+                    break;
+                case MOTOR_B_ACTION:
+                    rotateTo(MOTOR_B, myMessage.getData().getInt("value1"));
+                    break;
+                case MOTOR_RESET:
+                    reset(myMessage.getData().getInt("value1"));
+                    break;
+                case DO_ACTION:
+                    startProgram("action.rxe");
+                    break;
+                case DO_BEEP:
+                    doBeep(myMessage.getData().getInt("value1"), myMessage.getData().getInt("value2"));
+                    break;
+                case READ_MOTOR_STATE:
+                    readMotorState(myMessage.getData().getInt("value1"));
+                    break;
+                case GET_FIRMWARE_VERSION:
+                    getFirmwareVersion();
+                    break;
+                case FIND_FILES:
+                    findFiles(myMessage.getData().getInt("value1") == 0, myMessage.getData().getInt("value2"));
+                    break;
+                case DISCONNECT:
+                    destroyNXTconnection();
+                    break;
             }
         }
     };

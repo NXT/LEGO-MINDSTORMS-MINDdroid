@@ -62,7 +62,7 @@ public class MINDdroid extends Activity {
     private int directionRight; // +/- 1
     private int motorAction;
     private int directionAction; // +/- 1
-    private List programList;
+    private List<String> programList;
 
     public static boolean isBtOnByUs() {
         return btOnByUs;
@@ -96,31 +96,31 @@ public class MINDdroid extends Activity {
 
     private void setUpByType() {
         switch (mRobotType) {
-        case R.id.robot_type_2:
-            motorLeft = BTCommunicator.MOTOR_A;
-            directionLeft = 1;
-            motorRight = BTCommunicator.MOTOR_C;
-            directionRight = 1;
-            motorAction = BTCommunicator.MOTOR_B;
-            directionAction = 1;
-            break;
-        case R.id.robot_type_3:
-            motorLeft = BTCommunicator.MOTOR_B;
-            directionLeft = 1;
-            motorRight = BTCommunicator.MOTOR_C;
-            directionRight = 1;
-            motorAction = BTCommunicator.MOTOR_A;
-            directionAction = 1;
-            break;
-        default:
-            // default - robot_type_1
-            motorLeft = BTCommunicator.MOTOR_B;
-            directionLeft = 1;
-            motorRight = BTCommunicator.MOTOR_C;
-            directionRight = 1;
-            motorAction = BTCommunicator.MOTOR_A;
-            directionAction = 1;
-            break;
+            case R.id.robot_type_2:
+                motorLeft = BTCommunicator.MOTOR_A;
+                directionLeft = 1;
+                motorRight = BTCommunicator.MOTOR_C;
+                directionRight = 1;
+                motorAction = BTCommunicator.MOTOR_B;
+                directionAction = 1;
+                break;
+            case R.id.robot_type_3:
+                motorLeft = BTCommunicator.MOTOR_C;
+                directionLeft = -1;
+                motorRight = BTCommunicator.MOTOR_B;
+                directionRight = -1;
+                motorAction = BTCommunicator.MOTOR_A;
+                directionAction = 1;
+                break;
+            default:
+                // default - robot_type_1
+                motorLeft = BTCommunicator.MOTOR_B;
+                directionLeft = 1;
+                motorRight = BTCommunicator.MOTOR_C;
+                directionRight = 1;
+                motorAction = BTCommunicator.MOTOR_A;
+                directionAction = 1;
+                break;
         }
     }
 
@@ -155,21 +155,21 @@ public class MINDdroid extends Activity {
         }
 
         switch (((Thread) myBTCommunicator).getState()) {
-        case NEW:
-            myBTCommunicator.setMACAddress(mac_address);
-            myBTCommunicator.start();
-            break;
+            case NEW:
+                myBTCommunicator.setMACAddress(mac_address);
+                myBTCommunicator.start();
+                break;
 
-            //case RUNNABLE:  //already running - but this can't be in good state after failed connection due to request to pair
-            //break;
+                //case RUNNABLE:  //already running - but this can't be in good state after failed connection due to request to pair
+                //break;
 
-        default:
-            connected=false;
-            myBTCommunicator = null;
-            createBTCommunicator();
-            myBTCommunicator.setMACAddress(mac_address);
-            myBTCommunicator.start();
-            break;
+            default:
+                connected=false;
+                myBTCommunicator = null;
+                createBTCommunicator();
+                myBTCommunicator.setMACAddress(mac_address);
+                myBTCommunicator.start();
+                break;
         }
 
         updateButtonsAndMenu();
@@ -209,11 +209,24 @@ public class MINDdroid extends Activity {
             sendBTCmessage(1600, BTCommunicator.DO_BEEP, 494, 300);
 
             // MOTOR ACTION: forth an back
-            sendBTCmessage(BTCommunicator.NO_DELAY, motorAction, 75 * directionAction, 0);
-            sendBTCmessage(500, motorAction, -75 * directionAction, 500);
-            sendBTCmessage(1200, motorAction, 0, 1200);
-
-            sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, motorAction, 1500);
+            switch (mRobotType) {
+                case R.id.robot_type_3:
+                    for (int bite=0; bite<3; bite++) {
+                        sendBTCmessage(bite*400, motorAction, 75 * directionAction, 0);
+                        sendBTCmessage(bite*400+200, motorAction, -75 * directionAction, 0);
+                    }    
+                    sendBTCmessage(3*400, motorAction, 0, 0);
+                    break;
+            
+                default:
+                    sendBTCmessage(BTCommunicator.NO_DELAY, motorAction, 75 * directionAction, 0);
+                    sendBTCmessage(500, motorAction, -75 * directionAction, 0);
+                    sendBTCmessage(1000, motorAction, 0, 0);
+                    // MOTOR_STATE
+                    // sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, motorAction, 0);
+                    break;
+            }
+                             
 
         }
     }
@@ -308,26 +321,26 @@ public class MINDdroid extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-        case MENU_TOGGLE_CONNECT:
+            case MENU_TOGGLE_CONNECT:
 
-            if (myBTCommunicator == null || connected == false) {
-                selectNXT();
+                if (myBTCommunicator == null || connected == false) {
+                    selectNXT();
 
-            } else {
+                } else {
+                    destroyBTCommunicator();
+                    updateButtonsAndMenu();
+                }
+
+                return true;
+            case MENU_QUIT:
                 destroyBTCommunicator();
-                updateButtonsAndMenu();
-            }
+                finish();
 
-            return true;
-        case MENU_QUIT:
-            destroyBTCommunicator();
-            finish();
+                if (btOnByUs)
+                    showToast(getResources().getString(R.string.bt_off_message));
 
-            if (btOnByUs)
-                showToast(getResources().getString(R.string.bt_off_message));
-
-            SplashMenu.quitApplication();
-            return true;
+                SplashMenu.quitApplication();
+                return true;
         }
 
         return false;
@@ -343,82 +356,86 @@ public class MINDdroid extends Activity {
         @Override
         public void handleMessage(Message myMessage) {
             switch (myMessage.getData().getInt("message")) {
-            case BTCommunicator.DISPLAY_TOAST:
-                showToast(myMessage.getData().getString("toastText"));
-                break;
-            case BTCommunicator.STATE_CONNECTED:
-                connected = true;
-                programList = new ArrayList();
-                connectingProgressDialog.dismiss();
-                updateButtonsAndMenu();
-                sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.GET_FIRMWARE_VERSION, 0, 0);
-                break;
-            case BTCommunicator.MOTOR_STATE:
+                case BTCommunicator.DISPLAY_TOAST:
+                    showToast(myMessage.getData().getString("toastText"));
+                    break;
+                case BTCommunicator.STATE_CONNECTED:
+                    connected = true;
+                    programList = new ArrayList<String>();
+                    connectingProgressDialog.dismiss();
+                    updateButtonsAndMenu();
+                    sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.GET_FIRMWARE_VERSION, 0, 0);
+                    break;
+                case BTCommunicator.MOTOR_STATE:
 
-                if (myBTCommunicator != null) {
-                    byte[] motorMessage = myBTCommunicator.getReturnMessage();
-                    int position = byteToInt(motorMessage[21]) + (byteToInt(motorMessage[22]) << 8) + (byteToInt(motorMessage[23]) << 16)
-                                   + (byteToInt(motorMessage[24]) << 24);
-                    showToast(getResources().getString(R.string.current_position) + position);
-                }
-
-                break;
-            case BTCommunicator.STATE_CONNECTERROR:
-                connectingProgressDialog.dismiss();
-            case BTCommunicator.STATE_RECEIVEERROR:
-            case BTCommunicator.STATE_SENDERROR:
-                destroyBTCommunicator();
-
-                if (bt_error_pending == false) {
-                    bt_error_pending = true;
-                    // inform the user of the error with an AlertDialog
-                    AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
-                    builder.setTitle(getResources().getString(R.string.bt_error_dialog_title))
-                    .setMessage(getResources().getString(R.string.bt_error_dialog_message)).setCancelable(false)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int id) {
-                            bt_error_pending = false;
-                            dialog.cancel();
-                            selectNXT();
-                        }
-                    });
-                    builder.create().show();
-                }
-
-                break;
-                
-            case BTCommunicator.FIRMWARE_VERSION:
-                if (myBTCommunicator != null) {                
-                    byte[] firmwareMessage = myBTCommunicator.getReturnMessage();
-                    Log.d("MINDdroid","firmware version:" +
-                        firmwareMessage[2] + ":" + 
-                        firmwareMessage[3] + ":" + 
-                        firmwareMessage[4] + ":" + 
-                        firmwareMessage[5] + ":" + 
-                        firmwareMessage[6]);
-                    // afterwards we search for all files on the robot
-                    sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 0, 0);                                        
-                }
-                
-                break;
-                
-            case BTCommunicator.FIND_FILES:
-                if (myBTCommunicator != null) {
-                    byte[] fileMessage = myBTCommunicator.getReturnMessage();
-                    String fileName = new String(fileMessage, 4, 20);
-                    fileName = fileName.replaceAll("\0","");
-                    if (fileName.endsWith(".nxj") || fileName.endsWith(".rxe")) {
-                        programList.add(fileName);
-                        Log.d("MINDdroid","added file to list: " + fileName);
+                    if (myBTCommunicator != null) {
+                        byte[] motorMessage = myBTCommunicator.getReturnMessage();
+                        int position = byteToInt(motorMessage[21]) + (byteToInt(motorMessage[22]) << 8) + (byteToInt(motorMessage[23]) << 16)
+                                       + (byteToInt(motorMessage[24]) << 24);
+                        showToast(getResources().getString(R.string.current_position) + position);
                     }
-                    // find next entry with appropriate handle
-                    sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 
-                        1, byteToInt(fileMessage[3]));                                        
-                }
-                
-                break;                    
-            
+
+                    break;
+                case BTCommunicator.STATE_CONNECTERROR:
+                    connectingProgressDialog.dismiss();
+                case BTCommunicator.STATE_RECEIVEERROR:
+                case BTCommunicator.STATE_SENDERROR:
+                    destroyBTCommunicator();
+
+                    if (bt_error_pending == false) {
+                        bt_error_pending = true;
+                        // inform the user of the error with an AlertDialog
+                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                        builder.setTitle(getResources().getString(R.string.bt_error_dialog_title))
+                        .setMessage(getResources().getString(R.string.bt_error_dialog_message)).setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                bt_error_pending = false;
+                                dialog.cancel();
+                                selectNXT();
+                            }
+                        });
+                        builder.create().show();
+                    }
+
+                    break;
+
+                case BTCommunicator.FIRMWARE_VERSION:
+
+                    if (myBTCommunicator != null) {
+                        byte[] firmwareMessage = myBTCommunicator.getReturnMessage();
+                        Log.d("MINDdroid","firmware version:" +
+                              firmwareMessage[2] + ":" +
+                              firmwareMessage[3] + ":" +
+                              firmwareMessage[4] + ":" +
+                              firmwareMessage[5] + ":" +
+                              firmwareMessage[6]);
+                        // afterwards we search for all files on the robot
+                        sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 0, 0);
+                    }
+
+                    break;
+
+                case BTCommunicator.FIND_FILES:
+
+                    if (myBTCommunicator != null) {
+                        byte[] fileMessage = myBTCommunicator.getReturnMessage();
+                        String fileName = new String(fileMessage, 4, 20);
+                        fileName = fileName.replaceAll("\0","");
+
+                        if (fileName.endsWith(".nxj") || fileName.endsWith(".rxe")) {
+                            programList.add(fileName);
+                            Log.d("MINDdroid","added file to list: " + fileName);
+                        }
+
+                        // find next entry with appropriate handle
+                        sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES,
+                                       1, byteToInt(fileMessage[3]));
+                    }
+
+                    break;
+
             }
         }
     };
@@ -440,34 +457,34 @@ public class MINDdroid extends Activity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-        case REQUEST_CONNECT_DEVICE:
+            case REQUEST_CONNECT_DEVICE:
 
-            // When DeviceListActivity returns with a device to connect
-            if (resultCode == Activity.RESULT_OK) {
-                // Get the device MAC address
-                String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
-                pairing = data.getExtras().getBoolean(DeviceListActivity.PAIRING);
-                startBTCommunicator(address);
-            }
+                // When DeviceListActivity returns with a device to connect
+                if (resultCode == Activity.RESULT_OK) {
+                    // Get the device MAC address
+                    String address = data.getExtras().getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+                    pairing = data.getExtras().getBoolean(DeviceListActivity.PAIRING);
+                    startBTCommunicator(address);
+                }
 
-            break;
-        case REQUEST_ENABLE_BT:
+                break;
+            case REQUEST_ENABLE_BT:
 
-            // When the request to enable Bluetooth returns
-            switch (resultCode) {
-            case Activity.RESULT_OK:
-                btOnByUs = true;
-                selectNXT();
-                break;
-            case Activity.RESULT_CANCELED:
-                Toast.makeText(this, R.string.bt_needs_to_be_enabled, Toast.LENGTH_SHORT).show();//"You need to enable BT to start!"
-                finish();
-                break;
-            default:
-                Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
-                finish();
-                break;
-            }
+                // When the request to enable Bluetooth returns
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        btOnByUs = true;
+                        selectNXT();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        Toast.makeText(this, R.string.bt_needs_to_be_enabled, Toast.LENGTH_SHORT).show();//"You need to enable BT to start!"
+                        finish();
+                        break;
+                    default:
+                        Toast.makeText(this, R.string.problem_at_connecting, Toast.LENGTH_SHORT).show();
+                        finish();
+                        break;
+                }
         }
     }
 
