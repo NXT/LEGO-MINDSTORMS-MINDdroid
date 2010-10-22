@@ -10,6 +10,10 @@
     <string name="next">Next</string>
     <string name="options">Robot Type</string>  
     <string name="model_type_selected">Model type set to:</string>   
+    
+    <!-- file dialog and message -->
+    <string name="no_files_found">No files found on robot!</string>    
+    <string name="file_dialog_title">Select a program</string>    
 
     <!-- bluetooth messages -->
     <string name="connecting_please_wait">Connecting to your robot.\nPlease wait...</string>

@@ -235,7 +235,12 @@ public class MINDdroid extends Activity {
     public void actionButtonLongPress() {
         if (myBTCommunicator != null) {
             mView.getThread().mActionPressed = true;
-            sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_ACTION, 0, 0);
+
+            if (programList.size() == 0)
+                showToast(getResources().getString(R.string.no_files_found));                
+            
+    		FileDialog myFileDialog = new FileDialog(this, programList);    		    	    		
+			myFileDialog.show();			
         }
 
     }
@@ -254,6 +259,20 @@ public class MINDdroid extends Activity {
         myBundle.putInt("message", message);
         myBundle.putInt("value1", value1);
         myBundle.putInt("value2", value2);
+        Message myMessage = myHandler.obtainMessage();
+        myMessage.setData(myBundle);
+
+        if (delay == 0)
+            btcHandler.sendMessage(myMessage);
+
+        else
+            btcHandler.sendMessageDelayed(myMessage, delay);
+    }
+    
+    void sendBTCmessage(int delay, int message, String name) {
+        Bundle myBundle = new Bundle();
+        myBundle.putInt("message", message);
+        myBundle.putString("name", name);
         Message myMessage = myHandler.obtainMessage();
         myMessage.setData(myBundle);
 

@@ -227,6 +227,7 @@ public class BTCommunicator extends Thread {
     }
 
     private void startProgram(String programName) {
+        Log.d("BTCommunicator","Starting Program: "+programName);
         byte[] message = LCPMessage.getProgramMessage(programName);
         sendMessage(message);
     }
@@ -334,7 +335,7 @@ public class BTCommunicator extends Thread {
                     reset(myMessage.getData().getInt("value1"));
                     break;
                 case DO_ACTION:
-                    startProgram("action.rxe");
+                    startProgram(myMessage.getData().getString("name"));
                     break;
                 case DO_BEEP:
                     doBeep(myMessage.getData().getInt("value1"), myMessage.getData().getInt("value2"));
