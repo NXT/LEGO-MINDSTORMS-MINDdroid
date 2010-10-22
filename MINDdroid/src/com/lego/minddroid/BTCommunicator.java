@@ -263,7 +263,7 @@ public class BTCommunicator extends Thread {
     }
 
     private void findFiles(boolean findFirst, int handle) {
-        byte[] message = LCPMessage.getFindFilesMessage(findFirst, handle, "*");
+        byte[] message = LCPMessage.getFindFilesMessage(findFirst, handle, "*.*");
         sendMessage(message);
     }
 

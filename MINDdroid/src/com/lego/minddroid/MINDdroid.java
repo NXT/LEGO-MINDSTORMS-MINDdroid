@@ -63,6 +63,7 @@ public class MINDdroid extends Activity {
     private int motorAction;
     private int directionAction; // +/- 1
     private List<String> programList;
+    private static final int MAX_PROGRAMS = 20;
 
     public static boolean isBtOnByUs() {
         return btOnByUs;
@@ -429,9 +430,11 @@ public class MINDdroid extends Activity {
                             Log.d("MINDdroid","added file to list: " + fileName);
                         }
 
-                        // find next entry with appropriate handle
-                        sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES,
-                                       1, byteToInt(fileMessage[3]));
+                        // find next entry with appropriate handle, 
+                        // limit number of programs (in case of error (endless loop))
+                        if (programList.size() <= MAX_PROGRAMS)
+                            sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES,
+                                           1, byteToInt(fileMessage[3]));
                     }
 
                     break;
