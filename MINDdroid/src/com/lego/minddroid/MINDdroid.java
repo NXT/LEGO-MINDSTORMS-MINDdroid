@@ -59,6 +59,7 @@ public class MINDdroid extends Activity {
     int motorLeft;
     private int directionLeft; // +/- 1
     int motorRight;
+    private boolean stopAlreadySent = false;
     private int directionRight; // +/- 1
     private int motorAction;
     private int directionAction; // +/- 1
@@ -248,6 +249,16 @@ public class MINDdroid extends Activity {
     public void updateMotorControl(int left, int right) {
 
         if (myBTCommunicator != null) {
+            // don't send motor stop twice
+            if ((left == 0) && (right == 0)) {
+                if (stopAlreadySent)
+                    return;
+                else
+                    stopAlreadySent = true;
+            }
+            else
+                stopAlreadySent = false;         
+                        
             // send messages via the handler
             sendBTCmessage(BTCommunicator.NO_DELAY, motorLeft, left * directionLeft, 0);
             sendBTCmessage(BTCommunicator.NO_DELAY, motorRight, right * directionRight, 0);
