@@ -65,6 +65,7 @@ public class MINDdroid extends Activity {
     private int directionAction; // +/- 1
     private List<String> programList;
     private static final int MAX_PROGRAMS = 20;
+    private String programToStart;
 
     public static boolean isBtOnByUs() {
         return btOnByUs;
@@ -224,12 +225,8 @@ public class MINDdroid extends Activity {
                     sendBTCmessage(BTCommunicator.NO_DELAY, motorAction, 75 * directionAction, 0);
                     sendBTCmessage(500, motorAction, -75 * directionAction, 0);
                     sendBTCmessage(1000, motorAction, 0, 0);
-                    // MOTOR_STATE
-                    // sendBTCmessage(1500, BTCommunicator.READ_MOTOR_STATE, motorAction, 0);
                     break;
             }
-                             
-
         }
     }
 
@@ -241,10 +238,38 @@ public class MINDdroid extends Activity {
                 showToast(getResources().getString(R.string.no_files_found));                
             
     		FileDialog myFileDialog = new FileDialog(this, programList);    		    	    		
-			myFileDialog.show();			
+			myFileDialog.show();
         }
 
     }
+    
+    public void startProgram(String name) {
+        // for .rxe programs: get program name, eventually stop this and start the new one delayed
+        // is handled in startRXEprogram()
+        if (name.endsWith(".rxe")) {
+            programToStart = name;        
+            sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.GET_PROGRAM_NAME, 0, 0);
+            return;
+        }
+              
+        // for .nxj programs: stop bluetooth communication after starting the program
+        if (name.endsWith(".nxj")) {
+            sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.START_PROGRAM, name);
+            destroyBTCommunicator();
+            return;
+        }        
+
+    }
+
+    public void startRXEprogram(byte status) {
+        if (status == 0x00) {
+            sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.STOP_PROGRAM, 0, 0);
+            sendBTCmessage(1000, BTCommunicator.START_PROGRAM, programToStart);
+        }    
+        else {
+            sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.START_PROGRAM, programToStart);
+        }
+    }        
 
     public void updateMotorControl(int left, int right) {
 
@@ -436,12 +461,6 @@ public class MINDdroid extends Activity {
 
                     if (myBTCommunicator != null) {
                         byte[] firmwareMessage = myBTCommunicator.getReturnMessage();
-                        Log.d("MINDdroid","firmware version:" +
-                              firmwareMessage[2] + ":" +
-                              firmwareMessage[3] + ":" +
-                              firmwareMessage[4] + ":" +
-                              firmwareMessage[5] + ":" +
-                              firmwareMessage[6]);
                         // afterwards we search for all files on the robot
                         sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 0, 0);
                     }
@@ -457,7 +476,6 @@ public class MINDdroid extends Activity {
 
                         if (fileName.endsWith(".nxj") || fileName.endsWith(".rxe")) {
                             programList.add(fileName);
-                            Log.d("MINDdroid","added file to list: " + fileName);
                         }
 
                         // find next entry with appropriate handle, 
@@ -468,7 +486,14 @@ public class MINDdroid extends Activity {
                     }
 
                     break;
-
+                    
+                case BTCommunicator.PROGRAM_NAME:
+                    if (myBTCommunicator != null) {
+                        byte[] returnMessage = myBTCommunicator.getReturnMessage();
+                        startRXEprogram(returnMessage[2]);
+                    }
+                    
+                    break;
             }
         }
     };

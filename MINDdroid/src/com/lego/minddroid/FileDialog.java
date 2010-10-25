@@ -68,7 +68,7 @@ class FileDialog {
 	}
 	
 	private void startProgram(int number) {
-        ((MINDdroid) myActivity).sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DO_ACTION, (String) programs[number]);
+        ((MINDdroid) myActivity).startProgram((String) programs[number]);
 	}
 		    
 }

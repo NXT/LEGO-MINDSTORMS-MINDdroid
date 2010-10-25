@@ -40,7 +40,6 @@ public class BTCommunicator extends Thread {
     public static final int MOTOR_C = 2;
     public static final int MOTOR_B_ACTION = 40;
     public static final int MOTOR_RESET = 10;
-    public static final int DO_ACTION = 50;
     public static final int DO_BEEP = 51;
     public static final int READ_MOTOR_STATE = 60;
     public static final int GET_FIRMWARE_VERSION = 70;
@@ -54,13 +53,16 @@ public class BTCommunicator extends Thread {
     public static final int STATE_SENDERROR = 1005;
     public static final int FIRMWARE_VERSION = 1006;
     public static final int FIND_FILES = 1007;
-
+    public static final int START_PROGRAM = 1008;
+    public static final int STOP_PROGRAM = 1009;
+    public static final int GET_PROGRAM_NAME = 1010;
+    public static final int PROGRAM_NAME = 1011;
 
     public static final int NO_DELAY = 0;
 
     private static final UUID SERIAL_PORT_SERVICE_CLASS_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
     // this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
-    private static final String OUI_LEGO = "00:16:53";
+    public static final String OUI_LEGO = "00:16:53";
 
     BluetoothAdapter btAdapter;
     private BluetoothSocket nxtBTsocket = null;
@@ -195,7 +197,12 @@ public class BTCommunicator extends Thread {
                 }
 
                 break;
-
+                
+            case (byte) 0x11:
+                // GETCURRENTPROGRAMNAME return message
+                if (message.length >= 23) {
+                    sendState(PROGRAM_NAME);
+                }
         }
     }
 
@@ -227,11 +234,20 @@ public class BTCommunicator extends Thread {
     }
 
     private void startProgram(String programName) {
-        Log.d("BTCommunicator","Starting Program: "+programName);
-        byte[] message = LCPMessage.getProgramMessage(programName);
+        byte[] message = LCPMessage.getStartProgramMessage(programName);
         sendMessage(message);
     }
 
+    private void stopProgram() {
+        byte[] message = LCPMessage.getStopProgramMessage();
+        sendMessage(message);
+    }
+    
+    private void getProgramName() {
+        byte[] message = LCPMessage.getProgramNameMessage();
+        sendMessage(message);
+    }
+    
     private void changeMotorSpeed(int motor, int speed) {
         if (speed > 100)
             speed = 100;
@@ -334,9 +350,15 @@ public class BTCommunicator extends Thread {
                 case MOTOR_RESET:
                     reset(myMessage.getData().getInt("value1"));
                     break;
-                case DO_ACTION:
+                case START_PROGRAM:
                     startProgram(myMessage.getData().getString("name"));
                     break;
+                case STOP_PROGRAM:
+                    stopProgram();
+                    break;
+                case GET_PROGRAM_NAME:
+                    getProgramName();
+                    break;    
                 case DO_BEEP:
                     doBeep(myMessage.getData().getInt("value1"), myMessage.getData().getInt("value2"));
                     break;

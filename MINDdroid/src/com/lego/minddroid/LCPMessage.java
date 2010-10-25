@@ -111,7 +111,7 @@ public class LCPMessage {
     }
 
 
-    public static byte[] getProgramMessage(String programName) {
+    public static byte[] getStartProgramMessage(String programName) {
         byte[] message = new byte[22];
 
         // Direct command telegram, no response
@@ -127,6 +127,26 @@ public class LCPMessage {
         return message;
     }
 
+
+    public static byte[] getStopProgramMessage() {
+        byte[] message = new byte[2];
+
+        // Direct command telegram, no response
+        message[0] = (byte) 0x80;
+        message[1] = (byte) 0x01;
+
+        return message;
+    }
+    
+    public static byte[] getProgramNameMessage() {
+        byte[] message = new byte[2];
+
+        // Direct command telegram, with response
+        message[0] = (byte) 0x00;
+        message[1] = (byte) 0x11;
+
+        return message;
+    }
 
     public static byte[] getOutputStateMessage(int motor) {
         byte[] message = new byte[3];
@@ -166,7 +186,6 @@ public class LCPMessage {
 
         if (findFirst) {
             message[1] = (byte) 0x86;
-
 
             // copy searchString and end with 0 delimiter
             for (int pos=0; pos<searchString.length(); pos++)
