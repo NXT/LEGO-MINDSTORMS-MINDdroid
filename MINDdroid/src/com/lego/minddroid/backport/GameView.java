@@ -164,6 +164,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	    private float yX1 = 0;
 	    private float yY0 = 0;
 	    private float yY1 = 0;
+	    public boolean longPressCancel;
 		
 		public GameThread(SurfaceHolder surfaceHolder, Context context, Vibrator vibrator, Handler handler) {
 			// get handles to some important objects
@@ -375,7 +376,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 				updateTime();
 				updateMoveIndicator(mAccelX, mAccelY);
-				
+				doActionButtonFeedback();
 				// is it time to update the screen?
 				if (mElapsedSinceDraw > REDRAW_SCHED) {
 
@@ -389,6 +390,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                     
 				}
 			}
+		}
+
+		private void doActionButtonFeedback() {
+		    if((mLastTime-mTimeActionDown)>SHORT_PRESS_MAX_DURATION && longPressCancel!=true) {
+			//Log.d("GameView doActionButtonFeedback","mTimeActionDown+SHORT_PRESS_MAX_DURATION "+(mTimeActionDown+SHORT_PRESS_MAX_DURATION) +":mLastTime "+mLastTime+"   --dur:"+(mLastTime-mTimeActionDown) );
+			vibrate();
+			 
+			try {
+			    Thread.sleep(10);
+			} catch (InterruptedException e) {
+			    // TODO Auto-generated catch block
+			    e.printStackTrace();
+			}
+			vibrate();
+			longPressCancel=true;
+		    } 
+		    
 		}
 
 		public void lockCanvasAndDraw() {
@@ -651,7 +669,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	private float mAccelY = 0;
 	private float mAccelZ = 0; // heading
 	/**time that action button was pressed - used to calc long or short press */
-	long mTimeButtonUp=0;
+	long mTimeActionDown=0;
 	 
 	private final SensorEventListener mSensorAccelerometer = new SensorEventListener() {
 
@@ -707,15 +725,19 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		switch (event.getAction()){
 			
 		case MotionEvent.ACTION_DOWN:
-			mTimeButtonUp=System.currentTimeMillis();
+			mTimeActionDown=System.currentTimeMillis();
+			getThread().longPressCancel=false;
 			break;
 			
 		case MotionEvent.ACTION_UP:
-			long mTimeButtonDown=System.currentTimeMillis();
-			if (mTimeButtonDown-mTimeButtonUp<SHORT_PRESS_MAX_DURATION){//short press
+			long mTimeActionUp=System.currentTimeMillis();
+			if (mTimeActionUp-mTimeActionDown<SHORT_PRESS_MAX_DURATION){//short press
+			    getThread().longPressCancel=true;
 				mActivity.actionButtonPressed();
+				//Log.d("GameView TE","shortpress : "+(mTimeActionUp-mTimeActionDown));
 			}else{//long press
-				mActivity.actionButtonPressed();
+			   // Log.d("GameView TE","long press");
+				mActivity.actionButtonLongPress();
 			}
 			break;
 		}
