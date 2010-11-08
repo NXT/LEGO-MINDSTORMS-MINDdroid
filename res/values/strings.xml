@@ -10,6 +10,10 @@
     <string name="next">Next</string>
     <string name="options">Robot Type</string>  
     <string name="model_type_selected">Model type set to:</string>   
+    
+    <!-- file dialog and message -->
+    <string name="no_files_found">No files found on robot!</string>    
+    <string name="file_dialog_title">Select a program</string>    
 
     <!-- bluetooth messages -->
     <string name="connecting_please_wait">Connecting to your robot.\nPlease wait...</string>
@@ -42,7 +46,7 @@
     <string name="select_device">Select a device to connect</string>
     <string name="none_paired">No devices have been paired</string>
     <string name="none_found">No devices found</string>
-    <string name="title_paired_devices">Paired Devices</string>
+    <string name="title_paired_devices">Paired LEGO Devices</string>
     <string name="title_other_devices">Other Available Devices</string>
     <string name="button_scan">Scan for devices</string>
     <string name="pairing_message">After pairing, press menu and connect.</string>
@@ -70,7 +74,7 @@
         Matias Billeschou\nLEGO SYSTEM A/S, Denmark\nhttp://www.lego.com\n\n
         <b>Icons and overall graphic design</b>\n
         Vaidas Bagonas\nLEGO SYSTEM A/S, Denmark\nhttp://www.lego.com\n\n
-        <b>UX, concept and production</b>\n
+        <b>Additional code, UX, concept and production</b>\n
         Harv Stanic\nLEGO SYSTEM A/S, Denmark\nhttp://www.lego.com
     </string>
     <string name="about_thanks">
@@ -84,11 +88,11 @@
 
     <!-- Tutorial -->
     <string name="want_to_know_more">
-        Want to know more ... 
+        Do you want to know more? 
     </string>    
     
     <string name="tutorial_welcome_droid">
-        Welcome, Welcome!
+        Welcome, robot!
     </string>    
     
     <string name="tutorial_1">    
@@ -109,16 +113,19 @@
         or backwards.
     </string>
 
-    <string name="tutorial_3a">    
+    <string name="tutorial_3a">
         Twisting your hand to the left, it will make it turn left and twist right - turn right.
     </string>
 
-    <string name="tutorial_3b">    
-        It has an Action button that triggers instant 180° turn and back on the motor dedicated
-        for doing simple tasks.  It works really well with the easy-to-build
-        starter model Shooter-Bot [A-action, B-right motor, C-left motor] or 8527 Tribot built 
-        [A-right motor, B-action, C-left motor] from the instructions.  Select the robot type
-        via the menu button on your Android phone when you are on the "Tutorial/Start" screen.
+    <string name="tutorial_3b">
+        It has an <b>Action button</b> with two functions: On <b>short press</b> it triggers the motor dedicated
+        for doing simple tasks. For the Shooterbot and the Tribot it drives the motor 180° forward 
+        and back and for the Robogator the mouth will open and close three times. On <b>long press</b> you will
+        be able to select and start a program on the NXT brick, isn\'t that fantastic? It works really
+        well with the easy-to-build starter model Shooterbot [A-action, B-right motor, C-left motor], the 8527 Tribot built 
+        [A-right motor, B-action, C-left motor] and the Robogator [A-action, B-right motor, C-left motor]
+        from the instructions.  Select the robot type via the menu button on your Android phone
+        when you are on the "Tutorial/Start" screen.
     </string>
 
     <string name="tutorial_4">    

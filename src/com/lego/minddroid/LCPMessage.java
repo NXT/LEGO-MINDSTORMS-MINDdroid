@@ -20,7 +20,7 @@
 package com.lego.minddroid;
 
 /**
- * Class for composing the proper messages for simple 
+ * Class for composing the proper messages for simple
  * communication over bluetooth
  */
 public class LCPMessage {
@@ -28,7 +28,7 @@ public class LCPMessage {
 
     public static byte[] getBeepMessage(int frequency, int duration) {
         byte[] message = new byte[6];
-    
+
         // Direct command telegram, no response
         message[0] = (byte) 0x80;
         message[1] = (byte) 0x03;
@@ -46,19 +46,20 @@ public class LCPMessage {
     public static byte[] getMotorMessage(int motor, int speed) {
         byte[] message = new byte[12];
 
-        // Direct command telegram, no response        
+        // Direct command telegram, no response
         message[0] = (byte) 0x80;
         message[1] = (byte) 0x04;
         // Output port
         message[2] = (byte) motor;
+
         if (speed == 0) {
             message[3] = 0;
             message[4] = 0;
             message[5] = 0;
             message[6] = 0;
             message[7] = 0;
-        }
-        else {
+
+        } else {
             // Power set option (Range: -100 - 100)
             message[3] = (byte) speed;
             // Mode byte (Bit-field): MOTORON + BREAK
@@ -97,7 +98,7 @@ public class LCPMessage {
 
     public static byte[] getResetMessage(int motor) {
         byte[] message = new byte[4];
-    
+
         // Direct command telegram, no response
         message[0] = (byte) 0x80;
         message[1] = (byte) 0x0A;
@@ -110,32 +111,95 @@ public class LCPMessage {
     }
 
 
-    public static byte[] getProgramMessage(String programName) {
+    public static byte[] getStartProgramMessage(String programName) {
         byte[] message = new byte[22];
-    
+
         // Direct command telegram, no response
         message[0] = (byte) 0x80;
         message[1] = (byte) 0x00;
+
         // copy programName and end with 0 delimiter
-        for (int pos=0; pos<programName.length(); pos++) 
+        for (int pos=0; pos<programName.length(); pos++)
             message[2+pos] = (byte) programName.charAt(pos);
+
         message[programName.length()+2] = 0;
 
         return message;
-    } 
+    }
 
+
+    public static byte[] getStopProgramMessage() {
+        byte[] message = new byte[2];
+
+        // Direct command telegram, no response
+        message[0] = (byte) 0x80;
+        message[1] = (byte) 0x01;
+
+        return message;
+    }
+    
+    public static byte[] getProgramNameMessage() {
+        byte[] message = new byte[2];
+
+        // Direct command telegram, with response
+        message[0] = (byte) 0x00;
+        message[1] = (byte) 0x11;
+
+        return message;
+    }
 
     public static byte[] getOutputStateMessage(int motor) {
         byte[] message = new byte[3];
-    
+
         // Direct command telegram, with response
         message[0] = (byte) 0x00;
         message[1] = (byte) 0x06;
         // Output port
-        message[2] = (byte) motor;        
+        message[2] = (byte) motor;
 
         return message;
-    } 
+    }
+
+
+    public static byte[] getFirmwareVersionMessage() {
+        byte[] message = new byte[2];
+
+        // System command, reply required
+        message[0] = (byte) 0x01;
+        message[1] = (byte) 0x88;
+
+        return message;
+    }
+
+
+    public static byte[] getFindFilesMessage(boolean findFirst, int handle, String searchString) {
+        byte[] message;
+
+        if (findFirst)
+            message = new byte[22];
+
+        else
+            message = new byte[3];
+
+        // System command, reply required
+        message[0] = (byte) 0x01;
+
+        if (findFirst) {
+            message[1] = (byte) 0x86;
+
+            // copy searchString and end with 0 delimiter
+            for (int pos=0; pos<searchString.length(); pos++)
+                message[2+pos] = (byte) searchString.charAt(pos);
+
+            message[searchString.length()+2] = 0;
+
+        } else {
+            message[1] = (byte) 0x87;
+            message[2] = (byte) handle;
+        }
+
+        return message;
+    }
 
 
 }

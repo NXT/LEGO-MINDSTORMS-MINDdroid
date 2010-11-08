@@ -1,0 +1,13 @@
+Version 1.1 (November 8th, 2010)
+* Installation on SD card supported (for Android 2.2).
+* New supported model: Robogator (opens and closes mouth (3x) on short Action button press).
+* Starting of preinstalled programs on the NXT.
+** Automatically fetches program listing at startup of the gameplay.
+** Activated by long pressing of the Action button.
+** The "program to run" can be selected from a dialog.
+** Works on original LEGO firmware and on leJOS NXJ firmware.
+* Some bugfixes and improvements on bluetooth connection.
+
+Version 1.0 (October 11th, 2010)
+* Initial release.
+* Support for two models: Shooterbot and Tribot

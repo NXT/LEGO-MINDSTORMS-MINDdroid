@@ -115,12 +115,20 @@ public class DeviceListActivity extends Activity {
         Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
 
         // If there are paired devices, add each one to the ArrayAdapter
+        boolean legoDevicesFound = false;
+        
         if (pairedDevices.size() > 0) {
             findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices) {
-                mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                // only add LEGO devices
+                if (device.getAddress().startsWith(BTCommunicator.OUI_LEGO)) {
+                    legoDevicesFound = true;
+                    mPairedDevicesArrayAdapter.add(device.getName() + "\n" + device.getAddress());
+                }
             }
-        } else {
+        }
+        
+        if (legoDevicesFound == false) {
             String noDevices = getResources().getText(R.string.none_paired).toString();
             mPairedDevicesArrayAdapter.add(noDevices);
         }
