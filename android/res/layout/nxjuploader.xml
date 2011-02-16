@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/NXJUploader_layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"    
+    android:background="@drawable/background_1"
+>
+
+<TextView
+    android:id="@+id/heading_tv"
+    android:layout_marginTop="20dp"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/nxj_uploader_name"
+    android:textSize="12pt"
+    android:gravity="center"
+    android:textStyle="bold"
+    android:textColor="#ff9f00"
+    android:layout_gravity="center_horizontal"
+/>
+
+<Button 
+    android:id="@+id/nxt_button" 
+    android:layout_marginTop="20dp"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:textSize="12pt"    
+    android:text="@string/nxj_select_nxt" 
+/>
+
+<TextView
+    android:id="@+id/nxt_name"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:background="#60000000"
+    android:textSize="8pt"    
+    android:textColor="#ff9f00"
+    android:minLines="1"
+    android:gravity="center_horizontal"
+/>
+
+<Button 
+    android:id="@+id/file_button"
+    android:layout_marginTop="20dp"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:textSize="12pt"    
+    android:text="@string/nxj_select_file"
+/>
+
+<TextView
+    android:id="@+id/nxj_file_name"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" 
+    android:background="#60000000"
+    android:textSize="8pt"    
+    android:textColor="#ff9f00"
+    android:minLines="1"
+    android:gravity="center_horizontal"
+/>
+
+<Button
+    android:id="@+id/upload_button"
+    android:layout_marginTop="20dp"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/nxj_action"
+    android:textSize="12pt"
+    android:layout_gravity="center_horizontal"
+/>
+
+</LinearLayout>
+

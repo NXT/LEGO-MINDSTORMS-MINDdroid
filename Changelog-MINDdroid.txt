@@ -1,3 +1,38 @@
+Version 1.2 (February 16th)
+* Locales supported (German language included), also in Graphics.
+* Improved tutorial texts, also in German (thanks to Michael Biermann).
+* Improved bluetooth dialog.
+* Improved bluetooth connection algorithm, improvements on bluetooth connection for HTC desire (thanks to Michael Biermann).
+* LeJOS NXJ Support
+** Demonstration of the various possibilities with AlphaRex: walking, shaking, sensor-Readings, TTS and haptic feedback on the phone, playing music (see http://www.youtube.com/watch?v=PuZubEtLZic).
+*** Motor on the back of the robot: PORT A
+*** Motor for the right leg: PORT B
+*** Motor the the left leg: PORT C
+*** Touch sensor on the right leg: PORT 1
+*** Touch sensor on the left leg: PORT 2
+*** Ultrasonic sensor on the head: PORT 3
+*** Color Sensor on the hand: PORT 4
+*** (Originally USS and Color Sensor ports a reversed, but because of a little bug in leJOS 0.85 the USS can't be attached to PORT 4).
+** New class MINDdroidConnector for building advanced appies run on the robot and communicating with MINDdroid (or other upcoming Android apps).
+*** MINDdroid identifies MINDdroidConnector with special firmware-versioncode.
+*** Communicates with (extended) standard LCP (LEGO MINDSTORMS NXT Communications Protocol) message set.
+*** Can start multiple commands and runs in parallel.
+*** Appies on the robot can use features of the phone (TTS, haptic feedback).
+*** Appies can be started easily by just pressing the orange ENTER button twice.
+*** The NXT can be switched off easily by just pressing the gray button twice.
+** First candidate of MINDGameZ
+*** Multiplayer (1 to 9 players) game with adjustable number of rounds (1 to 9).
+*** Works with 8527 Tribot model (B-right motor, C-left motor, color/light sensor at port 3).
+*** Works with either the color or the light sensor, this can be selected from the menu. It’s also possible to calibrate the sensor at difficult light situations.
+*** Players gather points by driving a painted circuit.
+*** Tribot accelerates, the higher the speed the more points are collected.
+*** After touching the edges the robot stops and it's the turn of the next player.
+*** At last the winning player is determined.
+*** Video available at http://www.youtube.com/watch?v=4ypzf803xzo
+** NXJUploader for uploading leJOS-NXJ-apps to the robot (only enabled when the new leJOS NXJ robot model is selected).
+*** Comes with two included nxj-Files (AlphaRex.nxj and MINDGameZ.nxj)
+*** Looks also for files on the download directory of the SD-card.
+
 Version 1.1 (November 8th, 2010)
 * Installation on SD card supported (for Android 2.2).
 * New supported model: Robogator (opens and closes mouth (3x) on short Action button press).

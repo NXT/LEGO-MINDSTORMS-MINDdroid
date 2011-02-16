@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Copyright 2010 Guenther Hoelzl, Shawn Brown
+
+    This file is part of MINDdroid.
+  
+    MINDdroid is free software: you can redistribute it and/or modify it under
+    the terms of the GNU General Public License as published by the Free Software
+    Foundation, either version 3 of the License, or (at your option) any later
+    version.
+  
+    MINDdroid is distributed in the hope that it will be useful, but WITHOUT ANY
+    WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+    A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+  
+    You should have received a copy of the GNU General Public License along with
+    MINDdroid. If not, see <http://www.gnu.org/licenses/>.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical"
+   	android:padding="5dp" >
+	<ImageView 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:gravity="center" android:src="@drawable/logo_splash_minddroid"/>	
+    <ScrollView android:id="@+id/ScrollView" 
+                android:layout_marginBottom="110dip"
+                android:layout_width="fill_parent" 
+                android:layout_height="wrap_content" 
+                xmlns:android="http://schemas.android.com/apk/res/android">		
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+	    android:orientation="vertical"
+	    android:scrollbars="vertical"
+	    android:scrollbarAlwaysDrawVerticalTrack="true" 
+       	android:padding="5dp">
+        <TextView
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:gravity="center"
+            android:text="@string/about_general"/>
+        <TextView
+           	android:paddingTop="5dp"
+           	android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:gravity="center"
+            android:autoLink="web"  
+            android:linksClickable="true"            
+            android:text="@string/about_license_gpl"/>
+    	<ImageView 
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:gravity="center" android:src="@drawable/gplv3"/>
+        <TextView
+           	android:paddingTop="5dp"
+           	android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:gravity="center"
+            android:text="@string/about_license_lego"/>
+        <TextView
+            android:id="@+id/AboutPeople"
+           	android:paddingTop="12dp"
+           	android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:gravity="center"
+            android:autoLink="web"  
+            android:linksClickable="true"
+            android:text="@string/about_people"/>
+        <TextView
+           	android:paddingTop="5dp"
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:gravity="center"
+            android:text="@string/about_thanks"/>
+        <TextView
+           	android:paddingTop="5dp"
+            android:layout_width="fill_parent"
+           	android:layout_height="wrap_content"
+            android:textSize="6pt"
+            android:gravity="center"
+            android:text="@string/about_LEGO_legal"/>
+    </LinearLayout> 
+    </ScrollView>
+    <RelativeLayout android:layout_marginTop="-110dip" android:gravity="bottom" android:layout_height="wrap_content" android:layout_width="fill_parent">   
+    	<ImageView 
+    	    android:id="@+id/legalImage"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content"
+	    	android:gravity="center" android:src="@drawable/ic_splash_legal"/>
+        <Button
+            android:id="@+id/AboutOKbutton"
+            android:textSize="20sp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"   
+            android:layout_below="@+id/legalImage"         
+            android:text="@string/about_ok"
+        />
+    </RelativeLayout>      
+</LinearLayout>
