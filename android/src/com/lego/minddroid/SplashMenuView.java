@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Guenther Hoelzl, Shawn Brown
+ * Copyright 2010, 2011, 2012 Guenther Hoelzl, Shawn Brown
  * 
  * This file is part of MINDdroid.
  * 

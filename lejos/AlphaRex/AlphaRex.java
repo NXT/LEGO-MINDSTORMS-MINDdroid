@@ -44,7 +44,6 @@ public class AlphaRex implements CommandPerformer {
     private final static int MUSIC_COMMAND = 2;
     private final static int USS_READER = 3;
     private final static int COLOR_GUESSER = 4;
-    private final static int FREE_HEAP_MEMORY = 5;
 
     // Init states for moving of AlphaRex
     private final static int NOT_INIT = 0;
@@ -70,7 +69,6 @@ public class AlphaRex implements CommandPerformer {
         lcpThread.registerCommand("Musette from Bach", MUSIC_COMMAND);
         lcpThread.registerCommand("Ultrasonic-Reader", USS_READER);
         lcpThread.registerCommand("Color-Guesser", COLOR_GUESSER);
-        lcpThread.registerCommand("Heap memory info", FREE_HEAP_MEMORY);
         // also register the output and action command here,
         // so we can decide for ourselves what to do when
         // we get new motor commands or action button press
@@ -94,7 +92,7 @@ public class AlphaRex implements CommandPerformer {
 
         while (running) {
             // Read Escape Button and eventually stop the program
-            if (Button.ESCAPE.isPressed()) {
+            if (Button.ESCAPE.isDown()) {
                 running = false;
                 lcpThread.terminate();
             }
@@ -132,12 +130,13 @@ public class AlphaRex implements CommandPerformer {
     /**
      * Moves the motors on the left and right for two steps
      * forward.
+     * @param power how fast to move
      */
-    private static void walkForward() {
+    private static void walkForward(int power) {
         if (initState != INIT_FORWARD)
             initForward();
-        Motor.B.setSpeed(180);
-        Motor.C.setSpeed(180);
+        Motor.B.setSpeed(power*3);
+        Motor.C.setSpeed(power*3);
         Motor.B.forward();
         Motor.C.forward();
 
@@ -175,12 +174,13 @@ public class AlphaRex implements CommandPerformer {
     /**
      * Moves the motors on the left and right for two steps
      * backward.
+     * @param power how fast to move
      */
-    private static void walkBackward() {
+    private static void walkBackward(int power) {
         if (initState != INIT_BACKWARD)
             initBackward();
-        Motor.B.setSpeed(180);
-        Motor.C.setSpeed(180);
+        Motor.B.setSpeed(power*3);
+        Motor.C.setSpeed(power*3);
         Motor.B.backward();
         Motor.C.backward();
 
@@ -214,24 +214,24 @@ public class AlphaRex implements CommandPerformer {
      * as TTS to the mobile phone.
      */
     private void commandColorGuesser() {
-        ColorLightSensor myColorLightSensor = new ColorLightSensor(SensorPort.S4, ColorLightSensor.TYPE_COLORFULL);
+        ColorSensor myColorSensor = new ColorSensor(SensorPort.S4, ColorSensor.TYPE_COLORFULL);
         while (true) {
-            Colors.Color myColor = myColorLightSensor.readColor();
-            if (myColor == Colors.Color.GREEN) {
+            int myColor = myColorSensor.getColorID();
+            if (myColor == ColorSensor.Color.GREEN) {
                 if (lcpThread.sendTTS("green", 0, 0, 0, 1000))
                     break;
-            } else if (myColor == Colors.Color.RED) {
+            } else if (myColor == ColorSensor.Color.RED) {
                 // additional haptic feedback
                 lcpThread.vibratePhone(1000);
                 if (lcpThread.sendTTS("red", 0, 0, 0, 1000))
                     break;
-            } else if (myColor == Colors.Color.BLUE) {
+            } else if (myColor == ColorSensor.Color.BLUE) {
                 if (lcpThread.sendTTS("blue", 0, 0, 0, 1000))
                     break;
-            } else if (myColor == Colors.Color.YELLOW) {
+            } else if (myColor == ColorSensor.Color.YELLOW) {
                 if (lcpThread.sendTTS("yellow", 0, 0, 0, 1000))
                     break;
-            } else if (myColor == Colors.Color.WHITE) {
+            } else if (myColor == ColorSensor.Color.WHITE) {
                 if (lcpThread.sendTTS("white", 0, 0, 0, 1000))
                     break;
             }
@@ -239,7 +239,7 @@ public class AlphaRex implements CommandPerformer {
             if (LMDutils.interruptedSleep(300))
                 break;
         }
-        myColorLightSensor.setType(ColorLightSensor.TYPE_COLORNONE);
+        //myColorSensor.setType(ColorSensor.TYPE_COLORNONE);
     }
 
     /**
@@ -279,11 +279,6 @@ public class AlphaRex implements CommandPerformer {
                 }
                 break;
 
-            case FREE_HEAP_MEMORY:
-                long mem = System.getRuntime().freeMemory();
-                lcpThread.sendTTS(mem + " bytes free", 0, 0, 0, 4000);
-                break;
-
             case MINDdroidConnector.OUTPUT_COMMAND:
                 // Just change variables for moving, so the other threads can decide
                 // what to do and the bluetooth communication isn't blocked.
@@ -311,35 +306,36 @@ public class AlphaRex implements CommandPerformer {
 
             case MINDdroidConnector.ACTION_COMMAND:
                 boolean switchedOn = false;
-                ColorLightSensor myColorLightSensor = null;
+                ColorSensor myColorSensor = null;
                 if (colorSensorInUse == false) {
                     colorSensorInUse = true;
                     switchedOn = true;
-                    myColorLightSensor = new ColorLightSensor(SensorPort.S4, ColorLightSensor.TYPE_COLORRED);
+                    myColorSensor = new ColorSensor(SensorPort.S4, ColorSensor.TYPE_COLORRED);
+                    myColorSensor.setFloodlight(true);
                 }
                 Compositions.play(Compositions.BEETHOVEN_SYMPHONY_5_C_MINOR);
                 if (switchedOn) {
-                    myColorLightSensor.setType(ColorLightSensor.TYPE_COLORNONE);
+                    myColorSensor.setFloodlight(false);
                     colorSensorInUse = false;
                 }
                 break;
 
             case MINDdroidConnector.DAEMON_1:
                 // Display some nice effects
-                LCD.setAutoRefresh(0);
+                LCD.setAutoRefresh(false);
                 LCD.clear();
-                int line = 56;
+                int line = 7;
                 while (true) {
-                    LCD.drawString("MINDdroid", 24, line, false);
+                    LCD.drawString("MINDdroid", 3, line, false);
                     if (lcpThread.isConnected())
-                        LCD.drawString("connected", 24, line+10, false);
+                        LCD.drawString("connected", 3, line+1, false);
                     LCD.refresh();
-                    if (LMDutils.interruptedSleep(250))
+                    if (LMDutils.interruptedSleep(750))
                         break;
                     LCD.clear();
                     line-=1;
-                    if (line == 0)
-                        line = 56;
+                    if (line < 0)
+                        line = 7;
                 }
                 break;
 
@@ -366,9 +362,9 @@ public class AlphaRex implements CommandPerformer {
                 while (true) {
                     if (walkingPower != 0) {
                         if (walkingPower > 0)
-                            walkForward();
+                            walkForward(walkingPower);
                         else
-                            walkBackward();
+                            walkBackward(walkingPower);
                     }
                     if (LMDutils.interruptedSleep(100))
                         break;

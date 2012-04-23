@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="com.lego.minddroid" android:versionCode="3" android:installLocation="auto"
-	android:versionName="1.2">
+	package="com.lego.minddroid" android:versionCode="4" 
+	android:versionName="1.3">
 	<uses-sdk android:minSdkVersion="7" />
 	<application android:icon="@drawable/logo_new"
 		android:label="@string/app_name" android:debuggable="true">
 		<activity android:name=".MINDdroid" android:label="@string/app_name"
 			android:screenOrientation="portrait">
 		</activity>
-		<activity android:name=".NXJUploader" android:label="@string/nxj_uploader_name"
+		<activity android:name=".UniversalUploader" android:label="@string/uul_name"
 			android:screenOrientation="portrait">
 		</activity>
 		<activity android:name=".DeviceListActivity"

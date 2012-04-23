@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Copyright 2010 Guenther Hoelzl, Shawn Brown
+    Copyright 2010, 2011, 2012 Guenther Hoelzl, Shawn Brown
 
     This file is part of MINDdroid.
   
@@ -30,19 +30,19 @@
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:orientation="vertical">
 		
-		<RadioButton android:id="@+id/robot_type_1" android:text="Shooterbot"
+		<RadioButton android:id="@+id/robot_type_shooterbot" android:text="Shooterbot"
 			android:drawableBottom="@drawable/shooterbot"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-		<RadioButton android:id="@+id/robot_type_2" android:text="Tribot"
+		<RadioButton android:id="@+id/robot_type_tribot" android:text="Tribot"
 			android:drawableBottom="@drawable/tribot"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-		<RadioButton android:id="@+id/robot_type_3" android:text="Robogator"
+		<RadioButton android:id="@+id/robot_type_robogator" android:text="Robogator"
 			android:drawableBottom="@drawable/robogator"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-        <RadioButton android:id="@+id/robot_type_4" android:text="leJOS NXJ model"
+        <RadioButton android:id="@+id/robot_type_lejos" android:text="leJOS NXJ model"
             android:drawableBottom="@drawable/nxj"  android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp"/>
 

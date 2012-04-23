@@ -1,5 +1,5 @@
 /**
- *   Copyright 2010 Guenther Hoelzl, Shawn Brown
+ *   Copyright 2010, 2011, 2012 Guenther Hoelzl, Shawn Brown
  *
  *   This file is part of MINDdroid.
  *
@@ -498,7 +498,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 					right = -100;
 				
                 // Reverse the motors when driving back at the shooterbot and the NXJ model				
-				if (pitch < -10 && (mActivity.mRobotType==R.id.robot_type_1 || mActivity.mRobotType==R.id.robot_type_4)) {
+				if (pitch < -10 && 
+                    (mActivity.mRobotType==R.id.robot_type_shooterbot || 
+                    mActivity.mRobotType==R.id.robot_type_lejos)) {
 					
 					int back_left=right;
 					int back_right=left;
@@ -741,8 +743,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		List<Sensor> sensorList;
 		// register orientation sensor
 		sensorList = mSensorManager.getSensorList(Sensor.TYPE_ORIENTATION);
+        // access sensor 0, when not found an exception is thrown
 		mSensorManager.registerListener(mSensorAccelerometer, sensorList.get(0), SensorManager.SENSOR_DELAY_GAME);
-
 	}
 
 	@Override

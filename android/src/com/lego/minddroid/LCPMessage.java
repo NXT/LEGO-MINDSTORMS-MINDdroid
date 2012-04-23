@@ -1,5 +1,5 @@
 /**
- *   Copyright 2010, 2011 Guenther Hoelzl, Shawn Brown
+ *   Copyright 2010, 2011, 2012 Guenther Hoelzl, Shawn Brown
  *
  *   This file is part of MINDdroid.
  *
@@ -285,6 +285,20 @@ public class LCPMessage {
         message[23] = (byte) (fileLength >>> 8);
         message[24] = (byte) (fileLength >>> 16);
         message[25] = (byte) (fileLength >>> 24);        
+        return message;
+    }
+
+    public static byte[] getDeleteMessage(String fileName) {
+        byte[] message = new byte[22];
+
+        message[0] = SYSTEM_COMMAND_REPLY;
+        message[1] = DELETE;
+        
+        // copy programName and end with 0 delimiter
+        for (int pos=0; pos<fileName.length(); pos++)
+            message[2+pos] = (byte) fileName.charAt(pos);
+
+        message[fileName.length()+2] = 0;
         return message;
     }
 

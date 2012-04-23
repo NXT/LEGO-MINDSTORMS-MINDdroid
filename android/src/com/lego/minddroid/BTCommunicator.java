@@ -1,5 +1,5 @@
 /**
- *   Copyright 2010 Guenther Hoelzl, Shawn Brown
+ *   Copyright 2010, 2011, 2012 Guenther Hoelzl, Shawn Brown
  *
  *   This file is part of MINDdroid.
  *
@@ -450,7 +450,7 @@ public class BTCommunicator extends Thread {
                     doBeep(myMessage.getData().getInt("value1"), myMessage.getData().getInt("value2"));
                     break;
                 case DO_ACTION:
-                    doAction(0);
+                    doAction(myMessage.getData().getInt("value1"));
                     break;
                 case READ_MOTOR_STATE:
                     readMotorState(myMessage.getData().getInt("value1"));

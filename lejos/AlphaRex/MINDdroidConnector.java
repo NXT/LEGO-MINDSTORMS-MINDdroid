@@ -20,6 +20,7 @@
 import lejos.nxt.*;
 import lejos.robotics.navigation.*;
 import lejos.nxt.comm.*;
+import lejos.nxt.remote.ErrorMessages;
 
 /**
  * This class is for talking to MINDdroid, an application for the
@@ -60,6 +61,21 @@ public class MINDdroidConnector extends LCPBTResponder {
      */
     public MINDdroidConnector(CommandPerformer commander) {
         myCommander = commander;
+    }
+
+    /**
+     * Method called with a newly read command, before it is processed.
+     * Default action is to detect invalid commands and if detected to drop the
+     * connection. Don't disconnect on START_PROGRAM message!
+     * @param inMsg Newly read command
+     * @param len length of the command
+     * @return the length of the command
+     */
+    protected int preCommand(byte[] inMsg, int len)
+    {
+        if (len < 0)
+            disconnect();
+        return len;
     }
 
     /**
@@ -148,7 +164,7 @@ public class MINDdroidConnector extends LCPBTResponder {
                 index = (cmdId == LCP.FIND_FIRST) ? 0 : cmd[2];
                 index = findNextCommand(index);
                 if (index < 0) {
-                    reply[2] = LCP.FILE_NOT_FOUND;
+                    reply[2] = ErrorMessages.FILE_NOT_FOUND;
                 } else {
                     for (int i=0; i<myCommands[index].length(); i++) {
                         reply[4+i] = (byte) myCommands[index].charAt(i);

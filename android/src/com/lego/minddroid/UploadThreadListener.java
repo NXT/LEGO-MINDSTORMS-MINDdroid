@@ -1,5 +1,5 @@
 /**
- *   Copyright 2011 Guenther Hoelzl
+ *   Copyright 2011, 2012 Guenther Hoelzl
  *
  *   This file is part of MINDdroid.
  *

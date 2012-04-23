@@ -77,9 +77,7 @@ public class MINDGameZ implements CommandPerformer {
     private static boolean colorSensorConnected = true;
     private static LightSensor lightSensor = null;
     private static int lightValue;
-    private static ColorLightSensor colorLightSensor = null;
-    private static Colors.Color color;
-
+    private static ColorSensor colorSensor = null;
 
     private static int speed;
     private static byte speedPrescaler;
@@ -122,7 +120,7 @@ public class MINDGameZ implements CommandPerformer {
 
         while (running) {
             // Read Escape Button and eventually stop the program
-            if (Button.ESCAPE.isPressed()) {
+            if (Button.ESCAPE.isDown()) {
                 running = false;
                 lcpThread.terminate();
             }
@@ -147,9 +145,11 @@ public class MINDGameZ implements CommandPerformer {
      * @return when the method was interrupted
      */
     private static boolean initSensor() {
-        if ((colorLightSensor == null) && (lightSensor == null)) {
-            if (colorSensorConnected)
-                colorLightSensor = new ColorLightSensor(SensorPort.S3, ColorLightSensor.TYPE_COLORRED);
+        if ((colorSensor == null) && (lightSensor == null)) {
+            if (colorSensorConnected) {
+                colorSensor = new ColorSensor(SensorPort.S3, ColorSensor.TYPE_COLORRED);
+                colorSensor.setFloodlight(true);
+            }
             else
                 lightSensor = new LightSensor(SensorPort.S3);
             if (LMDutils.interruptedSleep(200))
@@ -163,7 +163,7 @@ public class MINDGameZ implements CommandPerformer {
      */
     private static int getSensorValue() {
         if (colorSensorConnected) 
-            return colorLightSensor.readRawValue();
+            return colorSensor.getRawLightValue();
         else
             return lightSensor.readNormalizedValue();
     }
@@ -211,9 +211,9 @@ public class MINDGameZ implements CommandPerformer {
         }
         
         if (displayText1 != null)
-            LCD.drawString(displayText1, 50-displayText1.length()*3, line, false);
+            LCD.drawString(displayText1, 8-displayText1.length()/2, line);
         if (displayText2 != null)
-            LCD.drawString(displayText2, 50-displayText2.length()*3, line+10, false);
+            LCD.drawString(displayText2, 8-displayText2.length()/2, line+1);
     }
 
     /**
@@ -225,9 +225,9 @@ public class MINDGameZ implements CommandPerformer {
         boolean leftReleased = true;
         boolean rightReleased = true;
         while (true) {
-            if (Button.ENTER.isPressed())
+            if (Button.ENTER.isDown())
                 return true;                
-            if (Button.RIGHT.isPressed()) {
+            if (Button.RIGHT.isDown()) {
                 if (rightReleased) 
                     if (currentNumber < maximum)
                         currentNumber++;
@@ -236,7 +236,7 @@ public class MINDGameZ implements CommandPerformer {
             else
                 rightReleased = true;
 
-            if (Button.LEFT.isPressed()) {
+            if (Button.LEFT.isDown()) {
                 if (leftReleased)
                     if (currentNumber > 1)
                         currentNumber--;
@@ -255,7 +255,7 @@ public class MINDGameZ implements CommandPerformer {
      */
     private boolean waitForEnter() {
         while (true) {
-            if (Button.ENTER.isPressed())
+            if (Button.ENTER.isDown())
                 return true;                
             if (LMDutils.interruptedSleep(100))
                 return false;            
@@ -391,7 +391,7 @@ public class MINDGameZ implements CommandPerformer {
                     lcpThread.sendTTS("not allowed", 0, 0, 0, 2000);
                     break;
                 }
-                colorLightSensor = null;
+                colorSensor = null;
                 lightSensor = null;                    
                 colorSensorConnected = (command == SELECT_COLOR_SENSOR);
                 if (lcpThread.sendTTS(colorSensorConnected ? "Color-Sensor" : "Light-Sensor", 0, 0, 0, 1000))
@@ -424,17 +424,17 @@ public class MINDGameZ implements CommandPerformer {
 
             case MINDdroidConnector.DAEMON_1:
                 // Display some nice effects
-                LCD.setAutoRefresh(0);
+                LCD.setAutoRefresh(false);
                 LCD.clear();
-                int line = 56;  
+                int line = 7;  
                 while (true) {
                     displayText(line--);
                     LCD.refresh();
-                    if (LMDutils.interruptedSleep(250))
+                    if (LMDutils.interruptedSleep(750))
                         break;
                     LCD.clear();
-                    if (line == 0)
-                        line = 56;
+                    if (line < 0)
+                        line = 7;
                 }
                 break;
 

@@ -1,5 +1,5 @@
 /**
- *   Copyright 2011 Guenther Hoelzl
+ *   Copyright 2011, 2012 Guenther Hoelzl
  *
  *   This file is part of MINDdroid.
  *
@@ -23,7 +23,9 @@ import android.content.res.AssetFileDescriptor;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import java.io.*;
+import java.util.Arrays;
 
 /**
  * The tasks have to be done in this thread, so the user interface
@@ -161,10 +163,8 @@ public final class UploadThread extends Thread {
     private void uploadFile(String fileName) throws FileNotFoundException, IOException {
         byte[] data = new byte[MAX_BUFFER_SIZE];
         int readLength;
-        byte handle;
         InputStream inputStream = null;
         byte[] message;
-
 
         // internal file: no path given
         if (fileName.indexOf('/') == -1) {
@@ -191,21 +191,41 @@ public final class UploadThread extends Thread {
         // extract fileName without path
         int lastSlashPos = fileName.lastIndexOf('/');
         fileName = fileName.substring(lastSlashPos + 1, fileName.length());
+        
+        boolean triedDelete = false;
+        while (true) {
+            // send OpenWriteMessage
+            message = LCPMessage.getOpenWriteMessage(fileName, mFileLength);
+            mBTCommunicator.sendMessage(message);
+            // get reply message including handle
+            message = mBTCommunicator.receiveMessage();
+            // check message if everything's OK
+            if (message != null &&
+                message.length == 4 &&
+                message[0] == LCPMessage.REPLY_COMMAND &&
+                message[1] == LCPMessage.OPEN_WRITE &&
+                message[2] == 0)
+                break;
+            
+            // file exists => try to delete file only once
+            if (triedDelete == false &&
+                message != null &&
+                message.length > 2 &&
+                message[0] == LCPMessage.REPLY_COMMAND &&
+                message[1] == LCPMessage.OPEN_WRITE &&
+                message[2] == (byte)0x8f) {
+                triedDelete = true;
+                message = LCPMessage.getDeleteMessage(fileName);
+                mBTCommunicator.sendMessage(message);            
+                message = mBTCommunicator.receiveMessage();
+                continue;                
+            }
+            else {
+                throw new IOException();
+            }
+        }
 
-        // send OpenWriteMessage
-        message = LCPMessage.getOpenWriteMessage(fileName, mFileLength);
-        mBTCommunicator.sendMessage(message);
-        // get reply message with handle
-        message = mBTCommunicator.receiveMessage();
-        // check message and get handle
-        if (message == null ||
-                message.length != 4 ||
-                message[0] != LCPMessage.REPLY_COMMAND ||
-                message[1] != LCPMessage.OPEN_WRITE ||
-                message[2] != 0)
-            throw new IOException();
-
-        handle = message[3];
+        byte handle = message[3];
         while ((readLength = inputStream.read(data)) > 0) {
             // send WriteMessage and receive reply with next handle
             message = LCPMessage.getWriteMessage(handle, data, readLength);

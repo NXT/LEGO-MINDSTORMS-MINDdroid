@@ -1,5 +1,5 @@
 /**
- *   Copyright 2010 Guenther Hoelzl, Shawn Brown
+ *   Copyright 2010, 2011, 2012 Guenther Hoelzl, Shawn Brown
  *
  *   This file is part of MINDdroid.
  *
@@ -38,37 +38,40 @@ public class Options {
 		mDialog = new Dialog(myActivity);
 		mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		mDialog.setContentView(R.layout.options);
-
 		mSelectionMessage = myActivity.getString(R.string.model_type_selected);
 
-		final RadioButton robot_type_1 = (RadioButton) mDialog.findViewById(R.id.robot_type_1);
-		final RadioButton robot_type_2 = (RadioButton) mDialog.findViewById(R.id.robot_type_2);
-		final RadioButton robot_type_3 = (RadioButton) mDialog.findViewById(R.id.robot_type_3);
-		final RadioButton robot_type_4 = (RadioButton) mDialog.findViewById(R.id.robot_type_4);
+		final RadioButton robotTypeShooterbot = 
+            (RadioButton) mDialog.findViewById(R.id.robot_type_shooterbot);
+		final RadioButton robotTypeTribot = 
+            (RadioButton) mDialog.findViewById(R.id.robot_type_tribot);
+		final RadioButton robotTypeRobogator = 
+            (RadioButton) mDialog.findViewById(R.id.robot_type_robogator);
+		final RadioButton robotTypeLejos = 
+            (RadioButton) mDialog.findViewById(R.id.robot_type_lejos);
 		
 		switch (splashMenu.getRobotType()) {
 
-			case R.id.robot_type_2:
-				robot_type_2.setChecked(true);
+			case R.id.robot_type_tribot:
+				robotTypeTribot.setChecked(true);
 				break;
 
-			case R.id.robot_type_3:
-				robot_type_3.setChecked(true);
+			case R.id.robot_type_robogator:
+				robotTypeRobogator.setChecked(true);
 				break;
 
-			case R.id.robot_type_4:
-				robot_type_4.setChecked(true);
+			case R.id.robot_type_lejos:
+				robotTypeLejos.setChecked(true);
 				break;
 
 			default:
-				robot_type_1.setChecked(true);
+				robotTypeShooterbot.setChecked(true);
 				break;
 		}
 
-		robot_type_1.setOnClickListener(radio_listener);
-		robot_type_2.setOnClickListener(radio_listener);
-		robot_type_3.setOnClickListener(radio_listener);
-		robot_type_4.setOnClickListener(radio_listener);
+		robotTypeShooterbot.setOnClickListener(radio_listener);
+		robotTypeTribot.setOnClickListener(radio_listener);
+		robotTypeRobogator.setOnClickListener(radio_listener);
+		robotTypeLejos.setOnClickListener(radio_listener);
 	}
 
 	public void show() {
@@ -82,7 +85,8 @@ public class Options {
 			RadioButton rb = (RadioButton) v;
 			rb.setChecked(true);
 			splashMenu.setRobotType(rb.getId());
-			Toast.makeText(mDialog.getContext(), mSelectionMessage + " " + rb.getText(), Toast.LENGTH_SHORT).show();
+			Toast.makeText(mDialog.getContext(), mSelectionMessage + " " + 
+                rb.getText(), Toast.LENGTH_SHORT).show();
 			mDialog.dismiss();
 		}
 	};

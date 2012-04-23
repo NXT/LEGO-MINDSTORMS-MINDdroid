@@ -1,4 +1,14 @@
-Version 1.2 (February 16th)
+Version 1.3 (April 18th, 2012)
+* Adapted to LeJOS NXJ 0.9.1
+* Included "Universal Uploader"
+** Now it's possible to transfer *.rcd, *.rso, *.ric, *.rxe when running the standard firmware.
+** Included are the following files:
+*** two (2) .nxj files - AlphaRex and MINDGameZ
+*** five (5) .rxe files - Pong, NXTCounter, Block, LineFollower, Robogator
+* Long press of “Action Button” does reversal action.
+* Some small bug fixes
+
+Version 1.2 (February 16th, 2011)
 * Locales supported (German language included), also in Graphics.
 * Improved tutorial texts, also in German (thanks to Michael Biermann).
 * Improved bluetooth dialog.

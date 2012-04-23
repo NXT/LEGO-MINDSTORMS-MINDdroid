@@ -1,5 +1,5 @@
 /**
- *   Copyright 2011 Guenther Hoelzl
+ *   Copyright 2011, 2012 Guenther Hoelzl
  *
  *   This file is part of MINDdroid.
  *
@@ -39,15 +39,20 @@ import android.widget.Toast;
  * Special programs will be able to communicate with MINDdroid, so no PC
  * is required for playing with a robot.
  */
-public class NXJUploader extends Activity implements UploadThreadListener, DialogListener, BTConnectable
+public class UniversalUploader extends Activity implements UploadThreadListener, DialogListener, BTConnectable
 {
     private static final int DIALOG_NXT = 0;
     private static final int DIALOG_FILE = 1;
 
-    // preinstalled modules on res/raw/directoy
-    private static String[] preinstalledNXJstring = new String[] 
+    // preinstalled modules on res/raw directoy
+    private static String[] preinstalledFilesString = new String[] 
         { "AlphaRex.nxj",
-          "MINDGameZ.nxj"
+          "MINDGameZ.nxj",
+          "Block.rxe",
+          "Linefollower.rxe",
+          "NXTCounter.rxe",
+          "Pong.rxe",
+          "Robogator_4.rxe"
         };
 
     private static final int REQUEST_CONNECT_DEVICE = 1000;
@@ -62,6 +67,7 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
     private boolean pairing;
     private boolean btErrorPending = false;
     private static boolean btOnByUs = false;
+    private Integer robotType;
         
     /** 
      * Called when the activity is first created. 
@@ -70,11 +76,13 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.nxjuploader);
+        setContentView(R.layout.uul);
         initLayout();
-        
+        // get robotType from intent
+        robotType = (Integer) getIntent().getSerializableExtra("robotType");        
         // Create objects for communication
-        mNXT = new BTCommunicator(this, null, BluetoothAdapter.getDefaultAdapter(), getResources());
+        mNXT = new BTCommunicator(this, null, 
+            BluetoothAdapter.getDefaultAdapter(), getResources());
         handler = new Handler();   
         // Create and launch the upload thread
         uploadThread = new UploadThread(this, getResources());
@@ -117,7 +125,7 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
      * @param btOnByUs true, when bluetooth was switched on by the app
      */
     public static void setBtOnByUs(boolean btOnByUs) {
-        NXJUploader.btOnByUs = btOnByUs;
+        UniversalUploader.btOnByUs = btOnByUs;
     }
 
     /**
@@ -231,9 +239,10 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
      * Shows the file dialog
      */            
     private void showFileDialog() {
-        NXJFileDialog fileDialog = new NXJFileDialog(this, this);
-        if (fileDialog.refreshFileList(preinstalledNXJstring) == 0) 
-            showToast(R.string.nxj_no_files);
+        UploaderFileDialog fileDialog = 
+            new UploaderFileDialog(this, this, robotType.intValue());
+        if (fileDialog.refreshFileList(preinstalledFilesString) == 0) 
+            showToast(R.string.uul_no_files);
         else {
             runningDialog = DIALOG_FILE;
             fileDialog.show();
@@ -254,7 +263,7 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
                 break;
 
             case DIALOG_FILE:
-                textView = (TextView) findViewById(R.id.nxj_file_name);
+                textView = (TextView) findViewById(R.id.uul_file_name);
                 textView.setText(text);
                 break;
         }
@@ -270,14 +279,14 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
                 TextView nxtTextView = (TextView) findViewById(R.id.nxt_name);
                 String macAddress = nxtTextView.getText().toString();
                 if (macAddress.compareTo("") == 0) {
-                    showToast(R.string.nxj_please_select_nxt);
+                    showToast(R.string.uul_please_select_nxt);
                     return;
                 }
                 macAddress = macAddress.substring(macAddress.lastIndexOf('-')+1);
-                TextView nxjTextView = (TextView) findViewById(R.id.nxj_file_name);
-                String fileName = nxjTextView.getText().toString();
+                TextView uulTextView = (TextView) findViewById(R.id.uul_file_name);
+                String fileName = uulTextView.getText().toString();
                 if (fileName.compareTo("") == 0) {
-                    showToast(R.string.nxj_please_select_file);
+                    showToast(R.string.uul_please_select_file);
                     return;
                 }
                 uploadThread.enqueueUpload(macAddress, fileName); 
@@ -312,10 +321,10 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
 
         switch (uploadStatus) {
             case UploadThread.CONNECTING:
-                showProgressDialog(getResources().getString(R.string.nxj_connecting));
+                showProgressDialog(getResources().getString(R.string.uul_connecting));
                 break;
             case UploadThread.UPLOADING:
-                showProgressDialog(getResources().getString(R.string.nxj_uploading), 
+                showProgressDialog(getResources().getString(R.string.uul_uploading), 
                     uploadThread.getFileLength(), 
                     uploadThread.getBytesUploaded());
                 break;
@@ -328,7 +337,7 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
                 break;
             case UploadThread.OPEN_BT_ERROR:
                 if (pairing)
-                    showToast(R.string.nxj_bluetooth_pairing);
+                    showToast(R.string.uul_bluetooth_pairing);
                 else
                     showBTErrorDialog();
                 break;
@@ -336,13 +345,13 @@ public class NXJUploader extends Activity implements UploadThreadListener, Dialo
                 showBTErrorDialog();
                 break;
             case UploadThread.OPEN_FILE_ERROR:
-                showToast(R.string.nxj_file_open_error);
+                showToast(R.string.uul_file_open_error);
                 break;
             case UploadThread.UPLOAD_ERROR:
                 showBTErrorDialog();
                 break;
             default:
-                showToast(R.string.nxj_other_error);
+                showToast(R.string.uul_other_error);
         }
         uploadThread.resetErrorCode();
     }

@@ -1,0 +1,172 @@
+<project name="sample" default="uploadandrun">
+	<description>
+		Sample build file
+	</description>
+
+	<!-- set properties for this build -->
+	<property environment="env" />
+	<property file="./samples.properties" />
+	<property name="src" location="." />
+	<basename property="program" file="." />
+	<property name="binary" value="${program}.nxj" />
+	<property name="debug" value="${program}.nxd" />
+
+	<path id="lejos.pc">
+		<fileset dir="${nxj.home}/lib/pc">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<path id="lejos.nxt">
+		<fileset dir="${nxj.home}/lib/nxt">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+
+	<condition property="d32Flag" value="-d32" else="-Dblank.dummy.arg=">
+		<and>
+			<os family="mac" />
+		</and>
+	</condition>
+
+	<!-- deletes class files -->
+	<target name="clean" description="clean up all generated files">
+		<delete>
+			<fileset dir=".">
+				<include name="**/*.class" />
+				<include name="**/*.nxj" />
+				<include name="**/*.nxd" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="compile" depends="clean" description="compile the source">
+		<!-- Compile the java code from ${src} -->
+		<echo>src = ${src}</echo>
+		<javac srcdir="${src}" destdir="${src}" debug="true" includeantruntime="false" verbose="false">
+			<bootclasspath refid="lejos.nxt" />
+			<!--
+				Without this, there are some JDK jars in the classpath.
+				Set verbose=true to check that the classpath is really clean.
+			-->
+    		<compilerarg value="-extdirs" />
+    		<compilerarg value="" />
+		</javac>
+	</target>
+
+	<target name="link" depends="compile" description="link the binary">
+		<!-- Link the binary and create a signature file -->
+		<java classname="lejos.pc.tools.NXJLink" failonerror="true">
+			<classpath refid="lejos.pc" />
+			<arg value="--bootclasspath" />
+			<arg pathref="lejos.nxt" />
+			<arg value="--classpath" />
+			<arg path="." />
+			<arg value="--writeorder" />
+			<arg value="LE" />
+			<arg value="-o" />
+			<arg file="${binary}" />
+			<arg value="-od" />
+			<arg file="${debug}" />
+			<arg value="-v" />
+			<arg value="${program}" />
+		</java>
+	</target>
+
+	<target name="debuglink" depends="compile" description="link the binary">
+		<!-- Link the binary and create a signature file -->
+		<java classname="lejos.pc.tools.NXJLink" failonerror="true">
+			<classpath refid="lejos.pc" />
+			<arg value="--bootclasspath" />
+			<arg pathref="lejos.nxt" />
+			<arg value="--classpath" />
+			<arg path="." />
+			<arg value="--writeorder" />
+			<arg value="LE" />
+			<arg value="-o" />
+			<arg file="${binary}" />
+			<arg value="-od" />
+			<arg file="${debug}" />
+			<arg value="-gr" />
+			<arg value="-v" />
+			<arg value="${program}" />
+		</java>
+	</target>
+
+	<target name="upload" depends="link" description="upload the binary">
+		<java classname="lejos.pc.tools.NXJUpload" fork="true" failonerror="true">
+			<jvmarg value="-Dnxj.home=${nxj.home}" />
+			<jvmarg value="${d32Flag}" />
+			<classpath refid="lejos.pc" />
+			<arg value="${binary}" />
+		</java>
+	</target>
+
+	<target name="uploadandrun" depends="link" description="upload and run the binary">
+		<java classname="lejos.pc.tools.NXJUpload" fork="true" failonerror="true">
+			<jvmarg value="-Dnxj.home=${nxj.home}" />
+			<jvmarg value="${d32Flag}" />
+			<classpath refid="lejos.pc" />
+			<arg value="-r" />
+			<arg file="${binary}" />
+		</java>
+	</target>
+
+	<target name="debuguploadandrun" depends="debuglink" description="upload and run the binary">
+		<java classname="lejos.pc.tools.NXJUpload" fork="true" failonerror="true">
+			<jvmarg value="-Dnxj.home=${nxj.home}" />
+			<jvmarg value="${d32Flag}" />
+			<classpath refid="lejos.pc" />
+			<arg value="-r" />
+			<arg file="${binary}" />
+		</java>
+	</target>
+
+	<target name="console" depends="debuguploadandrun" description="run a console">
+		<sleep seconds="4" />
+		<java classname="lejos.pc.tools.NXJConsole" fork="true" failonerror="true">
+			<jvmarg value="-Dnxj.home=${nxj.home}" />
+			<jvmarg value="${d32Flag}" />
+			<classpath refid="lejos.pc" />
+			<arg value="-di" />
+			<arg file="${debug}" />
+		</java>
+	</target>
+	
+	<target name="consoleviewer" depends="debuguploadandrun" description="run the GUI Console Viewer">
+		<sleep seconds="4" />
+		<java classname="lejos.pc.tools.NXJConsoleViewer" fork="true" failonerror="true">
+			<jvmarg value="-Dnxj.home=${nxj.home}" />
+			<jvmarg value="${d32Flag}" />
+			<classpath refid="lejos.pc" />
+			<arg value="-di" />
+			<arg file="${debug}" />
+		</java>
+	</target>
+	
+	<target name="debugtool" description="run the debug tool">
+		  <input
+		    message="Exception class:"
+		    addproperty="class"
+		  />
+		  <input
+		    message="Method number:"
+		    addproperty="method"
+		  />
+		  <input
+		    message="PC value:"
+		    addproperty="pc"
+		  />
+		<java classname="lejos.pc.tools.NXJDebugTool" fork="true" failonerror="true">
+			<jvmarg value="-Dnxj.home=${nxj.home}" />
+			<classpath refid="lejos.pc" />
+			<arg value="-di" />
+			<arg file="${debug}" />
+			<arg value="-c" />
+			<arg value="-m" />
+			<arg value="${class}" />
+			<arg value="${method}" />
+			<arg value="${pc}" />
+		</java>
+	</target>
+</project>

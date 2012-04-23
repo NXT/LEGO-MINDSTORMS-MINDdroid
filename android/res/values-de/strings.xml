@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-    Copyright 2010 Guenther Hoelzl, Shawn Brown
+    Copyright 2010, 2011, 2012 Guenther Hoelzl, Shawn Brown
 
     This file is part of MINDdroid.
   
@@ -17,21 +17,21 @@
     MINDdroid. If not, see <http://www.gnu.org/licenses/>.    
 -->
 <resources>
-
     <string name="nxt_default_name">NXT</string>
     <string name="app_name">MINDdroid</string>
     <string name="about">Info</string>
     <string name="connect">Verbinden</string>
     <string name="disconnect">Trennen</string>
+    <string name="start">Starte Programm</string>
     <string name="quit">Abbrechen</string>    
     <string name="action">Los geht\'s!</string>   
     <string name="next">Weiter</string>
     <string name="options">Robotertyp</string>  
-    <string name="upload">NXJ-File hochladen</string>  
+    <string name="upload">File hochladen</string>  
     <string name="model_type_selected">Robotertyp:</string>   
     
     <!-- file dialog and message -->
-    <string name="no_files_found">Der Roboter enthält keine Dateien!</string>    
+    <string name="no_programs_found">Der Roboter enthält keine Programme!</string>    
     <string name="file_dialog_title_1">Starte/Stoppe ein Programm</string>    
     <string name="file_dialog_title_2">Starte ein Programm</string>    
 
@@ -48,35 +48,43 @@
     <string name="lama_accept">Ich möchte spielen!</string>
     <string name="lama_refuse">Nein, danke</string>
 
-    <string name="bt_error_dialog_title">Bluetooth Fehler</string>    
+    <string name="bt_error_dialog_title">BlueTooth Fehler</string>    
 
     <string name="bt_error_dialog_message">
-        Oh nein! Es schaut so aus, als ob dein Roboter ausgeschaltet ist. Prüfe, ob dein Roboter
-        eingeschalten ist, ob Bluetooth aktiviert ist und probiere es nochmals.
+        Oh nein! Es schaut so aus, als ob dein NXT Roboter ausgeschaltet ist. Prüfe, ob dein NXT Roboter
+        eingeschalten ist, ob BlueTooth aktiviert ist und probiere es nochmals.
     </string>    
-    <string name="bt_needs_to_be_enabled">Bluetooth muss eingeschalten sein, um fortzufahren!"</string>
+    <string name="bt_needs_to_be_enabled">BlueTooth muss eingeschalten sein, um fortzufahren!"</string>
     
+    <!--  Sensor/bluetooth problem -->
+    <string name="sensor_initialization_failure">
+        Kein passender Sensor gefunden!
+    </string>    
+    <string name="bt_initialization_failure">
+        Bluetooth vom Gerät nicht unterstützt!
+    </string>    
+
     <!-- Splash Menu -->
     <string name="tutorial">Anleitung</string>
     <string name="start_button">Start</string>
     <string name="credits">Credits</string>
     
     <!--  DeviceListActivity -->
-    <string name="scanning">Suche nach Geräten...</string>
-    <string name="select_device">Wähle ein Gerät für den Verbindungsaufbau</string>
-    <string name="none_paired">Es gibt keine gepaarten Gräte</string>
-    <string name="none_found">Keine Geräte gefunden</string>
-    <string name="title_paired_devices">Gepaarte LEGO Geräte</string>
-    <string name="title_other_devices">Andere verfügbare Geräte</string>
-    <string name="button_scan">Suche nach neuen Geräten</string>
-    <string name="pairing_message">Nach Abschluss des Paarens bitte Menu drücken und verbinden.</string>
-    <string name="wait_till_bt_on">Bluetooth wird eingeschalten (für Verbindungsaufbau zum Roboter)</string>
-    <string name="bt_off_message">Bluetooth abgeschalten. Bis dann!</string>
+    <string name="scanning">Suche nach NXT Robotern...</string>
+    <string name="select_device">Wähle einen NXT Roboter für den Verbindungsaufbau</string>
+    <string name="none_paired">Es gibt keine gepaarten NXT Roboter</string>
+    <string name="none_found">Keine NXT Roboter gefunden</string>
+    <string name="title_paired_devices">Gepaarte NXT Roboter</string>
+    <string name="title_other_devices">Andere verfügbare NXT Roboter</string>
+    <string name="button_scan">Suche nach neuen NXT Robotern</string>
+    <string name="pairing_message">Nach Abschluss des Paarens bitte <b>Menu</b> drücken und verbinden.</string>
+    <string name="wait_till_bt_on">BlueTooth wird eingeschalten (für Verbindungsaufbau zum NXT Roboter)</string>
+    <string name="bt_off_message">BlueTooth abgeschalten. Bis dann!</string>
 
     <!--  TTS problems -->
     <string name="tts_language_not_supported">
         Sprachausgabe: Die Sprachdaten sind nicht installiert.
-        Bitte installiere \"SpeechSynthesis Data\" vom Market!
+        Bitte installiere \"SpeechSynthesis Data\" von Google Play!
     </string>
     
     <string name="tts_problem_with_language">
@@ -110,14 +118,17 @@
         <b>Zusätzlicher Quellcode, UX, Konzept und Produktion</b>\n
         Harv Stanic\nLEGO SYSTEM A/S, Dänemark\nhttp://www.lego.com\n\n
         <b>Anerkennung geht auch an</b>\n
-        Michael Biermann
+        Michael Biermann\n\n
+        <b>Wir danken auch</b>\n
+        Michael B. Andersen für Pong\n
+        Der ganzen leJOS NXJ und NXC/NBC Community
     </string>
     <string name="about_thanks">
         Wir bedanken uns dafür, dass du die MINDdroid App zusammen mit deinen 
         LEGO MINDSTORMS Robotern verwendest.
     </string>     
     <string name="about_LEGO_legal">            
-        © 2010, 2011 LEGO Gruppe.\nAlle Rechte vorbehalten.
+        © 2010, 2011, 2012 LEGO Gruppe.\nAlle Rechte vorbehalten.
     </string>     
     <string name="about_ok">OK</string>
 
@@ -131,7 +142,7 @@
     </string>    
 
     <string name="tutorial_bubble_02">
-        Ach so.\nWie funktioniert es?
+        Ach so.\nWie funktioniert\ndie App?
     </string>    
 
     <string name="tutorial_bubble_03">
@@ -147,15 +158,15 @@
     </string>        
     
     <string name="tutorial_welcome_droid">
-        Hallo, Roboter!
+        Hallo, Roboteer!
     </string>    
     
     <string name="tutorial_a">    
         MINDdroid ist eine Android Anwendung zur Fernsteuerung von LEGO MINDSTORMS NXT Robotern
         in Echtzeit. Für die drahtlose Verbindung zwischen deinem Smartphone mit Beschleunigungssensor
-        und deinem NXT Roboter wird Bluetooth eingesetzt.
+        und deinem NXT Roboter wird BlueTooth eingesetzt.
         \nEs wird weder ein Computer benötigt noch braucht etwas programmiert werden. Schalte deinen 
-        NXT Baustein an, aktiviere Bluetooth und paare dein Smartphone mit dem NXT bevor du loslegst.
+        NXT Roboter ein, aktiviere BlueTooth und paare dein Smartphone mit dem NXT Roboter bevor du loslegst.
         Verwende den mittleren Druckknopf im Menü, um eine Verbindung mit deinem NXT Roboter aufzubauen.
         Der Verbindungsaufbau dauert etwa 2-3 Sekunden. Und in weiteren zwei Sekunden tanzt dein Roboter!   
     </string>
@@ -163,19 +174,19 @@
     <string name="tutorial_b">  
         MINDdroid interagiert in Echtzeit mit NXT Robotermodellen, die zum Fahren und zum
         Ausführen einer bestimmten Tätigkeit ausgelegt sind. Neige dein Smartphone
-        nach vorne, um den Roboter vorwärts fahren zu lassen und nach hinten,
+        nach vorne, um den NXT Roboter vorwärts fahren zu lassen und nach hinten,
         um ihn in die entgegengesetzte Richtung zu bewegen.
     </string>
 
     <string name="tutorial_c1">
-        Drehe deine Hand nach links und der Roboter biegt nach links ab (analog für rechts).
+        Drehe deine Hand nach links und der NXT Roboter biegt nach links ab (analog für rechts).
     </string> 
 
     <string name="tutorial_c2">
         \nEs gibt einen <b>Action-Knopf</b> mit zwei Funktionen: Ein <b>kurzer Druck</b> startet den zusätzlichen
         Motor für einfache Funktionen. Beim Shooterbot und beim Tribot wird der Motor um 180° vorwärts (und zurück)
-        bewegt, beim Robogator öffnet sich das Maul dreimal auf und zu. Durch einen <b>langen Druck</b> kannst 
-        du ein Programm des NXT Bausteins auswählen und starten - ist das nicht toll? 
+        bewegt, beim Robogator öffnet sich das Maul dreimal auf und zu. Ist das nicht toll? 
+		Du kannst die umgekehrte Bewegung durch längeres Drücken auf den <b>Action-Knopf</b> erzielen.
         \nBesonders gut funktioniert die App mit dem Shooterbotmodell, dem 8527 Tribotmodell
         und dem Robogatormodell aus der Bauanleitung. Wähle das Robotermodell über
         den Menüeintrag deines Android Smartphones aus (Einstiegsbild / "Anleitung/Start").
@@ -185,48 +196,51 @@
         Mithilfe von leJOS NXJ (siehe http://www.lejos.org) kannst du auch andere Robotermodelle, wie
         unseren berühmten AlphaRex, steuern. Du kannst damit deinen UltraSonic Sensor auslesen und damit
         die Entfernung zwischen deinem Roboter und einem Gegenstand oder einer Wand messen oder du kannst
-        damit auch Farben erkennen, die dir dein Smartphone dann vorliest. Desweiteren kannst du 
-        leJOS Dateien (Endung: .nxj) direkt vom Android-Device auf deinen Roboter übertragen. Dazu werden
-        bereits zwei .nxj-Files mitgeliefert - AlphaRex und MINDGameZ mit denen du, so hoffen wir
-        zumindestens, Stunden voller Vergnügen mit deinem NXT haben kannst. Auf http://mindstorms.com 
-        findest du ausdruckbare Rennbahnen für MINDGameZ. Es macht aber auch sehr viel Spass, seine
-        eigenen Bahnen mit einem dicken Filzstift auf Packpapier selbst zu konstruieren...
+        damit auch Farben erkennen, die dir dein Smartphone dann vorliest. Das beste ist aber, dass
+		du Programme direkt von deinem Smartphone oder Tablet aus auf den NXT Roboter hochladen kannst und
+		sie sogar von dort aus starten kannst. Und als Draufgabe haben wir sogar zwei .nxj Programme -
+		AlphaRex und MINDGameZ, und fünf .rxe Programme - Pong, NXTCounter, Block, LineFollower und Robogator -
+		miteingepackt.
+		Mit diesen Programmen wirst du, so hoffen wir zumindestens, Stunden voller Vergnügen mit deinem 
+		NXT Roboter haben. Du kannst sie durch <b>Menu -> Starte Programm</b> zum Laufen bringen.\n\n
+		<i>Auf http://mindstorms.com findest du ausdruckbare Rennbahnen für MINDGameZ. Es macht aber auch sehr
+		viel Spass, seine eigenen Bahnen mit einem dicken Filzstift auf Packpapier selbst zu konstruieren...</i>
     </string>
 
     <string name="tutorial_e">
         Es wird die Richtung angezeigt, in die du dein Smartphone kippst und die Richtung in die 
         dein NXT Roboter fährt. Wenn der Roboter losfährt, vibriert das Smartphone kurz.
         Wird das Smartphone exakt waagerecht gehalten, hält der Roboter an. Je mehr du dein Smartphone
-        kippst, desto schneller bewegt sich dein Roboter. Du erkennst das auch am schneller blinkenden
+        kippst, desto schneller bewegt sich dein NXT Roboter. Du erkennst das auch am schneller blinkenden
         Quadrat-Icon. Total cool, uff?    
     </string>
 
     <string name="tutorial_f">    
         Weil wir es schaffen. Und wir denken, dass es Spaß macht. Außerdem wirst du begeistert sein
-        und dich und viele andere anregen, weitere coole Android Apps zur Interaktion mit dem NXT zu schreiben
-        und auch weitere coole LEGO MINDSTORMS Roboter zu bauen. Weil du es kannst!\n\nLeg los, 
+        und dich und viele andere anregen, weitere coole Android Apps zur Interaktion mit dem NXT Roboter
+		zu schreiben und auch weitere coole NXT Roboter zu bauen. Weil du es kannst!\n\nLeg los, 
         probier alles aus, hab Spaß beim Spielen und denk daran, dass es auf 
         http://mindstorms.com Neuigkeiten, Zusatzinfos und Goodies gibt.
     </string>
 
-    <!-- NXJ Uploader -->
-    <string name="nxj_uploader_name">NXJUploader</string>
-    <string name="nxj_select_nxt">1. Wähle NXT</string>
-    <string name="nxj_select_file">2. Wähle Dateinamen</string>
-    <string name="nxj_action">3. Übertragen!</string>
-    <string name="nxj_file_dialog_title">Wähle ein File</string>
-    <string name="nxj_nxt_dialog_title">Wähle einen NXT-Baustein</string>
-    <string name="nxj_please_select_nxt">Bitte wähle zuerst deinen NXT!</string>
-    <string name="nxj_please_select_file">Bitte wähle zuerst eine Datei!</string>
-    <string name="nxj_connecting">Verbinde, bitte warten...</string>
-    <string name="nxj_uploading">Übertragen, bitte warten...</string>
-    <string name="nxj_bluetooth_open_error">Kann Bluetooth-Verbindung nicht öffnen</string>
-    <string name="nxj_bluetooth_close_error">Kann Bluetooth-Verbidung nicht schließen</string>
-    <string name="nxj_file_open_error">Kann NXJ-Datei nicht öffnen</string>
-    <string name="nxj_uploading_error">Kann NXJ-Datei nicht hochladen</string>
-    <string name="nxj_other_error">Ein Fehler ist aufgetreten</string>
-    <string name="nxj_no_files">Keine NXJ-Dateien gefunden</string>
-    <string name="nxj_no_paired_NXT">Kein gepaarter NXT gefunden oder Bluetooth ausgeschalten</string>
-    <string name="nxj_bluetooth_pairing">Nach dem Pairing bitte ÜBERTRAGEN erneut drücken</string>
+    <!-- Universal Uploader -->
+    <string name="uul_name">Universal Uploader</string>
+    <string name="uul_select_nxt">1. Wähle NXT Roboter</string>
+    <string name="uul_select_file">2. Wähle Dateinamen</string>
+    <string name="uul_action">3. Übertragen!</string>
+    <string name="uul_file_dialog_title">Wähle ein File</string>
+    <string name="uul_nxt_dialog_title">Wähle einen NXT Roboter</string>
+    <string name="uul_please_select_nxt">Bitte wähle zuerst deinen NXT Roboter!</string>
+    <string name="uul_please_select_file">Bitte wähle zuerst eine Datei!</string>
+    <string name="uul_connecting">Verbinde, bitte warten...</string>
+    <string name="uul_uploading">Übertragen, bitte warten...</string>
+    <string name="uul_bluetooth_open_error">Kann BlueTooth-Verbindung nicht öffnen</string>
+    <string name="uul_bluetooth_close_error">Kann BlueTooth-Verbindung nicht schließen</string>
+    <string name="uul_file_open_error">Kann Datei nicht öffnen</string>
+    <string name="uul_uploading_error">Kann Datei nicht hochladen</string>
+    <string name="uul_other_error">Ein Fehler ist aufgetreten</string>
+    <string name="uul_no_files">Keine entsprechenden Dateien gefunden</string>
+    <string name="uul_no_paired_NXT">Kein gepaarter NXT Roboter gefunden oder BlueTooth ausgeschalten</string>
+    <string name="uul_bluetooth_pairing">Nach dem Pairing bitte <b>Übertragen</b> erneut drücken</string>
 
 </resources>

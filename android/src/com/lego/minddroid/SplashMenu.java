@@ -1,5 +1,5 @@
 /**
- * Copyright 2010 Guenther Hoelzl, Shawn Brown
+ * Copyright 2010, 2011, 2012 Guenther Hoelzl, Shawn Brown
  *
  * This file is part of MINDdroid.
  *
@@ -43,10 +43,10 @@ public class SplashMenu extends Activity {
 
 
     public static void quitApplication() {
-        if (MINDdroid.isBtOnByUs() || NXJUploader.isBtOnByUs()) {
+        if (MINDdroid.isBtOnByUs() || UniversalUploader.isBtOnByUs()) {
             BluetoothAdapter.getDefaultAdapter().disable();
             MINDdroid.setBtOnByUs(false);
-            NXJUploader.setBtOnByUs(false);
+            UniversalUploader.setBtOnByUs(false);
         }
         splashMenu.finish();
 
@@ -58,7 +58,6 @@ public class SplashMenu extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // show Lama and write nxj-files to SD-card
         Lama.show(this);
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -76,17 +75,16 @@ public class SplashMenu extends Activity {
 
     @Override
     protected void onPause() {
-        if (MINDdroid.isBtOnByUs() || NXJUploader.isBtOnByUs()) {
+        if (MINDdroid.isBtOnByUs() || UniversalUploader.isBtOnByUs()) {
             BluetoothAdapter.getDefaultAdapter().disable();
             MINDdroid.setBtOnByUs(false);
-            NXJUploader.setBtOnByUs(false);
+            UniversalUploader.setBtOnByUs(false);
         }
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        // TODO Auto-generated method stub
         super.onResume();
     }
 
@@ -96,23 +94,10 @@ public class SplashMenu extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(0, MENU_OPTIONS, 1, getResources().getString(R.string.options)).setIcon(R.drawable.ic_menu_preferences);
-        menu.add(0, MENU_UPLOAD, 2, getResources().getString(R.string.upload)).setIcon(R.drawable.ic_menu_nxj);
+        menu.add(0, MENU_UPLOAD, 2, getResources().getString(R.string.upload)).setIcon(R.drawable.ic_menu_file);
         menu.add(0, MENU_ABOUT, 3, getResources().getString(R.string.about)).setIcon(R.drawable.ic_menu_about);
         menu.add(0, MENU_QUIT, 4, getResources().getString(R.string.quit)).setIcon(R.drawable.ic_menu_exit);
         return true;
-    }
-
-    /**
-     * Enables/disables the menu items
-     */
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean displayMenu;
-        displayMenu = super.onPrepareOptionsMenu(menu);
-        if (displayMenu) {
-            menu.getItem(1).setEnabled(getRobotType() == R.id.robot_type_4);
-        }
-        return displayMenu;
     }
 
     /**
@@ -126,8 +111,9 @@ public class SplashMenu extends Activity {
                 options.show();
                 return true;
             case MENU_UPLOAD:
-                Intent nxjUpload = new Intent(this.getBaseContext(), NXJUploader.class);
-                this.startActivity(nxjUpload);
+                Intent uulIntent = new Intent(this.getBaseContext(), UniversalUploader.class);
+                uulIntent.putExtra("robotType", new Integer(mRobotType));
+                this.startActivity(uulIntent);
                 return true;
             case MENU_ABOUT:
                 About about = new About();
@@ -151,7 +137,7 @@ public class SplashMenu extends Activity {
     public int lookupRobotType() {
         SharedPreferences mUserPreferences;
         mUserPreferences =  getSharedPreferences(MINDDROID_PREFS, Context.MODE_PRIVATE);
-        return mUserPreferences.getInt(MINDDROID_ROBOT_TYPE, R.id.robot_type_1);
+        return mUserPreferences.getInt(MINDDROID_ROBOT_TYPE, R.id.robot_type_shooterbot);
     }
 
     public int getRobotType() {
