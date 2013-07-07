@@ -1,2 +1,6 @@
 *.class
 *.nxj
+bin/
+gen/
+.directory
+.classpath
