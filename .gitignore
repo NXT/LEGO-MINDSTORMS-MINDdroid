@@ -1,2 +1,5 @@
 *.class
 *.nxj
+bin/
+gen/
+.directory

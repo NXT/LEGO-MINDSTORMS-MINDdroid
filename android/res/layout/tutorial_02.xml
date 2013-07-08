@@ -21,7 +21,7 @@
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
    	android:padding="5dp" >
-	<ImageView 
+	<ImageView android:contentDescription="@string/no_content_description"
 	    android:id="@+id/TutorialImageView"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"

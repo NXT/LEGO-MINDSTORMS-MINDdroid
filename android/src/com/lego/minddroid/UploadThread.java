@@ -19,13 +19,15 @@
 
 package com.lego.minddroid;
 
-import android.content.res.AssetFileDescriptor;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
-import java.io.*;
-import java.util.Arrays;
 
 /**
  * The tasks have to be done in this thread, so the user interface

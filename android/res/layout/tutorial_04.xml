@@ -25,8 +25,8 @@
                 android:layout_marginBottom="50dip"
                 android:layout_width="fill_parent" 
                 android:layout_height="wrap_content" 
-                xmlns:android="http://schemas.android.com/apk/res/android">		
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                >		
+    <LinearLayout 
 	    android:layout_width="fill_parent"
         android:layout_height="wrap_content"
 	    android:orientation="vertical"
@@ -41,7 +41,7 @@
             android:gravity="left"
             android:textColor="#00ccff"
             android:text="@string/tutorial_b"/>
-    	<ImageView 
+    	<ImageView android:contentDescription="@string/no_content_description"
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="wrap_content"
 	    	android:gravity="center" android:src="@drawable/hand_small"/>	    	            
@@ -53,7 +53,7 @@
             android:gravity="left"
             android:textColor="#00ccff"
             android:text="@string/tutorial_c1"/>
-    	<ImageView 
+    	<ImageView android:contentDescription="@string/no_content_description"
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="wrap_content"
 	    	android:gravity="center" android:src="@drawable/mobiles_small"/>	    	            
@@ -65,7 +65,7 @@
             android:gravity="left"
             android:textColor="#00ccff"
             android:text="@string/tutorial_c2"/>
-    	<ImageView 
+    	<ImageView android:contentDescription="@string/no_content_description"
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="wrap_content"
 	    	android:gravity="center" android:src="@drawable/shooter_small"/>	    	            
@@ -79,7 +79,7 @@
             android:gravity="left"
             android:textColor="#00ccff"           
             android:text="@string/tutorial_d"/>
-    	<ImageView 
+    	<ImageView android:contentDescription="@string/no_content_description"
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="wrap_content"
 	    	android:gravity="center" android:src="@drawable/nxj"/>	    	                        

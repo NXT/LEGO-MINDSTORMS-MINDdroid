@@ -19,29 +19,17 @@
 
 package com.lego.minddroid;
 
+import java.util.Iterator;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.text.method.LinkMovementMethod;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.ListIterator;
 
 class FileDialog {
 
     private Activity myActivity;
     private List<String> myList;    
-    private int programNr = -1;
     private CharSequence[] programs;
     
     public FileDialog(Activity activity, List<String> list) {    

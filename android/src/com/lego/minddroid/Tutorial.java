@@ -21,34 +21,18 @@ package com.lego.minddroid;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.content.Context;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.ImageView;
-
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.Closeable;
-import java.util.regex.Pattern;
-
-import android.util.Log;
+import android.widget.TextView;
 
 class Tutorial {
 
     private Dialog dialog;
     private int currentScene = 0;
     private Activity myActivity;
-    private int myScreenWidth;
-    private int myScreenHeight;
-    
     // the following array holds the scenes, each scene consists of the following properties
     // layout, text/image#1, text/image#2, text/image#3
     private int[] sceneProperties = new int[] { 
@@ -65,8 +49,6 @@ class Tutorial {
     };
     
     public Tutorial(int screenWidth, int screenHeight) {
-        myScreenWidth = screenWidth;
-        myScreenHeight = screenHeight;
     }
    
 	public void show(final Activity myActivity) {
@@ -91,9 +73,7 @@ class Tutorial {
 	    int layout = sceneProperties[currentScene*4];
 	    int resource0 = sceneProperties[currentScene*4+1];   
 	    int resource1 = sceneProperties[currentScene*4+2];   
-   	    int resource2 = sceneProperties[currentScene*4+3]; 
-   	      	    
-	    // rehide the current dialog shortly	    
+   	    // rehide the current dialog shortly	    
         if (dialog.isShowing())
             dialog.dismiss();        
 		dialog.setContentView(layout);
