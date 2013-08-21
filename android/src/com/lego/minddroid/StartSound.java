@@ -22,7 +22,6 @@ package com.lego.minddroid;
 import android.content.Context;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.util.Log;
 
 public class StartSound extends Thread {
 	private Context myContext;

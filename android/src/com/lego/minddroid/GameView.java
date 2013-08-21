@@ -92,9 +92,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 		 */
 		private int mCanvasWidth = 1;
 
-		/** Message handler used by thread to interact with TextView */
-		private Handler mHandler;
-
 		/** Used to figure out elapsed time between frames */
 		private long mLastTime;
 
@@ -170,7 +167,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 			// get handles to some important objects
 			mHapticFeedback = vibrator;
 			mSurfaceHolder = surfaceHolder;
-			mHandler = handler;
 			Resources res = context.getResources();
 			mIconOrange = context.getResources().getDrawable(R.drawable.orange);
 			// load background image as a Bitmap instead of a Drawable b/c
@@ -662,7 +658,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 	/** orientation (tilt) readings */
 	private float mAccelX = 0;
 	private float mAccelY = 0;
-	private float mAccelZ = 0; // heading
 	/**time that action button was pressed - used to calc long or short press */
 	long mTimeActionDown=0;
 	 
@@ -679,7 +674,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
 			mAccelX = 0 - event.values[2];
 			mAccelY = 0 - event.values[1];
-			mAccelZ = event.values[0];
 
 		}
 

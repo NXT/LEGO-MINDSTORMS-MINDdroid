@@ -19,27 +19,21 @@
 
 package com.lego.minddroid;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.text.method.LinkMovementMethod;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.TextView;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Locale;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.os.Environment;
 
 /**
  * Builds and shows a file dialog for selecting files
  */    
 class UploaderFileDialog {
 
-    private final static String DIR_PATH = "/sdcard/download/";
+    private final static String DIR_PATH = Environment.getExternalStorageDirectory().getPath();
     private final static String[] NXTG_EXTENSIONS = 
         { ".rcd", ".rso", ".ric", ".rxe" };
 
@@ -64,7 +58,7 @@ class UploaderFileDialog {
      */        
     private boolean matchNXTGExtension(String filename) {
         for (int i=0; i<NXTG_EXTENSIONS.length; i++) {
-            if (filename.toLowerCase().endsWith(NXTG_EXTENSIONS[i]))
+            if (filename.toLowerCase(Locale.getDefault()).endsWith(NXTG_EXTENSIONS[i]))
                 return true;
         }    
         return false;
@@ -77,7 +71,7 @@ class UploaderFileDialog {
      * @return number of files in the directory
      */    
     public int refreshFileList(String[] preinstalledList) {
-        ArrayList<String> fileList = new ArrayList();
+        ArrayList<String> fileList = new ArrayList<String>();
 
         // internal files
         preinstalledFiles = preinstalledList.length;
