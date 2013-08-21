@@ -1,5 +1,9 @@
-*.class
+# Mindstorms NXJ files
 *.nxj
+# generated files
 bin/
 gen/
+# stuff placed by my file browser there
 .directory
+# Local configuration file (sdk path, etc)
+local.properties
