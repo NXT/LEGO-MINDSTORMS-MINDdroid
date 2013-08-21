@@ -1,19 +1,9 @@
 # Mindstorms NXJ files
 *.nxj
-
-# built application files
-*.apk
-*.ap_
-
-# files for the dex VM
-*.dex
-
-# Java class files
-*.class
-
 # generated files
 bin/
 gen/
-
+# stuff placed by my file browser there
+.directory
 # Local configuration file (sdk path, etc)
 local.properties

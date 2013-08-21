@@ -22,7 +22,7 @@
             android:layout_height="wrap_content" 
             xmlns:android="http://schemas.android.com/apk/res/android">		
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
 	android:orientation="vertical" android:layout_width="fill_parent"
 	android:layout_height="wrap_content">
 	
@@ -30,19 +30,19 @@
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:orientation="vertical">
 		
-		<RadioButton android:id="@+id/robot_type_shooterbot" android:text="Shooterbot"
+		<RadioButton android:id="@+id/robot_type_shooterbot" android:text="@string/robot_type_shooterbot"
 			android:drawableBottom="@drawable/shooterbot"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-		<RadioButton android:id="@+id/robot_type_tribot" android:text="Tribot"
+		<RadioButton android:id="@+id/robot_type_tribot" android:text="@string/robot_type_tribot"
 			android:drawableBottom="@drawable/tribot"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-		<RadioButton android:id="@+id/robot_type_robogator" android:text="Robogator"
+		<RadioButton android:id="@+id/robot_type_robogator" android:text="@string/robot_type_robogator"
 			android:drawableBottom="@drawable/robogator"  android:layout_width="wrap_content"
 			android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp" android:paddingBottom="8dp"/>
 			
-        <RadioButton android:id="@+id/robot_type_lejos" android:text="leJOS NXJ model"
+        <RadioButton android:id="@+id/robot_type_lejos" android:text="@string/robot_type_lejos"
             android:drawableBottom="@drawable/nxj"  android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:scaleType="centerCrop" android:drawablePadding="1dp"/>
 

@@ -21,7 +21,7 @@
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
    	android:padding="5dp" >
-	<ImageView 
+	<ImageView android:contentDescription="@string/no_content_description"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
 		android:gravity="center" android:src="@drawable/logo_splash_minddroid"/>	   	
@@ -33,7 +33,7 @@
        	android:textColor="#00ccff"
         android:textSize="12pt"
         android:gravity="center"/>
-	<ImageView 
+	<ImageView android:contentDescription="@string/legal_notification"
 	    android:id="@+id/legalImage"
     	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
@@ -43,6 +43,5 @@
         android:textSize="20sp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"   
-        android:layout_below="@+id/legalImage"         
         android:text="@string/want_to_know_more"/>
 </LinearLayout>
