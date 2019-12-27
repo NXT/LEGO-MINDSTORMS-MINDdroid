@@ -16,15 +16,14 @@
 
 package com.lego.minddroid;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.SharedPreferences;
+
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 
 /**
  * Displays an LAMA ("LEGO Application MINDdroid Agreement") that the user has to accept before
@@ -41,7 +40,7 @@ class Lama {
     /**
      * callback to let the activity know when the user has accepted the LAMA.
      */
-    static interface OnLamaAgreedTo {
+    interface OnLamaAgreedTo {
 
         /**
          * Called when the user has accepted the lama and the dialog closes.
@@ -63,24 +62,14 @@ class Lama {
             final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle(R.string.lama_title);
             builder.setCancelable(true);
-            builder.setPositiveButton(R.string.lama_accept, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    accept(preferences);
-                    if (activity instanceof OnLamaAgreedTo) {
-                        ((OnLamaAgreedTo) activity).onLamaAgreedTo();
-                    }
+            builder.setPositiveButton(R.string.lama_accept, (dialog, which) -> {
+                accept(preferences);
+                if (activity instanceof OnLamaAgreedTo) {
+                    ((OnLamaAgreedTo) activity).onLamaAgreedTo();
                 }
             });
-            builder.setNegativeButton(R.string.lama_refuse, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    refuse(activity);
-                }
-            });
-            builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                public void onCancel(DialogInterface dialog) {
-                    refuse(activity);
-                }
-            });
+            builder.setNegativeButton(R.string.lama_refuse, (dialog, which) -> refuse(activity));
+            builder.setOnCancelListener(dialog -> refuse(activity));
             builder.setMessage(readLama(activity));
             builder.create().show();
             return false;
@@ -89,7 +78,7 @@ class Lama {
     }
 
     private static void accept(SharedPreferences preferences) {
-        preferences.edit().putBoolean(PREFERENCE_LAMA_ACCEPTED, true).commit();
+        preferences.edit().putBoolean(PREFERENCE_LAMA_ACCEPTED, true).apply();
     }
 
     private static void refuse(Activity activity) {

@@ -133,9 +133,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
         reusableToast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
 
         // experimental TTS support for the lejosMINDdroid project
-        mTts = new TextToSpeech(this,
-                this  // TextToSpeech.OnInitListener
-        );
+        mTts = new TextToSpeech(this, this);
     }
 
     /**
@@ -206,7 +204,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
         if (myBTCommunicator != null) {
             try {
                 myBTCommunicator.destroyNXTconnection();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
         createBTCommunicator();

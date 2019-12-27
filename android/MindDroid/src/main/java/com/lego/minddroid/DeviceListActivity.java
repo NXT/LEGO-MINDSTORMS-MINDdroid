@@ -1,28 +1,26 @@
-/**
- *   (Changes from original are) Copyright 2010 Guenther Hoelzl, Shawn Brown
- *
- *   This file is part of MINDdroid.
- *
- *   MINDdroid is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MINDdroid is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
- *   
- * 
+/*
+ * (Changes from original are) Copyright 2010 Guenther Hoelzl, Shawn Brown
+ * <p>
+ * This file is part of MINDdroid.
+ * <p>
+ * MINDdroid is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * MINDdroid is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * <p>
  * (original work is) Copyright (C) 2009 The Android Open Source Project
-**/
+ **/
 
 package com.lego.minddroid;
-
-import java.util.Set;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -33,7 +31,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -41,6 +38,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.Set;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and
@@ -57,7 +56,6 @@ public class DeviceListActivity extends Activity {
 
     // Member fields
     private BluetoothAdapter mBtAdapter;
-    private ArrayAdapter<String> mPairedDevicesArrayAdapter;
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
     @Override
@@ -67,31 +65,29 @@ public class DeviceListActivity extends Activity {
         // Setup the window
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.device_list);
- 
+
         // Set result CANCELED incase the user backs out
         setResult(Activity.RESULT_CANCELED);
 
         // Initialize the button to perform device discovery
-        Button scanButton = (Button) findViewById(R.id.button_scan);
-        scanButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                doDiscovery();
-                v.setVisibility(View.GONE);
-            }
+        Button scanButton = findViewById(R.id.button_scan);
+        scanButton.setOnClickListener(v -> {
+            doDiscovery();
+            v.setVisibility(View.GONE);
         });
 
         // Initialize array adapters. One for already paired devices and
         // one for newly discovered devices
-        mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
-        mNewDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
+        ArrayAdapter<String> mPairedDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_name);
+        mNewDevicesArrayAdapter = new ArrayAdapter<>(this, R.layout.device_name);
 
         // Find and set up the ListView for paired devices
-        ListView pairedListView = (ListView) findViewById(R.id.paired_devices);
+        ListView pairedListView = findViewById(R.id.paired_devices);
         pairedListView.setAdapter(mPairedDevicesArrayAdapter);
         pairedListView.setOnItemClickListener(mDeviceClickListener);
 
         // Find and set up the ListView for newly discovered devices
-        ListView newDevicesListView = (ListView) findViewById(R.id.new_devices);
+        ListView newDevicesListView = findViewById(R.id.new_devices);
         newDevicesListView.setAdapter(mNewDevicesArrayAdapter);
         newDevicesListView.setOnItemClickListener(mDeviceClickListener);
 
@@ -111,7 +107,7 @@ public class DeviceListActivity extends Activity {
 
         // If there are paired devices, add each one to the ArrayAdapter
         boolean legoDevicesFound = false;
-        
+
         if (pairedDevices.size() > 0) {
             findViewById(R.id.title_paired_devices).setVisibility(View.VISIBLE);
             for (BluetoothDevice device : pairedDevices) {
@@ -122,8 +118,8 @@ public class DeviceListActivity extends Activity {
                 }
             }
         }
-        
-        if (legoDevicesFound == false) {
+
+        if (!legoDevicesFound) {
             String noDevices = getResources().getText(R.string.none_paired).toString();
             mPairedDevicesArrayAdapter.add(noDevices);
         }
@@ -169,19 +165,19 @@ public class DeviceListActivity extends Activity {
 
             String info = ((TextView) v).getText().toString();
             // did we choose a correct name and address?
-            if (info.lastIndexOf('-') != info.length()-18) 
+            if (info.lastIndexOf('-') != info.length() - 18)
                 return;
 
             // Cancel discovery because it's costly and we're about to connect
             mBtAdapter.cancelDiscovery();
             // Get the device MAC address, this is the text after the last '-' character
-            String address = info.substring(info.lastIndexOf('-')+1);
+            String address = info.substring(info.lastIndexOf('-') + 1);
             // Create the result Intent and include the infos
             Intent intent = new Intent();
             Bundle data = new Bundle();
             data.putString(DEVICE_NAME_AND_ADDRESS, info);
             data.putString(EXTRA_DEVICE_ADDRESS, address);
-            data.putBoolean(PAIRING,av.getId()==R.id.new_devices);
+            data.putBoolean(PAIRING, av.getId() == R.id.new_devices);
             intent.putExtras(data);
             // Set result and finish this Activity
             setResult(RESULT_OK, intent);
@@ -201,10 +197,10 @@ public class DeviceListActivity extends Activity {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
-                if (device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                if (device != null && device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     mNewDevicesArrayAdapter.add(device.getName() + "-" + device.getAddress());
                 }
-            // When discovery is finished, change the Activity title
+                // When discovery is finished, change the Activity title
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 setProgressBarIndeterminateVisibility(false);
                 setTitle(R.string.select_device);

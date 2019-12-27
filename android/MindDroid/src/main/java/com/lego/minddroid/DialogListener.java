@@ -1,4 +1,4 @@
-/**
+/*
  *   Copyright 2010, 2011, 2012 Guenther Hoelzl
  *
  *   This file is part of MINDdroid.
@@ -21,5 +21,5 @@ package com.lego.minddroid;
 
 public interface DialogListener {
 
-    public void dialogUpdate(String fileName);
+    void dialogUpdate(String fileName);
 }

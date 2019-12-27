@@ -1,4 +1,4 @@
-/**
+/*
  *   Copyright 2011, 2012 Guenther Hoelzl
  *
  *   This file is part of MINDdroid.
@@ -36,16 +36,16 @@ import android.os.Looper;
 public final class UploadThread extends Thread {
 
     // errorcodes during the task
-    public static final int NO_ERROR = 0;
-    public static final int OPEN_BT_ERROR = 1;
-    public static final int CLOSE_BT_ERROR = 2;
-    public static final int OPEN_FILE_ERROR = 3;
-    public static final int UPLOAD_ERROR = 4;
+    static final int NO_ERROR = 0;
+    static final int OPEN_BT_ERROR = 1;
+    static final int CLOSE_BT_ERROR = 2;
+    static final int OPEN_FILE_ERROR = 3;
+    static final int UPLOAD_ERROR = 4;
 
     // status of the thread
-    public static final int IDLE = 0;
-    public static final int CONNECTING = 1;
-    public static final int UPLOADING = 2;
+    private static final int IDLE = 0;
+    static final int CONNECTING = 1;
+    static final int UPLOADING = 2;
 
     private static final int MAX_BUFFER_SIZE = 58;
 
@@ -63,12 +63,12 @@ public final class UploadThread extends Thread {
 
     private int errorCode;
 
-    public UploadThread(UploadThreadListener listener, Resources resources) {
+    UploadThread(UploadThreadListener listener, Resources resources) {
         this.listener = listener;
         this.resources = resources;
     }
 
-    public void setBluetoothCommunicator(BTCommunicator communicator) {
+    void setBluetoothCommunicator(BTCommunicator communicator) {
         mBTCommunicator = communicator;
     }
 
@@ -81,51 +81,43 @@ public final class UploadThread extends Thread {
             Looper.prepare();
             handler = new Handler();
             Looper.loop();
-        } catch (Throwable t) {
+        } catch (Throwable ignored) {
         }
     }
 
     /**
      * Puts a new request for stopping the looper into the queue
      */
-    public synchronized void requestStop() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Looper.myLooper().quit();
-            }
-        });
+    synchronized void requestStop() {
+        handler.post(() -> Looper.myLooper().quit());
     }
 
     /**
      * Puts a new request for uploading into the queue handled by the looper
      * @param fileName the name of the file to upload including the path
      */
-    public synchronized void enqueueUpload(final String nxtAddress, final String fileName) {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                boolean uploading = false;
+    synchronized void enqueueUpload(final String nxtAddress, final String fileName) {
+        handler.post(() -> {
+            boolean uploading = false;
+            try {
+                signalUpdate(CONNECTING);
+                mBTCommunicator.setMACAddress(nxtAddress);
+                mBTCommunicator.createNXTconnection();
+                signalUpdate(UPLOADING);
+                uploading = true;
+                uploadFile(fileName);
+                signalUpdate(IDLE);
+            } catch (FileNotFoundException e) {
+                errorCode = OPEN_FILE_ERROR;
+            } catch (IOException e) {
+                errorCode = uploading ? UPLOAD_ERROR : OPEN_BT_ERROR;
+            } finally {
                 try {
-                    signalUpdate(CONNECTING);
-                    mBTCommunicator.setMACAddress(nxtAddress);
-                    mBTCommunicator.createNXTconnection();
-                    signalUpdate(UPLOADING);
-                    uploading = true;
-                    uploadFile(fileName);
-                    signalUpdate(IDLE);
-                } catch (FileNotFoundException e) {
-                    errorCode = OPEN_FILE_ERROR;
+                    mBTCommunicator.destroyNXTconnection();
                 } catch (IOException e) {
-                    errorCode = uploading ? UPLOAD_ERROR : OPEN_BT_ERROR;
-                } finally {
-                    try {
-                        mBTCommunicator.destroyNXTconnection();
-                    } catch (IOException e) {
-                        errorCode = CLOSE_BT_ERROR;
-                    }
-                    signalUpdate(IDLE);
+                    errorCode = CLOSE_BT_ERROR;
                 }
+                signalUpdate(IDLE);
             }
         });
     }
@@ -133,28 +125,28 @@ public final class UploadThread extends Thread {
     /**
      * @return the maximum number of bytes to be uploaded
      */
-    public int getFileLength() {
+    int getFileLength() {
         return mFileLength;
     }
 
     /**
      * @return the number of bytes already uploaded
      */
-    public int getBytesUploaded() {
+    int getBytesUploaded() {
         return mUploaded;
     }
 
     /**
      * @return the error after an action
      */
-    public int getErrorCode() {
+    int getErrorCode() {
         return errorCode;
     }
 
     /**
      * Resets the error status
      */
-    public void resetErrorCode() {
+    void resetErrorCode() {
         errorCode = NO_ERROR;
     }
 
@@ -162,10 +154,10 @@ public final class UploadThread extends Thread {
      * Opens a file with the given filename and uplodads it to the robot
      * @param fileName the name of the file to upload including the path
      */
-    private void uploadFile(String fileName) throws FileNotFoundException, IOException {
+    private void uploadFile(String fileName) throws IOException {
         byte[] data = new byte[MAX_BUFFER_SIZE];
         int readLength;
-        InputStream inputStream = null;
+        InputStream inputStream;
         byte[] message;
 
         // internal file: no path given
@@ -192,7 +184,7 @@ public final class UploadThread extends Thread {
         mUploaded = 0;
         // extract fileName without path
         int lastSlashPos = fileName.lastIndexOf('/');
-        fileName = fileName.substring(lastSlashPos + 1, fileName.length());
+        fileName = fileName.substring(lastSlashPos + 1);
         
         boolean triedDelete = false;
         while (true) {
@@ -210,7 +202,7 @@ public final class UploadThread extends Thread {
                 break;
             
             // file exists => try to delete file only once
-            if (triedDelete == false &&
+            if (!triedDelete &&
                 message != null &&
                 message.length > 2 &&
                 message[0] == LCPMessage.REPLY_COMMAND &&

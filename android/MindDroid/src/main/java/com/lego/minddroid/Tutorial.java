@@ -46,7 +46,7 @@ class Tutorial {
             R.layout.tutorial_02, R.drawable.tutorial_05, R.string.tutorial_bubble_05, 0,
     };
 
-    public Tutorial() {
+    Tutorial() {
     }
 
     public void show(final Activity myActivity) {

@@ -1,21 +1,21 @@
-/**
- *   Copyright 2011, 2012 Guenther Hoelzl
- *
- *   This file is part of MINDdroid.
- *
- *   MINDdroid is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   MINDdroid is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
-**/
+/*
+ * Copyright 2011, 2012 Guenther Hoelzl
+ * <p>
+ * This file is part of MINDdroid.
+ * <p>
+ * MINDdroid is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * MINDdroid is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
+ **/
 
 package com.lego.minddroid;
 
@@ -23,43 +23,38 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-/** 
+/**
  * This class is for uploading programs to the NXT brick via Bluetooth.
  * Special programs will be able to communicate with MINDdroid, so no PC
  * is required for playing with a robot.
  */
-public class UniversalUploader extends Activity implements UploadThreadListener, DialogListener, BTConnectable
-{
+public class UniversalUploader extends Activity implements UploadThreadListener, DialogListener, BTConnectable {
     private static final int DIALOG_NXT = 0;
     private static final int DIALOG_FILE = 1;
 
     // preinstalled modules on res/raw directoy
-    private static String[] preinstalledFilesString = new String[] 
-        { "AlphaRex.nxj",
-          "MINDGameZ.nxj",
-          "Block.rxe",
-          "Linefollower.rxe",
-          "NXTCounter.rxe",
-          "Pong.rxe",
-          "Robogator_4.rxe"
-        };
+    private static String[] preinstalledFilesString = new String[]
+            {"AlphaRex.nxj",
+                    "MINDGameZ.nxj",
+                    "Block.rxe",
+                    "Linefollower.rxe",
+                    "NXTCounter.rxe",
+                    "Pong.rxe",
+                    "Robogator_4.rxe"
+            };
 
     private static final int REQUEST_CONNECT_DEVICE = 1000;
     private static final int REQUEST_ENABLE_BT = 2000;
 
-    private BTCommunicator mNXT;
-	private UploadThread uploadThread;
-	private Handler handler;
+    private UploadThread uploadThread;
+    private Handler handler;
     private ProgressDialog progressDialog;
     private int uploadStatus;
     private int runningDialog;
@@ -67,22 +62,21 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
     private boolean btErrorPending = false;
     private static boolean btOnByUs = false;
     private Integer robotType;
-        
-    /** 
-     * Called when the activity is first created. 
+
+    /**
+     * Called when the activity is first created.
      */
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.uul);
         initLayout();
         // get robotType from intent
-        robotType = (Integer) getIntent().getSerializableExtra("robotType");        
+        robotType = (Integer) getIntent().getSerializableExtra("robotType");
         // Create objects for communication
-        mNXT = new BTCommunicator(this, null, 
-            BluetoothAdapter.getDefaultAdapter(), getResources());
-        handler = new Handler();   
+        BTCommunicator mNXT = new BTCommunicator(this, null,
+                BluetoothAdapter.getDefaultAdapter(), getResources());
+        handler = new Handler();
         // Create and launch the upload thread
         uploadThread = new UploadThread(this, getResources());
         uploadThread.setBluetoothCommunicator(mNXT);
@@ -99,20 +93,21 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
         }
     }
 
-    /** 
-     * Called when the activity is destroyed. 
+    /**
+     * Called when the activity is destroyed.
      */
     @Override
-	protected void onDestroy() {
-		super.onDestroy();
-				
-		// request the uploadthread to stop
-		uploadThread.requestStop();	
+    protected void onDestroy() {
+        super.onDestroy();
+
+        // request the uploadthread to stop
+        uploadThread.requestStop();
     }
 
     /**
-     * Asks if bluetooth was switched on during the runtime of the app. For saving 
+     * Asks if bluetooth was switched on during the runtime of the app. For saving
      * battery we switch it off when the app is terminated.
+     *
      * @return true, when bluetooth was switched on by the app
      */
     public static boolean isBtOnByUs() {
@@ -121,6 +116,7 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
 
     /**
      * Sets a flag when bluetooth was switched on durin runtime
+     *
      * @param btOnByUs true, when bluetooth was switched on by the app
      */
     public static void setBtOnByUs(boolean btOnByUs) {
@@ -128,7 +124,7 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
     }
 
     /**
-     * @return true, when currently pairing 
+     * @return true, when currently pairing
      */
     @Override
     public boolean isPairing() {
@@ -136,26 +132,16 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
     }
 
     /**
-     * Displays a message as a toast
-     */        
-    public void showToast(String message) {
-        Toast toast = Toast.makeText(this, message, Toast.LENGTH_SHORT);
-        toast.show();
-        return;
-    }
-
-    /**
      * Displays a message from resID as a toast
-     */        
+     */
     public void showToast(int resID) {
         Toast toast = Toast.makeText(this, resID, Toast.LENGTH_SHORT);
         toast.show();
-        return;
     }
 
     /**
      * Displays resp. updates a progress dialog
-     */        
+     */
     public void showProgressDialog(String message, int maxProgress, int currentProgress) {
         boolean initialized = false;
         if (progressDialog == null) {
@@ -167,13 +153,13 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
         }
         progressDialog.setMax(maxProgress);
         progressDialog.setProgress(currentProgress);
-        if (initialized) 
+        if (initialized)
             progressDialog.show();
     }
 
     /**
      * Displays resp. updates a progress dialog
-     */        
+     */
     public void showProgressDialog(String message) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
@@ -185,17 +171,17 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
 
     /**
      * Dismisses an existing progress dialog
-     */        
+     */
     public void dismissProgressDialog() {
         if (progressDialog != null) {
             progressDialog.dismiss();
             progressDialog = null;
         }
     }
-            
+
     /**
      * Initializes the values on the main screen
-     */    
+     */
     private void initLayout() {
         initNXTButton();
         initFileButton();
@@ -204,31 +190,23 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
 
     /**
      * Initializes the "SELECT NXT" button
-     */        
+     */
     private void initNXTButton() {
-        Button fileButton = (Button) findViewById(R.id.nxt_button);
-        fileButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                selectNXT();
-            }
-        }); 
+        Button fileButton = findViewById(R.id.nxt_button);
+        fileButton.setOnClickListener(v -> selectNXT());
     }
 
     /**
      * Initializes the "SELECT FILE" button
-     */        
+     */
     private void initFileButton() {
-        Button fileButton = (Button) findViewById(R.id.file_button);
-        fileButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                showFileDialog();
-            }
-        }); 
+        Button fileButton = findViewById(R.id.file_button);
+        fileButton.setOnClickListener(v -> showFileDialog());
     }
 
     /**
      * Starts the NXT selection activity
-     */            
+     */
     private void selectNXT() {
         Intent serverIntent = new Intent(this, DeviceListActivity.class);
         startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
@@ -236,11 +214,11 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
 
     /**
      * Shows the file dialog
-     */            
+     */
     private void showFileDialog() {
-        UploaderFileDialog fileDialog = 
-            new UploaderFileDialog(this, this, robotType.intValue());
-        if (fileDialog.refreshFileList(preinstalledFilesString) == 0) 
+        UploaderFileDialog fileDialog =
+                new UploaderFileDialog(this, this, robotType);
+        if (fileDialog.refreshFileList(preinstalledFilesString) == 0)
             showToast(R.string.uul_no_files);
         else {
             runningDialog = DIALOG_FILE;
@@ -248,7 +226,7 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
         }
     }
 
-    /* 
+    /*
      * This is the method for returning values of dialogs
      * @param the selected text
      */
@@ -257,12 +235,12 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
         TextView textView;
         switch (runningDialog) {
             case DIALOG_NXT:
-                textView = (TextView) findViewById(R.id.nxt_name);
+                textView = findViewById(R.id.nxt_name);
                 textView.setText(text);
                 break;
 
             case DIALOG_FILE:
-                textView = (TextView) findViewById(R.id.uul_file_name);
+                textView = findViewById(R.id.uul_file_name);
                 textView.setText(text);
                 break;
         }
@@ -270,52 +248,48 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
 
     /**
      * Initializes the "UPLOAD" button
-     */        
+     */
     private void initUploadButton() {
-        Button uploadButton = (Button) findViewById(R.id.upload_button);
-        uploadButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {                
-                TextView nxtTextView = (TextView) findViewById(R.id.nxt_name);
-                String macAddress = nxtTextView.getText().toString();
-                if (macAddress.compareTo("") == 0) {
-                    showToast(R.string.uul_please_select_nxt);
-                    return;
-                }
-                macAddress = macAddress.substring(macAddress.lastIndexOf('-')+1);
-                TextView uulTextView = (TextView) findViewById(R.id.uul_file_name);
-                String fileName = uulTextView.getText().toString();
-                if (fileName.compareTo("") == 0) {
-                    showToast(R.string.uul_please_select_file);
-                    return;
-                }
-                uploadThread.enqueueUpload(macAddress, fileName); 
+        Button uploadButton = findViewById(R.id.upload_button);
+        uploadButton.setOnClickListener(v -> {
+            TextView nxtTextView = findViewById(R.id.nxt_name);
+            String macAddress = nxtTextView.getText().toString();
+            if (macAddress.compareTo("") == 0) {
+                showToast(R.string.uul_please_select_nxt);
+                return;
             }
-        }); 
+            macAddress = macAddress.substring(macAddress.lastIndexOf('-') + 1);
+            TextView uulTextView = findViewById(R.id.uul_file_name);
+            String fileName = uulTextView.getText().toString();
+            if (fileName.compareTo("") == 0) {
+                showToast(R.string.uul_please_select_file);
+                return;
+            }
+            uploadThread.enqueueUpload(macAddress, fileName);
+        });
     }
 
     /**
-     * This will be called by the UploadThread to signal an update of the 
-     * current status. 
+     * This will be called by the UploadThread to signal an update of the
+     * current status.
+     *
      * @param status The current state of the UploadThread
-     */        
-	@Override
-	public void handleUploadThreadUpdate(final int status) {
-		handler.post(new Runnable() {
-			@Override
-			public void run() {
-                if (status != uploadStatus) {
-                    dismissProgressDialog();
-                    uploadStatus = status;
-                }
-                showUploadStatus();
-			}
-		});
-	}
+     */
+    @Override
+    public void handleUploadThreadUpdate(final int status) {
+        handler.post(() -> {
+            if (status != uploadStatus) {
+                dismissProgressDialog();
+                uploadStatus = status;
+            }
+            showUploadStatus();
+        });
+    }
 
     /**
-     * Shows the current status of the uploader either in 
+     * Shows the current status of the uploader either in
      * a progress bar or in toast in case of an error.
-     */        
+     */
     private void showUploadStatus() {
 
         switch (uploadStatus) {
@@ -323,9 +297,9 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
                 showProgressDialog(getResources().getString(R.string.uul_connecting));
                 break;
             case UploadThread.UPLOADING:
-                showProgressDialog(getResources().getString(R.string.uul_uploading), 
-                    uploadThread.getFileLength(), 
-                    uploadThread.getBytesUploaded());
+                showProgressDialog(getResources().getString(R.string.uul_uploading),
+                        uploadThread.getFileLength(),
+                        uploadThread.getBytesUploaded());
                 break;
             default:
                 dismissProgressDialog();
@@ -358,20 +332,17 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
     /**
      * Shows an error dialog when there's an error regarding
      * bluettooth transfer.
-     */        
+     */
     private void showBTErrorDialog() {
-        if (btErrorPending == false) {
+        if (!btErrorPending) {
             btErrorPending = true;
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getResources().getString(R.string.bt_error_dialog_title))
-            .setMessage(getResources().getString(R.string.bt_error_dialog_message)).setCancelable(false)
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    btErrorPending = false;
-                    dialog.cancel();
-                }
-            });
+                    .setMessage(getResources().getString(R.string.bt_error_dialog_message)).setCancelable(false)
+                    .setPositiveButton("OK", (dialog, id) -> {
+                        btErrorPending = false;
+                        dialog.cancel();
+                    });
             builder.create().show();
         }
     }
@@ -385,7 +356,7 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
                     // Get the device infos
                     String infos = data.getExtras().getString(DeviceListActivity.DEVICE_NAME_AND_ADDRESS);
                     pairing = data.getExtras().getBoolean(DeviceListActivity.PAIRING);
-                    TextView textView = (TextView) findViewById(R.id.nxt_name);
+                    TextView textView = findViewById(R.id.nxt_name);
                     textView.setText(infos);
                 }
                 break;
@@ -402,7 +373,7 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
                         break;
                 }
                 break;
-        }                
+        }
     }
 
 }

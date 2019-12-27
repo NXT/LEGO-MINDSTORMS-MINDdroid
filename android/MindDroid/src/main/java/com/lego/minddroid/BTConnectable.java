@@ -1,4 +1,4 @@
-/**
+/*
  *   Copyright 2010, 2011, 2012 Guenther Hoelzl
  *
  *   This file is part of MINDdroid.
@@ -24,6 +24,6 @@ public interface BTConnectable {
     /**
      * @return true, when currently pairing 
      */
-    public boolean isPairing();
+    boolean isPairing();
 
 }

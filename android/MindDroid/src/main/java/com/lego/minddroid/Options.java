@@ -33,7 +33,7 @@ public class Options {
     private String mSelectionMessage;
     private SplashMenu splashMenu;
 
-    public Options(Activity myActivity) {
+    Options(Activity myActivity) {
         this.splashMenu = (SplashMenu) myActivity;
         mDialog = new Dialog(myActivity);
         mDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
@@ -55,6 +55,19 @@ public class Options {
             robotTypeShooterbot.setChecked(true);
         }
 
+        // Perform action on clicks
+        OnClickListener radio_listener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Perform action on clicks
+                RadioButton rb = (RadioButton) v;
+                rb.setChecked(true);
+                splashMenu.setRobotType(rb.getId());
+                Toast.makeText(mDialog.getContext(), mSelectionMessage + " " +
+                        rb.getText(), Toast.LENGTH_SHORT).show();
+                mDialog.dismiss();
+            }
+        };
         robotTypeShooterbot.setOnClickListener(radio_listener);
         robotTypeTribot.setOnClickListener(radio_listener);
         robotTypeRobogator.setOnClickListener(radio_listener);
@@ -64,18 +77,5 @@ public class Options {
     public void show() {
         mDialog.show();
     }
-
-    private OnClickListener radio_listener = new OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            // Perform action on clicks
-            RadioButton rb = (RadioButton) v;
-            rb.setChecked(true);
-            splashMenu.setRobotType(rb.getId());
-            Toast.makeText(mDialog.getContext(), mSelectionMessage + " " +
-                    rb.getText(), Toast.LENGTH_SHORT).show();
-            mDialog.dismiss();
-        }
-    };
 
 }
