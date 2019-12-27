@@ -106,7 +106,7 @@ public class SplashMenuView extends View {
 		if (event.getAction() == MotionEvent.ACTION_DOWN) {
 
 			if (event.getY() > tutorialButtonYStart && event.getY() <= tutorialButtonYStart + ic_splash_tutorial.getHeight()) {
-				Tutorial tutorial = new Tutorial(mScreenWidth, mScreenWidth);
+				Tutorial tutorial = new Tutorial();
 				tutorial.show(splashMenuActivity);
 			} else if (event.getY() > startButtonYStart && event.getY() <= startButtonYStart + ic_splash_start.getHeight()) {
 				Intent playGame = new Intent(splashMenuActivity.getBaseContext(), MINDdroid.class);
