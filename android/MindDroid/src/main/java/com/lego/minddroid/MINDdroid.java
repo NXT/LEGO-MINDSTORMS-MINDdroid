@@ -63,7 +63,6 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
     private Handler btcHandler;
     private Menu myMenu;
     private GameView mView;
-    private Activity thisActivity;
     private boolean btErrorPending = false;
     private boolean pairing;
     private static boolean btOnByUs = false;
@@ -111,16 +110,10 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
         return pairing;
     }
 
-    /**
-     * Called when the activity is first created. Inititializes all the
-     * graphical views.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        thisActivity = this;
-        mRobotType = this.getIntent().getIntExtra(SplashMenu.MINDDROID_ROBOT_TYPE,
-                R.id.robot_type_shooterbot);
+        mRobotType = this.getIntent().getIntExtra(SplashMenu.MINDDROID_ROBOT_TYPE, R.id.robot_type_shooterbot);
         setUpByType();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -245,7 +238,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
 
         if (mRobotType != R.id.robot_type_lejos) {
             if (buttonMode == ACTION_BUTTON_SHORT) {
-                // Wolfgang Amadeus Mozart 
+                // Wolfgang Amadeus Mozart
                 // "Zauberfloete - Der Vogelfaenger bin ich ja"
                 sendBTCmessage(BTCommunicator.NO_DELAY,
                         BTCommunicator.DO_BEEP, 392, 100);
@@ -455,7 +448,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
     }
 
     @Override
-    public void onSaveInstanceState(Bundle icicle) {
+    public void onSaveInstanceState(@NonNull Bundle icicle) {
         super.onSaveInstanceState(icicle);
         mView.unregisterListener();
     }
@@ -533,9 +526,8 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
 
     /**
      * Displays a message as a toast
+     *  @param textToShow the message
      *
-     * @param textToShow the message
-     * @param length     the length of the toast to display
      */
     private void showToast(String textToShow, int length) {
         reusableToast.setText(textToShow);
@@ -597,7 +589,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
                     if (!btErrorPending) {
                         btErrorPending = true;
                         // inform the user of the error with an AlertDialog
-                        AlertDialog.Builder builder = new AlertDialog.Builder(thisActivity);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MINDdroid.this);
                         builder.setTitle(getResources().getString(R.string.bt_error_dialog_title))
                                 .setMessage(getResources().getString(R.string.bt_error_dialog_message)).setCancelable(false)
                                 .setPositiveButton("OK", (dialog, id) -> {
@@ -643,7 +635,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
                             programList.add(fileName);
                         }
 
-                        // find next entry with appropriate handle, 
+                        // find next entry with appropriate handle,
                         // limit number of programs (in case of error (endless loop))
                         if (programList.size() <= MAX_PROGRAMS)
                             sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES,
@@ -663,7 +655,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
                 case BTCommunicator.SAY_TEXT:
                     if (myBTCommunicator != null) {
                         byte[] textMessage = myBTCommunicator.getReturnMessage();
-                        // evaluate control byte 
+                        // evaluate control byte
                         byte controlByte = textMessage[2];
                         // BIT7: Language
                         if ((controlByte & 0x80) == 0x00)
@@ -675,7 +667,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
                             mTts.setPitch(1.0f);
                         else
                             mTts.setPitch(0.75f);
-                        // BIT0-3: Speech Rate    
+                        // BIT0-3: Speech Rate
                         switch (controlByte & 0x0f) {
                             case 0x01:
                                 mTts.setSpeechRate(1.5f);
@@ -760,7 +752,7 @@ public class MINDdroid extends Activity implements BTConnectable, TextToSpeech.O
 
                 break;
 
-            // will not be called now, since the check intent is not generated                
+            // will not be called now, since the check intent is not generated
             case TTS_CHECK_CODE:
                 if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {
                     // success, create the TTS instance
