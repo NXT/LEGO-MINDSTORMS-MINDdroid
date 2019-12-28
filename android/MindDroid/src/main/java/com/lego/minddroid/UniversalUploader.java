@@ -331,7 +331,7 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
 
     /**
      * Shows an error dialog when there's an error regarding
-     * bluettooth transfer.
+     * bluetooth transfer.
      */
     private void showBTErrorDialog() {
         if (!btErrorPending) {
@@ -353,11 +353,11 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
             case REQUEST_CONNECT_DEVICE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
-                    // Get the device infos
-                    String infos = data.getExtras().getString(DeviceListActivity.DEVICE_NAME_AND_ADDRESS);
+                    // Get the device info
+                    String info = data.getExtras().getString(DeviceListActivity.DEVICE_NAME_AND_ADDRESS);
                     pairing = data.getExtras().getBoolean(DeviceListActivity.PAIRING);
                     TextView textView = findViewById(R.id.nxt_name);
-                    textView.setText(infos);
+                    textView.setText(info);
                 }
                 break;
 

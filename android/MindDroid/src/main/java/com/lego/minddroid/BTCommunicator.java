@@ -32,6 +32,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * This class is for talking to a LEGO NXT robot via bluetooth.
@@ -122,7 +123,8 @@ public class BTCommunicator extends Thread {
         try {        
             createNXTconnection();
         }
-        catch (IOException e) { }
+        catch (IOException e) {
+        }
 
         while (connected) {
             try {
@@ -419,7 +421,7 @@ public class BTCommunicator extends Thread {
     }
 
     // receive messages from the UI
-    final Handler myHandler = new Handler() {
+    private final Handler myHandler = new Handler() {
         @Override
         public void handleMessage(Message myMessage) {
 
