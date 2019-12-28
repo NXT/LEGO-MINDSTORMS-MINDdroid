@@ -355,6 +355,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        tts.shutdown()
         destroyBTCommunicator()
     }
 
