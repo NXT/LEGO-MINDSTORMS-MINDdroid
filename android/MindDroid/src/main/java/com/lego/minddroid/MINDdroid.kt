@@ -35,6 +35,8 @@ import android.view.MenuItem
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.coroutineScope
+import info.hannes.github.AppUpdateHelper
 import java.io.IOException
 import java.util.*
 
@@ -72,12 +74,12 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     private var programList: MutableList<String>? = null
     private var programToStart: String? = null
     // experimental TTS support
-    private var mTts: TextToSpeech? = null
+    private lateinit var tts: TextToSpeech
     private val TTS_CHECK_CODE = 9991
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mRobotType = this.intent.getIntExtra(SplashMenu.MINDDROID_ROBOT_TYPE, R.id.robot_type_shooterbot)
+        mRobotType = intent.getIntExtra(SplashMenu.MINDDROID_ROBOT_TYPE, R.id.robot_type_shooterbot)
         setUpByType()
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         val mySound = StartSound(this)
@@ -87,7 +89,9 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
         mView!!.isFocusable = true
         setContentView(mView)
         // experimental TTS support for the lejosMINDdroid project
-        mTts = TextToSpeech(this, this)
+        tts = TextToSpeech(this, this)
+
+        AppUpdateHelper.checkForNewVersion(this, BuildConfig.GIT_USER, BuildConfig.GIT_REPOSITORY, lifecycle.coroutineScope)
     }
 
     /**
@@ -530,9 +534,9 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                     startRXEprogram(returnMessage[2])
                 }
                 BTCommunicator.SAY_TEXT -> if (myBTCommunicator != null) {
-                    val resultText = ByteHelper.handleResult(mTts, myBTCommunicator!!.returnMessage)
+                    val resultText = ByteHelper.handleResult(tts, myBTCommunicator!!.returnMessage)
                     showToast(resultText)
-                    mTts!!.speak(resultText, TextToSpeech.QUEUE_FLUSH, null)
+                    tts.speak(resultText, TextToSpeech.QUEUE_FLUSH, null,  null)
                 }
                 BTCommunicator.VIBRATE_PHONE -> if (myBTCommunicator != null) {
                     val vibrateMessage = myBTCommunicator!!.returnMessage
@@ -572,7 +576,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                 }
             }
             TTS_CHECK_CODE -> if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) { // success, create the TTS instance
-                mTts = TextToSpeech(this, this)
+                tts = TextToSpeech(this, this)
             } else { // missing data, install it
                 val installIntent = Intent()
                 installIntent.action = TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA
@@ -587,7 +591,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     override fun onInit(status: Int) { // status can be either TextToSpeech.SUCCESS or TextToSpeech.ERROR.
         if (status == TextToSpeech.SUCCESS) { // Set preferred language to US english.
 // Note that a language may not be available, and the result will indicate this.
-            val result = mTts!!.setLanguage(Locale.US)
+            val result = tts.setLanguage(Locale.US)
             // Try this someday for some interesting results.
             if (result == TextToSpeech.LANG_MISSING_DATA ||
                     result == TextToSpeech.LANG_NOT_SUPPORTED) { // Language data is missing or the language is not supported.
