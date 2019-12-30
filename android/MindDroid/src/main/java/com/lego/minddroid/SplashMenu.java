@@ -18,7 +18,6 @@
 
 package com.lego.minddroid;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -31,7 +30,11 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 
-public class SplashMenu extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
+
+import info.hannes.github.AppUpdateHelper;
+
+public class SplashMenu extends AppCompatActivity {
 
     public static final int MENU_OPTIONS = Menu.FIRST;
     public static final int MENU_UPLOAD = Menu.FIRST + 1;
@@ -57,6 +60,8 @@ public class SplashMenu extends Activity {
         mRobotType = lookupRobotType();
         View splashMenuView = new SplashMenuView(getApplicationContext(), this);
         setContentView(splashMenuView);
+
+        AppUpdateHelper.INSTANCE.checkForNewVersion(this, BuildConfig.GIT_USER, BuildConfig.GIT_REPOSITORY);
     }
 
     @Override

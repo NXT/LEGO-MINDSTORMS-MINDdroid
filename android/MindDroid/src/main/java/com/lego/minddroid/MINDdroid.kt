@@ -88,8 +88,6 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
         setContentView(mView)
         // experimental TTS support for the lejosMINDdroid project
         tts = TextToSpeech(this, this)
-
-        AppUpdateHelper.checkForNewVersion(this, BuildConfig.GIT_USER, BuildConfig.GIT_REPOSITORY, lifecycle.coroutineScope)
     }
 
     /**
