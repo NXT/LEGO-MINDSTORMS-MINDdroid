@@ -47,10 +47,7 @@ public class SplashMenu extends Activity {
             MINDdroid.setBtOnByUs(false);
             UniversalUploader.setBtOnByUs(false);
         }
-        splashMenu.finish();
     }
-
-    private static Activity splashMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +57,6 @@ public class SplashMenu extends Activity {
         mRobotType = lookupRobotType();
         View splashMenuView = new SplashMenuView(getApplicationContext(), this);
         setContentView(splashMenuView);
-        splashMenu = this;
     }
 
     @Override
@@ -123,13 +119,15 @@ public class SplashMenu extends Activity {
 
     private void showAbout() {
         Dialog dialog = new Dialog(this);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.aboutbox);
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.setContentView(R.layout.aboutbox);
 
-        Button buttonOK = dialog.findViewById(R.id.AboutOKbutton);
-        buttonOK.setOnClickListener(v -> dialog.dismiss());
+            Button buttonOK = dialog.findViewById(R.id.AboutOKbutton);
+            buttonOK.setOnClickListener(v -> dialog.dismiss());
 
-        dialog.show();
+            dialog.show();
+        }
     }
 
     public void setRobotType(int mRobotType) {

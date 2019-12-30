@@ -426,6 +426,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                 finish()
                 if (btOnByUs) showToast(R.string.bt_off_message)
                 SplashMenu.quitApplication()
+                finish()
                 return true
             }
         }
@@ -535,7 +536,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                 BTCommunicator.SAY_TEXT -> if (myBTCommunicator != null) {
                     val resultText = ByteHelper.handleResult(tts, myBTCommunicator!!.returnMessage)
                     showToast(resultText)
-                    tts.speak(resultText, TextToSpeech.QUEUE_FLUSH, null,  null)
+                    tts.speak(resultText, TextToSpeech.QUEUE_FLUSH, null, null)
                 }
                 BTCommunicator.VIBRATE_PHONE -> if (myBTCommunicator != null) {
                     val vibrateMessage = myBTCommunicator!!.returnMessage
