@@ -2,9 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-def gitRepoUser = 'GIT_USER'
-def gitRepoName = 'GIT_REPOSITORY'
-
 android {
     compileSdkVersion sdkVersion
 
@@ -14,8 +11,8 @@ android {
         versionCode getGitCommitCount()
         versionName getVersion()
 
-        buildConfigField "String", gitRepoUser, "\"" + getGitUser() + "\""
-        buildConfigField "String", gitRepoName, "\"" + getGitRepository() + "\""
+        buildConfigField "String", 'GIT_USER', "\"" + getGitUser() + "\""
+        buildConfigField "String", 'GIT_REPOSITORY', "\"" + getGitRepository() + "\""
     }
 
     signingConfigs {
@@ -63,11 +60,6 @@ static def getLatestGitHash() {
     return process.text.toString().trim()
 }
 
-static def getGitCommitCount() {
-    def process = "git rev-list HEAD --count".execute()
-    return process.text.toInteger()
-}
-
 static def getVersion() {
     return getTag() + "-" + getLatestGitHash()
 }
@@ -81,10 +73,12 @@ dependencies {
     implementation "androidx.annotation:annotation:1.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'com.github.hannesa2:githubAppUpdate:0.2'
+    implementation 'com.github.hannesa2:githubAppUpdate:0.3'
+}
 
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.2-1.3.60"
-    implementation "androidx.lifecycle:lifecycle-runtime:2.2.0-rc03"
+static def getGitCommitCount() {
+    def process = "git rev-list HEAD --count".execute()
+    return process.text.toInteger()
 }
 
 static def getGitOriginRemote() {

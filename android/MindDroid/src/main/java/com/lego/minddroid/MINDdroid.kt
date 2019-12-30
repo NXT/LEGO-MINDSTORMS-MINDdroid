@@ -35,7 +35,6 @@ import android.view.MenuItem
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.coroutineScope
 import info.hannes.github.AppUpdateHelper
 import java.io.IOException
 import java.util.*
