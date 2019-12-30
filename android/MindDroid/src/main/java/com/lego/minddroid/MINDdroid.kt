@@ -74,7 +74,6 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     private var programToStart: String? = null
     // experimental TTS support
     private lateinit var tts: TextToSpeech
-    private val TTS_CHECK_CODE = 9991
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -603,6 +602,8 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     }
 
     companion object {
+
+        private const val TTS_CHECK_CODE = 9991
         const val UPDATE_TIME = 200
         const val MENU_TOGGLE_CONNECT = Menu.FIRST
         const val MENU_START_SW = Menu.FIRST + 1
