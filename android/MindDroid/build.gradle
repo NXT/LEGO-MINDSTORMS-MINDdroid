@@ -73,7 +73,7 @@ dependencies {
     implementation "androidx.annotation:annotation:1.1.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation 'com.github.hannesa2:githubAppUpdate:0.3'
+    implementation 'com.github.hannesa2:githubAppUpdate:0.5'
 }
 
 static def getGitCommitCount() {

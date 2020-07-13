@@ -61,7 +61,7 @@ public class SplashMenu extends AppCompatActivity {
         View splashMenuView = new SplashMenuView(getApplicationContext(), this);
         setContentView(splashMenuView);
 
-        AppUpdateHelper.INSTANCE.checkForNewVersion(this, BuildConfig.GIT_USER, BuildConfig.GIT_REPOSITORY);
+        AppUpdateHelper.INSTANCE.checkForNewVersion(this, BuildConfig.GIT_USER, BuildConfig.GIT_REPOSITORY, BuildConfig.VERSION_NAME);
     }
 
     @Override
