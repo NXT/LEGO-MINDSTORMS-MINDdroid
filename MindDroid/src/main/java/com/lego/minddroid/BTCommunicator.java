@@ -31,8 +31,8 @@ import android.bluetooth.BluetoothSocket;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 
 /**
  * This class is for talking to a LEGO NXT robot via bluetooth.
@@ -74,16 +74,16 @@ public class BTCommunicator extends Thread {
     // this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
     public static final String OUI_LEGO = "00:16:53";
 
-    private Resources mResources;
-    private BluetoothAdapter btAdapter;
+    private final Resources mResources;
+    private final BluetoothAdapter btAdapter;
     private BluetoothSocket nxtBTsocket = null;
     private OutputStream nxtOutputStream = null;
     private InputStream nxtInputStream = null;
     private boolean connected = false;
 
-    private Handler uiHandler;
+    private final Handler uiHandler;
     private String mMACaddress;
-    private BTConnectable myOwner;
+    private final BTConnectable myOwner;
 
     private byte[] returnMessage;
 
@@ -123,7 +123,7 @@ public class BTCommunicator extends Thread {
         try {        
             createNXTconnection();
         }
-        catch (IOException e) {
+        catch (IOException ignored) {
         }
 
         while (connected) {
@@ -153,7 +153,7 @@ public class BTCommunicator extends Thread {
     public void createNXTconnection() throws IOException {
         try {
             BluetoothSocket nxtBTSocketTemporary;
-            BluetoothDevice nxtDevice = null;
+            BluetoothDevice nxtDevice;
             nxtDevice = btAdapter.getRemoteDevice(mMACaddress);
             if (nxtDevice == null) {
                 if (uiHandler == null)
@@ -181,8 +181,8 @@ public class BTCommunicator extends Thread {
 
                 // try another method for connection, this should work on the HTC desire, credits to Michael Biermann
                 try {
-                    Method mMethod = nxtDevice.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
-                    nxtBTSocketTemporary = (BluetoothSocket) mMethod.invoke(nxtDevice, Integer.valueOf(1));            
+                    Method mMethod = nxtDevice.getClass().getMethod("createRfcommSocket", int.class);
+                    nxtBTSocketTemporary = (BluetoothSocket) mMethod.invoke(nxtDevice, 1);
                     nxtBTSocketTemporary.connect();
                 }
                 catch (Exception e1){
@@ -396,8 +396,7 @@ public class BTCommunicator extends Thread {
     private void waitSomeTime(int millis) {
         try {
             Thread.sleep(millis);
-
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
     }
 
@@ -421,7 +420,7 @@ public class BTCommunicator extends Thread {
     }
 
     // receive messages from the UI
-    private final Handler myHandler = new Handler() {
+    private final Handler myHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message myMessage) {
 
@@ -472,7 +471,7 @@ public class BTCommunicator extends Thread {
                     try {
                         destroyNXTconnection();
                     }
-                    catch (IOException e) { }
+                    catch (IOException ignored) { }
                     break;
             }
         }
