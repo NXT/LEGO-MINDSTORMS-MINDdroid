@@ -1,0 +1,46 @@
+buildscript {
+    ext.kotlin_version = '1.5.31'
+
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.0.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+
+}
+
+ext {
+    revision = getGitCommitHash()
+    versionRevision = getGitCommitCount()
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+    }
+
+}
+
+private static def getGitCommitCount() {
+    try {
+        return 'git rev-list --first-parent --count HEAD'.execute().text.trim() as Integer
+    }
+    catch (ignored) {
+        return 0
+    }
+}
+
+private static def getGitCommitHash() {
+    try {
+        return 'git rev-parse --short HEAD'.execute().text.trim()
+    }
+    catch (ignored) {
+        return null
+    }
+}
