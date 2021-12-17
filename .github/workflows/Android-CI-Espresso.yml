@@ -5,12 +5,10 @@ on:
     branches:
       - master
   pull_request:
-    branches:
-      - master
 
 jobs:
   buildTest:
-    name: Build & Test JDK ${{ matrix.java_version }}
+    name: Build & Test
     runs-on: macOS-latest
     steps:
       - name: Checkout
@@ -20,7 +18,7 @@ jobs:
       - name: Install JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: "adopt"
           java-version: 11
       - name: Install Android SDK
         uses: malinskiy/action-android/install-sdk@release/0.1.2
@@ -39,14 +37,14 @@ jobs:
       - name: Install JDK
         uses: actions/setup-java@v2
         with:
-          distribution: 'adopt'
+          distribution: "adopt"
           java-version: 11
       - name: Install Android SDK
-        uses: malinskiy/action-android/install-sdk@release/0.0.7
+        uses: malinskiy/action-android/install-sdk@release/0.1.2
       - name: Code checks
-        run: ./gradlew check --stacktrace
+        run: ./gradlew check
       - name: Archive Lint report
-        uses: actions/upload-artifact@v2.0.1
+        uses: actions/upload-artifact@v2.2.4
         if: ${{ always() }}
         with:
           name: LEGO-Lint-report
