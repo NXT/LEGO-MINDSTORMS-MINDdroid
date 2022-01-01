@@ -493,7 +493,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     /**
      * Receive messages from the BTCommunicator
      */
-    val myHandler: Handler = object : Handler() {
+    private val myHandler: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(myMessage: Message) {
             when (myMessage.data.getInt("message")) {
                 BTCommunicator.DISPLAY_TOAST -> showToast(myMessage.data.getString("toastText"))

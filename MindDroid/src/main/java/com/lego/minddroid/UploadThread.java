@@ -36,7 +36,7 @@ import android.os.Looper;
  */
 public final class UploadThread extends Thread {
 
-    // errorcodes during the task
+    // error codes during the task
     static final int NO_ERROR = 0;
     static final int OPEN_BT_ERROR = 1;
     static final int CLOSE_BT_ERROR = 2;
@@ -53,9 +53,9 @@ public final class UploadThread extends Thread {
 
     private Handler handler;
 
-    private UploadThreadListener listener;
+    private final UploadThreadListener listener;
 
-    private Resources resources;
+    private final Resources resources;
 
     private BTCommunicator mBTCommunicator;
 
