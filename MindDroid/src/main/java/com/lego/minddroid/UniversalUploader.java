@@ -19,16 +19,21 @@
 
 package com.lego.minddroid;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
 
 /**
  * This class is for uploading programs to the NXT brick via Bluetooth.
@@ -40,7 +45,7 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
     private static final int DIALOG_FILE = 1;
 
     // preinstalled modules on res/raw directoy
-    private static String[] preinstalledFilesString = new String[]
+    private static final String[] preinstalledFilesString = new String[]
             {"AlphaRex.nxj",
                     "MINDGameZ.nxj",
                     "Block.rxe",
@@ -74,11 +79,11 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
         // get robotType from intent
         robotType = (Integer) getIntent().getSerializableExtra("robotType");
         // Create objects for communication
-        BTCommunicator mNXT = new BTCommunicator(this, null,
+        BTCommunicator mNXT = new BTCommunicator(this, this, null,
                 BluetoothAdapter.getDefaultAdapter(), getResources());
         handler = new Handler();
         // Create and launch the upload thread
-        uploadThread = new UploadThread(this, getResources());
+        uploadThread = new UploadThread(this, this, getResources());
         uploadThread.setBluetoothCommunicator(mNXT);
         uploadThread.start();
     }
@@ -89,7 +94,42 @@ public class UniversalUploader extends Activity implements UploadThreadListener,
 
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled()) {
             Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, BTCommunicator.RESULT_BLUETOOTH_CONNECT);  // Comment 26
+                } else
+                    Toast.makeText(this, "Issue with BLUETOOTH_CONNECT", Toast.LENGTH_LONG).show();
+            } else
+                startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case BTCommunicator.RESULT_BLUETOOTH_CONNECT: // Allowed was selected so Permission granted
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Bluetooth permission granted", Toast.LENGTH_LONG).show();
+                } else if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(permissions[0])) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN xxx", Toast.LENGTH_LONG).show();
+                } else {
+                    // User selected Deny Dialog to EXIT App ==> OR <== RETRY to have a second chance to Allow Permissions
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_DENIED) {
+                        Toast.makeText(this, "Bluetooth permission NOT granted", Toast.LENGTH_LONG).show();
+                    }
+                }
+            case BTCommunicator.RESULT_BLUETOOTH_SCAN: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN granted", Toast.LENGTH_LONG).show();
+                } else if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(permissions[0])) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN granted", Toast.LENGTH_LONG).show();
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_DENIED) {
+                        Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN NOT granted", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+            }
         }
     }
 

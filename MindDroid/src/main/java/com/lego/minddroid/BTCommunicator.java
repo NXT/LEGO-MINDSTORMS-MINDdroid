@@ -15,7 +15,7 @@
  *
  *   You should have received a copy of the GNU General Public License
  *   along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
-**/
+ **/
 
 package com.lego.minddroid;
 
@@ -25,14 +25,21 @@ import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
+import android.Manifest;
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
 
 /**
  * This class is for talking to a LEGO NXT robot via bluetooth.
@@ -41,13 +48,17 @@ import android.util.Log;
  * by the owners, i.e. calling the send/recive methods by themselves.
  */
 public class BTCommunicator extends Thread {
+
+    public static final int RESULT_BLUETOOTH_CONNECT = 666;
+    public static final int RESULT_BLUETOOTH_SCAN = 667;
+
     public static final int MOTOR_A = 0;
     public static final int MOTOR_B = 1;
     public static final int MOTOR_C = 2;
     public static final int MOTOR_B_ACTION = 40;
     public static final int MOTOR_RESET = 10;
     public static final int DO_BEEP = 51;
-    public static final int DO_ACTION = 52;    
+    public static final int DO_ACTION = 52;
     public static final int READ_MOTOR_STATE = 60;
     public static final int GET_FIRMWARE_VERSION = 70;
     public static final int DISCONNECT = 99;
@@ -74,20 +85,22 @@ public class BTCommunicator extends Thread {
     // this is the only OUI registered by LEGO, see http://standards.ieee.org/regauth/oui/index.shtml
     public static final String OUI_LEGO = "00:16:53";
 
-    private Resources mResources;
-    private BluetoothAdapter btAdapter;
+    private final Resources mResources;
+    private final BluetoothAdapter btAdapter;
+    private final Activity activity;
     private BluetoothSocket nxtBTsocket = null;
     private OutputStream nxtOutputStream = null;
     private InputStream nxtInputStream = null;
     private boolean connected = false;
 
-    private Handler uiHandler;
+    private final Handler uiHandler;
     private String mMACaddress;
-    private BTConnectable myOwner;
+    private final BTConnectable myOwner;
 
     private byte[] returnMessage;
 
-    public BTCommunicator(BTConnectable myOwner, Handler uiHandler, BluetoothAdapter btAdapter, Resources resources) {
+    public BTCommunicator(Activity activity, BTConnectable myOwner, Handler uiHandler, BluetoothAdapter btAdapter, Resources resources) {
+        this.activity = activity;
         this.myOwner = myOwner;
         this.uiHandler = uiHandler;
         this.btAdapter = btAdapter;
@@ -108,7 +121,7 @@ public class BTCommunicator extends Thread {
 
     /**
      * @return The current status of the connection
-     */            
+     */
     public boolean isConnected() {
         return connected;
     }
@@ -120,17 +133,16 @@ public class BTCommunicator extends Thread {
     @Override
     public void run() {
 
-        try {        
-            createNXTconnection();
-        }
-        catch (IOException e) {
+        try {
+            createNXTconnection(activity);
+        } catch (IOException ignored) {
         }
 
         while (connected) {
             try {
                 returnMessage = receiveMessage();
                 if ((returnMessage.length >= 2) && ((returnMessage[0] == LCPMessage.REPLY_COMMAND) ||
-                    (returnMessage[0] == LCPMessage.DIRECT_COMMAND_NOREPLY)))
+                        (returnMessage[0] == LCPMessage.DIRECT_COMMAND_NOREPLY)))
                     dispatchMessage(returnMessage);
 
             } catch (IOException e) {
@@ -144,16 +156,17 @@ public class BTCommunicator extends Thread {
 
     /**
      * Create a bluetooth connection with SerialPortServiceClass_UUID
+     *
      * @see <a href=
-     *      "http://lejos.sourceforge.net/forum/viewtopic.php?t=1991&highlight=android"
-     *      />
+     * "http://lejos.sourceforge.net/forum/viewtopic.php?t=1991&highlight=android"
+     * />
      * On error the method either sends a message to it's owner or creates an exception in the
      * case of no message handler.
      */
-    public void createNXTconnection() throws IOException {
+    public void createNXTconnection(Activity activity) throws IOException {
         try {
             BluetoothSocket nxtBTSocketTemporary;
-            BluetoothDevice nxtDevice = null;
+            BluetoothDevice nxtDevice;
             nxtDevice = btAdapter.getRemoteDevice(mMACaddress);
             if (nxtDevice == null) {
                 if (uiHandler == null)
@@ -164,39 +177,44 @@ public class BTCommunicator extends Thread {
                     return;
                 }
             }
-            nxtBTSocketTemporary = nxtDevice.createRfcommSocketToServiceRecord(SERIAL_PORT_SERVICE_CLASS_UUID);
-            try {
-                nxtBTSocketTemporary.connect();
-            }
-            catch (IOException e) {  
-                if (myOwner.isPairing()) {
-                    if (uiHandler != null) {
-                        sendToast(mResources.getString(R.string.pairing_message));
-                        sendState(STATE_CONNECTERROR_PAIRING);
-                    }
-                    else
-                        throw e;
-                    return;
-                }
-
-                // try another method for connection, this should work on the HTC desire, credits to Michael Biermann
+            if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    activity.requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, BTCommunicator.RESULT_BLUETOOTH_CONNECT);  // Comment 26
+                } else
+                    Toast.makeText(activity, "Issue with bluetooth connection", Toast.LENGTH_LONG).show();
+                return;
+            } else {
+                nxtBTSocketTemporary = nxtDevice.createRfcommSocketToServiceRecord(SERIAL_PORT_SERVICE_CLASS_UUID);
                 try {
-                    Method mMethod = nxtDevice.getClass().getMethod("createRfcommSocket", new Class[] { int.class });
-                    nxtBTSocketTemporary = (BluetoothSocket) mMethod.invoke(nxtDevice, Integer.valueOf(1));            
                     nxtBTSocketTemporary.connect();
+                } catch (IOException e) {
+                    if (myOwner.isPairing()) {
+                        if (uiHandler != null) {
+                            sendToast(mResources.getString(R.string.pairing_message));
+                            sendState(STATE_CONNECTERROR_PAIRING);
+                        } else
+                            throw e;
+                        return;
+                    }
+
+                    // try another method for connection, this should work on the HTC desire, credits to Michael Biermann
+                    try {
+                        Method mMethod = nxtDevice.getClass().getMethod("createRfcommSocket", int.class);
+                        nxtBTSocketTemporary = (BluetoothSocket) mMethod.invoke(nxtDevice, Integer.valueOf(1));
+                        nxtBTSocketTemporary.connect();
+                    } catch (Exception e1) {
+                        if (uiHandler == null)
+                            throw new IOException();
+                        else
+                            sendState(STATE_CONNECTERROR);
+                        return;
+                    }
                 }
-                catch (Exception e1){
-                    if (uiHandler == null)
-                        throw new IOException();
-                    else
-                        sendState(STATE_CONNECTERROR);
-                    return;
-                }
+                nxtBTsocket = nxtBTSocketTemporary;
+                nxtInputStream = nxtBTsocket.getInputStream();
+                nxtOutputStream = nxtBTsocket.getOutputStream();
+                connected = true;
             }
-            nxtBTsocket = nxtBTSocketTemporary;
-            nxtInputStream = nxtBTsocket.getInputStream();
-            nxtOutputStream = nxtBTsocket.getOutputStream();
-            connected = true;
         } catch (IOException e) {
             if (uiHandler == null)
                 throw e;
@@ -237,6 +255,7 @@ public class BTCommunicator extends Thread {
 
     /**
      * Sends a message on the opened OutputStream
+     *
      * @param message, the message as a byte array
      */
     public void sendMessage(byte[] message) throws IOException {
@@ -248,12 +267,13 @@ public class BTCommunicator extends Thread {
         nxtOutputStream.write(messageLength);
         nxtOutputStream.write(messageLength >> 8);
         nxtOutputStream.write(message, 0, message.length);
-    }  
+    }
 
     /**
      * Receives a message on the opened InputStream
+     *
      * @return the message
-     */                
+     */
     public byte[] receiveMessage() throws IOException {
         if (nxtInputStream == null)
             throw new IOException();
@@ -263,11 +283,12 @@ public class BTCommunicator extends Thread {
         byte[] returnMessage = new byte[length];
         nxtInputStream.read(returnMessage);
         return returnMessage;
-    }    
+    }
 
     /**
-     * Sends a message on the opened OutputStream. In case of 
+     * Sends a message on the opened OutputStream. In case of
      * an error the state is sent to the handler.
+     *
      * @param message, the message as a byte array
      */
     private void sendMessageAndState(byte[] message) {
@@ -276,8 +297,7 @@ public class BTCommunicator extends Thread {
 
         try {
             sendMessage(message);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             sendState(STATE_SENDERROR);
         }
     }
@@ -309,25 +329,25 @@ public class BTCommunicator extends Thread {
                 }
 
                 break;
-                
+
             case LCPMessage.GET_CURRENT_PROGRAM_NAME:
 
                 if (message.length >= 23) {
                     sendState(PROGRAM_NAME);
                 }
-                
+
                 break;
-                
+
             case LCPMessage.SAY_TEXT:
-                
+
                 if (message.length == 22) {
                     sendState(SAY_TEXT);
                 }
-                
+
             case LCPMessage.VIBRATE_PHONE:
                 if (message.length == 3) {
                     sendState(VIBRATE_PHONE);
-                }                                
+                }
         }
     }
 
@@ -336,7 +356,7 @@ public class BTCommunicator extends Thread {
         sendMessageAndState(message);
         waitSomeTime(20);
     }
-    
+
     private void doAction(int actionNr) {
         byte[] message = LCPMessage.getActionMessage(actionNr);
         sendMessageAndState(message);
@@ -351,12 +371,12 @@ public class BTCommunicator extends Thread {
         byte[] message = LCPMessage.getStopProgramMessage();
         sendMessageAndState(message);
     }
-    
+
     private void getProgramName() {
         byte[] message = LCPMessage.getProgramNameMessage();
         sendMessageAndState(message);
     }
-    
+
     private void changeMotorSpeed(int motor, int speed) {
         if (speed > 100)
             speed = 100;
@@ -396,8 +416,7 @@ public class BTCommunicator extends Thread {
     private void waitSomeTime(int millis) {
         try {
             Thread.sleep(millis);
-
-        } catch (InterruptedException e) {
+        } catch (InterruptedException ignored) {
         }
     }
 
@@ -421,7 +440,7 @@ public class BTCommunicator extends Thread {
     }
 
     // receive messages from the UI
-    private final Handler myHandler = new Handler() {
+    private final Handler myHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message myMessage) {
 
@@ -447,7 +466,7 @@ public class BTCommunicator extends Thread {
                     break;
                 case GET_PROGRAM_NAME:
                     getProgramName();
-                    break;    
+                    break;
                 case DO_BEEP:
                     doBeep(myMessage.getData().getInt("value1"), myMessage.getData().getInt("value2"));
                     break;
@@ -471,8 +490,8 @@ public class BTCommunicator extends Thread {
                     waitSomeTime(500);
                     try {
                         destroyNXTconnection();
+                    } catch (IOException ignored) {
                     }
-                    catch (IOException e) { }
                     break;
             }
         }
