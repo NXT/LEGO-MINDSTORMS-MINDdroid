@@ -24,10 +24,7 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.os.Vibrator
+import android.os.*
 import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.OnInitListener
 import android.view.Menu
@@ -441,7 +438,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     /**
      * Receive messages from the BTCommunicator
      */
-    val myHandler: Handler = object : Handler() {
+    private val myHandler: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(myMessage: Message) {
             when (myMessage.data.getInt("message")) {
                 BTCommunicator.DISPLAY_TOAST -> showToast(myMessage.data.getString("toastText"))
