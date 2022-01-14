@@ -15,7 +15,7 @@
  *
  *   You should have received a copy of the GNU General Public License
  *   along with MINDdroid.  If not, see <http://www.gnu.org/licenses/>.
-**/
+ **/
 
 package com.lego.minddroid;
 
@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
+import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
@@ -35,7 +36,7 @@ import android.os.Looper;
  */
 public final class UploadThread extends Thread {
 
-    // errorcodes during the task
+    // error codes during the task
     static final int NO_ERROR = 0;
     static final int OPEN_BT_ERROR = 1;
     static final int CLOSE_BT_ERROR = 2;
@@ -48,12 +49,13 @@ public final class UploadThread extends Thread {
     static final int UPLOADING = 2;
 
     private static final int MAX_BUFFER_SIZE = 58;
+    private final Activity activity;
 
     private Handler handler;
 
-    private UploadThreadListener listener;
+    private final UploadThreadListener listener;
 
-    private Resources resources;
+    private final Resources resources;
 
     private BTCommunicator mBTCommunicator;
 
@@ -63,7 +65,8 @@ public final class UploadThread extends Thread {
 
     private int errorCode;
 
-    UploadThread(UploadThreadListener listener, Resources resources) {
+    UploadThread(Activity activity, UploadThreadListener listener, Resources resources) {
+        this.activity = activity;
         this.listener = listener;
         this.resources = resources;
     }
@@ -94,6 +97,7 @@ public final class UploadThread extends Thread {
 
     /**
      * Puts a new request for uploading into the queue handled by the looper
+     *
      * @param fileName the name of the file to upload including the path
      */
     synchronized void enqueueUpload(final String nxtAddress, final String fileName) {
@@ -102,7 +106,7 @@ public final class UploadThread extends Thread {
             try {
                 signalUpdate(CONNECTING);
                 mBTCommunicator.setMACAddress(nxtAddress);
-                mBTCommunicator.createNXTconnection();
+                mBTCommunicator.createNXTconnection(activity);
                 signalUpdate(UPLOADING);
                 uploading = true;
                 uploadFile(fileName);
@@ -152,6 +156,7 @@ public final class UploadThread extends Thread {
 
     /**
      * Opens a file with the given filename and uplodads it to the robot
+     *
      * @param fileName the name of the file to upload including the path
      */
     private void uploadFile(String fileName) throws IOException {
@@ -185,7 +190,7 @@ public final class UploadThread extends Thread {
         // extract fileName without path
         int lastSlashPos = fileName.lastIndexOf('/');
         fileName = fileName.substring(lastSlashPos + 1);
-        
+
         boolean triedDelete = false;
         while (true) {
             // send OpenWriteMessage
@@ -195,26 +200,24 @@ public final class UploadThread extends Thread {
             message = mBTCommunicator.receiveMessage();
             // check message if everything's OK
             if (message != null &&
-                message.length == 4 &&
-                message[0] == LCPMessage.REPLY_COMMAND &&
-                message[1] == LCPMessage.OPEN_WRITE &&
-                message[2] == 0)
+                    message.length == 4 &&
+                    message[0] == LCPMessage.REPLY_COMMAND &&
+                    message[1] == LCPMessage.OPEN_WRITE &&
+                    message[2] == 0)
                 break;
-            
+
             // file exists => try to delete file only once
             if (!triedDelete &&
-                message != null &&
-                message.length > 2 &&
-                message[0] == LCPMessage.REPLY_COMMAND &&
-                message[1] == LCPMessage.OPEN_WRITE &&
-                message[2] == (byte)0x8f) {
+                    message != null &&
+                    message.length > 2 &&
+                    message[0] == LCPMessage.REPLY_COMMAND &&
+                    message[1] == LCPMessage.OPEN_WRITE &&
+                    message[2] == (byte) 0x8f) {
                 triedDelete = true;
                 message = LCPMessage.getDeleteMessage(fileName);
-                mBTCommunicator.sendMessage(message);            
+                mBTCommunicator.sendMessage(message);
                 message = mBTCommunicator.receiveMessage();
-                continue;                
-            }
-            else {
+            } else {
                 throw new IOException();
             }
         }
@@ -254,6 +257,7 @@ public final class UploadThread extends Thread {
 
     /**
      * Informs the listener activity to make an update at the screen.
+     *
      * @param status the current status of the thread
      */
     private void signalUpdate(int status) {

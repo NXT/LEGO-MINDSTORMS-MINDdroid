@@ -17,6 +17,7 @@
  **/
 package com.lego.minddroid
 
+import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
@@ -24,10 +25,8 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Bundle
-import android.os.Handler
-import android.os.Message
-import android.os.Vibrator
+import android.content.pm.PackageManager
+import android.os.*
 import android.speech.tts.TextToSpeech
 import android.speech.tts.TextToSpeech.OnInitListener
 import android.view.Menu
@@ -35,6 +34,7 @@ import android.view.MenuItem
 import android.view.Window
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import java.io.IOException
 import java.util.*
 
@@ -46,7 +46,8 @@ import java.util.*
  */
 class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
 
-    private var myBTCommunicator: BTCommunicator? = null
+    private var btCommunicator: BTCommunicator? = null
+
     /**
      * Gets the current connection status.
      *
@@ -60,6 +61,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     private var mView: GameView? = null
     private var btErrorPending = false
     private var pairing = false
+
     @JvmField
     var mRobotType = 0
     var motorLeft = 0
@@ -71,6 +73,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     private var directionAction = 0 // +/- 1 = 0
     private var programList: MutableList<String>? = null
     private var programToStart: String? = null
+
     // experimental TTS support
     private lateinit var tts: TextToSpeech
 
@@ -139,8 +142,8 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
      * Creates a new object for communication to the NXT robot via bluetooth and fetches the corresponding handler.
      */
     private fun createBTCommunicator() { // interestingly BT adapter needs to be obtained by the UI thread - so we pass it in in the constructor
-        myBTCommunicator = BTCommunicator(this, myHandler, BluetoothAdapter.getDefaultAdapter(), resources)
-        btcHandler = myBTCommunicator!!.handler
+        btCommunicator = BTCommunicator(this, this, myHandler, BluetoothAdapter.getDefaultAdapter(), resources)
+        btcHandler = btCommunicator!!.handler
     }
 
     /**
@@ -151,15 +154,15 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     private fun startBTCommunicator(mac_address: String?) {
         isConnected = false
         connectingProgressDialog = ProgressDialog.show(this, "", resources.getString(R.string.connecting_please_wait), true)
-        if (myBTCommunicator != null) {
+        if (btCommunicator != null) {
             try {
-                myBTCommunicator!!.destroyNXTconnection()
+                btCommunicator!!.destroyNXTconnection()
             } catch (ignored: IOException) {
             }
         }
         createBTCommunicator()
-        myBTCommunicator!!.setMACAddress(mac_address)
-        myBTCommunicator!!.start()
+        btCommunicator!!.setMACAddress(mac_address)
+        btCommunicator!!.start()
         updateButtonsAndMenu()
     }
 
@@ -167,9 +170,9 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
      * Sends a message for disconnecting to the communcation thread.
      */
     fun destroyBTCommunicator() {
-        if (myBTCommunicator != null) {
+        if (btCommunicator != null) {
             sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.DISCONNECT, 0, 0)
-            myBTCommunicator = null
+            btCommunicator = null
         }
         isConnected = false
         updateButtonsAndMenu()
@@ -184,8 +187,10 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
         if (mRobotType != R.id.robot_type_lejos) {
             if (buttonMode == ACTION_BUTTON_SHORT) { // Wolfgang Amadeus Mozart
 // "Zauberfloete - Der Vogelfaenger bin ich ja"
-                sendBTCmessage(BTCommunicator.NO_DELAY,
-                        BTCommunicator.DO_BEEP, 392, 100)
+                sendBTCmessage(
+                    BTCommunicator.NO_DELAY,
+                    BTCommunicator.DO_BEEP, 392, 100
+                )
                 sendBTCmessage(200, BTCommunicator.DO_BEEP, 440, 100)
                 sendBTCmessage(400, BTCommunicator.DO_BEEP, 494, 100)
                 sendBTCmessage(600, BTCommunicator.DO_BEEP, 523, 100)
@@ -193,8 +198,10 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                 sendBTCmessage(1200, BTCommunicator.DO_BEEP, 523, 300)
                 sendBTCmessage(1600, BTCommunicator.DO_BEEP, 494, 300)
             } else { // G-F-E-D-C
-                sendBTCmessage(BTCommunicator.NO_DELAY,
-                        BTCommunicator.DO_BEEP, 392, 100)
+                sendBTCmessage(
+                    BTCommunicator.NO_DELAY,
+                    BTCommunicator.DO_BEEP, 392, 100
+                )
                 sendBTCmessage(200, BTCommunicator.DO_BEEP, 349, 100)
                 sendBTCmessage(400, BTCommunicator.DO_BEEP, 330, 100)
                 sendBTCmessage(600, BTCommunicator.DO_BEEP, 294, 100)
@@ -222,7 +229,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
      * Method for performing the appropriate action when the ACTION button is pressed shortly.
      */
     fun actionButtonPressed() {
-        if (myBTCommunicator != null) {
+        if (btCommunicator != null) {
             mView!!.thread.mActionPressed = true
             performActionCommand(ACTION_BUTTON_SHORT)
         }
@@ -232,7 +239,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
      * Method for performing the appropriate action when the ACTION button is long pressed.
      */
     fun actionButtonLongPress() {
-        if (myBTCommunicator != null) {
+        if (btCommunicator != null) {
             mView!!.thread.mActionPressed = true
             performActionCommand(ACTION_BUTTON_LONG)
         }
@@ -281,7 +288,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
      * @param left The power of the left motor from 0 to 100.
      */
     fun updateMotorControl(left: Int, right: Int) {
-        if (myBTCommunicator != null) { // don't send motor stop twice
+        if (btCommunicator != null) { // don't send motor stop twice
             stopAlreadySent = if (left == 0 && right == 0) {
                 if (stopAlreadySent) return else true
             } else false
@@ -346,9 +353,54 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
         }
         if (!BluetoothAdapter.getDefaultAdapter().isEnabled) {
             val enableIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(arrayOf(Manifest.permission.BLUETOOTH), BTCommunicator.RESULT_BLUETOOTH_CONNECT) // Comment 26
+                } else Toast.makeText(this, "Issue with BLUETOOTH_CONNECT", Toast.LENGTH_LONG).show()
+            } else
+                startActivityForResult(enableIntent, REQUEST_ENABLE_BT)
         } else {
             selectNXT()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String?>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            BTCommunicator.RESULT_BLUETOOTH_CONNECT -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Bluetooth permission granted", Toast.LENGTH_LONG).show()
+                } else if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(permissions[0]!!)) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN xxx", Toast.LENGTH_LONG).show()
+                } else {
+                    // User selected Deny Dialog to EXIT App ==> OR <== RETRY to have a second chance to Allow Permissions
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_DENIED) {
+                        Toast.makeText(this, "Bluetooth permission NOT granted", Toast.LENGTH_LONG).show()
+                    }
+                }
+                run {
+                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN granted", Toast.LENGTH_LONG).show()
+                    } else if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(permissions[0]!!)) {
+                        Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN granted", Toast.LENGTH_LONG).show()
+                    } else {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_DENIED) {
+                            Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN NOT granted", Toast.LENGTH_LONG).show()
+                        }
+                    }
+                }
+            }
+            BTCommunicator.RESULT_BLUETOOTH_SCAN -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN granted", Toast.LENGTH_LONG).show()
+                } else if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(permissions[0]!!)) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN granted", Toast.LENGTH_LONG).show()
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_DENIED) {
+                        Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN NOT granted", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
         }
     }
 
@@ -390,7 +442,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
         displayMenu = super.onPrepareOptionsMenu(menu)
         if (displayMenu) {
             var startEnabled = false
-            if (myBTCommunicator != null) startEnabled = myBTCommunicator!!.isConnected
+            if (btCommunicator != null) startEnabled = btCommunicator!!.isConnected
             menu.findItem(MENU_START_SW).isEnabled = startEnabled
         }
         return displayMenu
@@ -402,7 +454,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             MENU_TOGGLE_CONNECT -> {
-                if (myBTCommunicator == null || !isConnected) {
+                if (btCommunicator == null || !isConnected) {
                     selectNXT()
                 } else {
                     destroyBTCommunicator()
@@ -441,7 +493,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
     /**
      * Receive messages from the BTCommunicator
      */
-    val myHandler: Handler = object : Handler() {
+    private val myHandler: Handler = object : Handler(Looper.getMainLooper()) {
         override fun handleMessage(myMessage: Message) {
             when (myMessage.data.getInt("message")) {
                 BTCommunicator.DISPLAY_TOAST -> showToast(myMessage.data.getString("toastText"))
@@ -452,8 +504,8 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                     updateButtonsAndMenu()
                     sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.GET_FIRMWARE_VERSION, 0, 0)
                 }
-                BTCommunicator.MOTOR_STATE -> if (myBTCommunicator != null) {
-                    val motorMessage = myBTCommunicator!!.returnMessage
+                BTCommunicator.MOTOR_STATE -> if (btCommunicator != null) {
+                    val motorMessage = btCommunicator!!.returnMessage
                     val position = ByteHelper.byteToInt(motorMessage[21]) +
                             (ByteHelper.byteToInt(motorMessage[22]) shl 8) +
                             (ByteHelper.byteToInt(motorMessage[23]) shl 16) +
@@ -472,12 +524,12 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                         // inform the user of the error with an AlertDialog
                         val builder = AlertDialog.Builder(this@MINDdroid)
                         builder.setTitle(resources.getString(R.string.bt_error_dialog_title))
-                                .setMessage(resources.getString(R.string.bt_error_dialog_message)).setCancelable(false)
-                                .setPositiveButton("OK") { dialog: DialogInterface, id: Int ->
-                                    btErrorPending = false
-                                    dialog.cancel()
-                                    selectNXT()
-                                }
+                            .setMessage(resources.getString(R.string.bt_error_dialog_message)).setCancelable(false)
+                            .setPositiveButton("OK") { dialog: DialogInterface, id: Int ->
+                                btErrorPending = false
+                                dialog.cancel()
+                                selectNXT()
+                            }
                         builder.create().show()
                     }
                 }
@@ -487,17 +539,17 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                         btErrorPending = true
                         val builder = AlertDialog.Builder(this@MINDdroid)
                         builder.setTitle(resources.getString(R.string.bt_error_dialog_title))
-                                .setMessage(resources.getString(R.string.bt_error_dialog_message)).setCancelable(false)
-                                .setPositiveButton("OK") { dialog: DialogInterface, id: Int ->
-                                    btErrorPending = false
-                                    dialog.cancel()
-                                    selectNXT()
-                                }
+                            .setMessage(resources.getString(R.string.bt_error_dialog_message)).setCancelable(false)
+                            .setPositiveButton("OK") { dialog: DialogInterface, id: Int ->
+                                btErrorPending = false
+                                dialog.cancel()
+                                selectNXT()
+                            }
                         builder.create().show()
                     }
                 }
-                BTCommunicator.FIRMWARE_VERSION -> if (myBTCommunicator != null) {
-                    val firmwareMessage = myBTCommunicator!!.returnMessage
+                BTCommunicator.FIRMWARE_VERSION -> if (btCommunicator != null) {
+                    val firmwareMessage = btCommunicator!!.returnMessage
                     // check if we know the firmware
                     var isLejosMindDroid = true
                     var pos = 0
@@ -515,8 +567,8 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                     // afterwards we search for all files on the robot
                     sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 0, 0)
                 }
-                BTCommunicator.FIND_FILES -> if (myBTCommunicator != null) {
-                    val fileMessage = myBTCommunicator!!.returnMessage
+                BTCommunicator.FIND_FILES -> if (btCommunicator != null) {
+                    val fileMessage = btCommunicator!!.returnMessage
                     var fileName = String(fileMessage, 4, 20)
                     fileName = fileName.replace("\u0000".toRegex(), "")
                     if (mRobotType == R.id.robot_type_lejos || fileName.endsWith(".nxj") || fileName.endsWith(".rxe")) {
@@ -524,19 +576,24 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
                     }
                     // find next entry with appropriate handle,
 // limit number of programs (in case of error (endless loop))
-                    if (programList!!.size <= MAX_PROGRAMS) sendBTCmessage(BTCommunicator.NO_DELAY, BTCommunicator.FIND_FILES, 1, ByteHelper.byteToInt(fileMessage[3]))
+                    if (programList!!.size <= MAX_PROGRAMS) sendBTCmessage(
+                        BTCommunicator.NO_DELAY,
+                        BTCommunicator.FIND_FILES,
+                        1,
+                        ByteHelper.byteToInt(fileMessage[3])
+                    )
                 }
-                BTCommunicator.PROGRAM_NAME -> if (myBTCommunicator != null) {
-                    val returnMessage = myBTCommunicator!!.returnMessage
+                BTCommunicator.PROGRAM_NAME -> if (btCommunicator != null) {
+                    val returnMessage = btCommunicator!!.returnMessage
                     startRXEprogram(returnMessage[2])
                 }
-                BTCommunicator.SAY_TEXT -> if (myBTCommunicator != null) {
-                    val resultText = ByteHelper.handleResult(tts, myBTCommunicator!!.returnMessage)
+                BTCommunicator.SAY_TEXT -> if (btCommunicator != null) {
+                    val resultText = ByteHelper.handleResult(tts, btCommunicator!!.returnMessage)
                     showToast(resultText)
                     tts.speak(resultText, TextToSpeech.QUEUE_FLUSH, null, null)
                 }
-                BTCommunicator.VIBRATE_PHONE -> if (myBTCommunicator != null) {
-                    val vibrateMessage = myBTCommunicator!!.returnMessage
+                BTCommunicator.VIBRATE_PHONE -> if (btCommunicator != null) {
+                    val vibrateMessage = btCommunicator!!.returnMessage
                     val myVibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
                     myVibrator.vibrate(vibrateMessage[2] * 10.toLong())
                 }
@@ -591,7 +648,8 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
             val result = tts.setLanguage(Locale.US)
             // Try this someday for some interesting results.
             if (result == TextToSpeech.LANG_MISSING_DATA ||
-                    result == TextToSpeech.LANG_NOT_SUPPORTED) { // Language data is missing or the language is not supported.
+                result == TextToSpeech.LANG_NOT_SUPPORTED
+            ) { // Language data is missing or the language is not supported.
                 if (mRobotType == R.id.robot_type_lejos) showToast(R.string.tts_language_not_supported)
             }
         } else { // Initialization failed.
@@ -612,6 +670,7 @@ class MINDdroid : AppCompatActivity(), BTConnectable, OnInitListener {
         private const val REQUEST_ENABLE_BT = 2000
         private var btOnByUs = false
         private const val MAX_PROGRAMS = 20
+
         /**
          * Asks if bluetooth was switched on during the runtime of the app. For saving
          * battery we switch it off when the app is terminated.

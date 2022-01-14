@@ -29,8 +29,8 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Vibrator;
 import android.util.Log;
@@ -66,9 +66,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         /** The drawable to use as the background of the animation canvas */
         private Bitmap mBackgroundImage;
 
-        private Drawable mIconOrange;
+        private final Drawable mIconOrange;
 
-        private Drawable mIconWhite;
+        private final Drawable mIconWhite;
 
         private Bitmap mTarget;
 
@@ -123,11 +123,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         long mElapsedSinceNXTCommand = 0;
 
         /**
-         * count how many times we took tilt readings in 100ms so we can average
-         * position
-         */
-        int mAvCount = 0;
-        /**
          * time when tilt icon should change color
          */
         long mNextPulse = 0;
@@ -144,7 +139,6 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         /** digital filtering variables **/
         private float xX0 = 0;
-        private float xX1 = 0;
         private float xY0 = 0;
         private float xY1 = 0;
 
@@ -580,7 +574,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         void updateMoveIndicator(float mAcX, float mAcY) {
 
             // IIR filtering for x direction
-            xX1 = xX0;
+            float xX1 = xX0;
             xX0 = mAcX;
             xY1 = xY0;
             xY0 = (float) 0.07296293 * xX0 + (float) 0.07296293 * xX1 + (float) 0.8540807 * xY1;
@@ -608,11 +602,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
                 return false;
             }
 
-            if (((mCanvasHeight - (mActionButton.getHeight() + (GOAL_HEIGHT))) / 2 > mY || ((mCanvasHeight - mActionButton.getHeight()) + (GOAL_HEIGHT)) / 2 < mY)) {
-                return false;
-            }
-
-            return true;
+            return !((mCanvasHeight - (mActionButton.getHeight() + (GOAL_HEIGHT))) / 2 > mY) && !(((mCanvasHeight - mActionButton.getHeight()) + (GOAL_HEIGHT)) / 2 < mY);
         }
 
     }
@@ -620,12 +610,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     /** used for logging */
     private static final String TAG = GameView.class.getName();
 
-    private MINDdroid mActivity;
+    private final MINDdroid mActivity;
 
     /** The thread that actually draws the animation */
     private GameThread thread;
 
-    private SensorManager mSensorManager;
+    private final SensorManager mSensorManager;
 
     /** orientation (tilt) readings */
     private float mAccelX = 0;
@@ -663,7 +653,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         holder.addCallback(this);
         this.context = context;
         // create thread only; it's started in surfaceCreated()
-        thread = new GameThread(holder, context, (Vibrator) uiActivity.getSystemService(Context.VIBRATOR_SERVICE), new Handler() {
+        thread = new GameThread(holder, context, (Vibrator) uiActivity.getSystemService(Context.VIBRATOR_SERVICE), new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message m) {
 
@@ -729,7 +719,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
             getThread().start();
         } else {
-            thread = new GameThread(holder, context, (Vibrator) mActivity.getSystemService(Context.VIBRATOR_SERVICE), new Handler() {
+            thread = new GameThread(holder, context, (Vibrator) mActivity.getSystemService(Context.VIBRATOR_SERVICE), new Handler(Looper.getMainLooper()) {
                 @Override
                 public void handleMessage(Message m) {
 
@@ -752,7 +742,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             try {
                 getThread().join();
                 retry = false;
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
         }
     }
@@ -763,4 +753,3 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
 }
-

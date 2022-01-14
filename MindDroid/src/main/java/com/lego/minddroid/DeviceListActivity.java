@@ -22,6 +22,7 @@
 
 package com.lego.minddroid;
 
+import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -29,6 +30,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -38,8 +41,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Set;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and
@@ -51,13 +58,14 @@ public class DeviceListActivity extends Activity {
     static final String PAIRING = "pairing";
 
     // Return Intent extra
-    public static String DEVICE_NAME_AND_ADDRESS = "device_infos";
+    public static String DEVICE_NAME_AND_ADDRESS = "device_info";
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
 
     // Member fields
     private BluetoothAdapter mBtAdapter;
     private ArrayAdapter<String> mNewDevicesArrayAdapter;
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +74,7 @@ public class DeviceListActivity extends Activity {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.device_list);
 
-        // Set result CANCELED incase the user backs out
+        // Set result CANCELED in case the user backs out
         setResult(Activity.RESULT_CANCELED);
 
         // Initialize the button to perform device discovery
@@ -101,9 +109,17 @@ public class DeviceListActivity extends Activity {
 
         // Get the local Bluetooth adapter
         mBtAdapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> pairedDevices;
 
         // Get a set of currently paired devices
-        Set<BluetoothDevice> pairedDevices = mBtAdapter.getBondedDevices();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, BTCommunicator.RESULT_BLUETOOTH_CONNECT);  // Comment 26
+            } else
+                Toast.makeText(this, "Issue with bluetooth connection", Toast.LENGTH_LONG).show();
+            return;
+        } else
+            pairedDevices = mBtAdapter.getBondedDevices();
 
         // If there are paired devices, add each one to the ArrayAdapter
         boolean legoDevicesFound = false;
@@ -126,12 +142,49 @@ public class DeviceListActivity extends Activity {
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case BTCommunicator.RESULT_BLUETOOTH_CONNECT: // Allowed was selected so Permission granted
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Bluetooth permission granted", Toast.LENGTH_LONG).show();
+                } else if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(permissions[0])) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN xxx", Toast.LENGTH_LONG).show();
+                } else {
+                    // User selected Deny Dialog to EXIT App ==> OR <== RETRY to have a second chance to Allow Permissions
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_DENIED) {
+                        Toast.makeText(this, "Bluetooth permission NOT granted", Toast.LENGTH_LONG).show();
+                    }
+                }
+            case BTCommunicator.RESULT_BLUETOOTH_SCAN: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN granted", Toast.LENGTH_LONG).show();
+                } else if (Build.VERSION.SDK_INT >= 23 && !shouldShowRequestPermissionRationale(permissions[0])) {
+                    Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN granted", Toast.LENGTH_LONG).show();
+                } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_DENIED) {
+                        Toast.makeText(this, "Bluetooth BLUETOOTH_SCAN NOT granted", Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
 
         // Make sure we're not doing discovery anymore
         if (mBtAdapter != null) {
-            mBtAdapter.cancelDiscovery();
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, BTCommunicator.RESULT_BLUETOOTH_SCAN);  // Comment 26
+                } else
+                    Toast.makeText(this, "Issue with BLUETOOTH_SCAN connection", Toast.LENGTH_LONG).show();
+                return;
+            } else
+                mBtAdapter.cancelDiscovery();
         }
 
         // Unregister broadcast listeners
@@ -142,7 +195,6 @@ public class DeviceListActivity extends Activity {
      * Start device discover with the BluetoothAdapter
      */
     private void doDiscovery() {
-
         // Indicate scanning in the title
         setProgressBarIndeterminateVisibility(true);
         setTitle(R.string.scanning);
@@ -151,16 +203,19 @@ public class DeviceListActivity extends Activity {
         findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
 
         // If we're already discovering, stop it
-        if (mBtAdapter.isDiscovering()) {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, BTCommunicator.RESULT_BLUETOOTH_SCAN);  // Comment 26
+            } else
+                Toast.makeText(this, "Issue with BLUETOOTH_SCAN connection", Toast.LENGTH_LONG).show();
+        } else if (mBtAdapter.isDiscovering()) {
             mBtAdapter.cancelDiscovery();
-        }
-
-        // Request discover from BluetoothAdapter
-        mBtAdapter.startDiscovery();
+        } else
+            mBtAdapter.startDiscovery();
     }
 
     // The on-click listener for all devices in the ListViews
-    private OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
+    private final OnItemClickListener mDeviceClickListener = new OnItemClickListener() {
         public void onItemClick(AdapterView<?> av, View v, int arg2, long arg3) {
 
             String info = ((TextView) v).getText().toString();
@@ -169,10 +224,18 @@ public class DeviceListActivity extends Activity {
                 return;
 
             // Cancel discovery because it's costly and we're about to connect
-            mBtAdapter.cancelDiscovery();
+            if (ActivityCompat.checkSelfPermission(DeviceListActivity.this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, BTCommunicator.RESULT_BLUETOOTH_SCAN);  // Comment 26
+                } else
+                    Toast.makeText(DeviceListActivity.this, "Issue with BLUETOOTH_SCAN connection", Toast.LENGTH_LONG).show();
+                return;
+            } else
+                mBtAdapter.cancelDiscovery();
+
             // Get the device MAC address, this is the text after the last '-' character
             String address = info.substring(info.lastIndexOf('-') + 1);
-            // Create the result Intent and include the infos
+            // Create the result Intent and include the info
             Intent intent = new Intent();
             Bundle data = new Bundle();
             data.putString(DEVICE_NAME_AND_ADDRESS, info);
@@ -197,7 +260,12 @@ public class DeviceListActivity extends Activity {
                 // Get the BluetoothDevice object from the Intent
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 // If it's already paired, skip it, because it's been listed already
-                if (device != null && device.getBondState() != BluetoothDevice.BOND_BONDED) {
+                if (ActivityCompat.checkSelfPermission(DeviceListActivity.this, Manifest.permission.BLUETOOTH) != PackageManager.PERMISSION_GRANTED) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        requestPermissions(new String[]{Manifest.permission.BLUETOOTH}, BTCommunicator.RESULT_BLUETOOTH_SCAN);  // Comment 26
+                    } else
+                        Toast.makeText(DeviceListActivity.this, "Issue with BLUETOOTH_CONNECT connection", Toast.LENGTH_LONG).show();
+                } else if (device != null && device.getBondState() != BluetoothDevice.BOND_BONDED) {
                     mNewDevicesArrayAdapter.add(device.getName() + "-" + device.getAddress());
                 }
                 // When discovery is finished, change the Activity title

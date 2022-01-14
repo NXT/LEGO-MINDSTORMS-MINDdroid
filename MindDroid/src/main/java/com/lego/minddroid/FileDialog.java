@@ -28,16 +28,14 @@ import android.content.DialogInterface;
 
 class FileDialog {
 
-    private Activity myActivity;
-    private List<String> myList;    
-    private CharSequence[] programs;
+    private final Activity myActivity;
+    private final CharSequence[] programs;
     
     public FileDialog(Activity activity, List<String> list) {    
         myActivity = activity;
-        myList = list;
         // copy Strings from list to CharSequence array
-        programs = new CharSequence[myList.size()];
-        Iterator<String> iterator = myList.iterator(); 
+        programs = new CharSequence[list.size()];
+        Iterator<String> iterator = list.iterator();
         int position = 0;
         while(iterator.hasNext()) {
             programs[position++] = iterator.next();
